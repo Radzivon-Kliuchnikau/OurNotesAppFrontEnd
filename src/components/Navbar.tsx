@@ -25,9 +25,19 @@ const Navbar = () => {
                     }}>
                     Our Notes
                 </Typography>
-                <Checklist sx={{display: {xs: "block", sm: "none"}}}/> {/*Icon instead of Text logo when screen is small*/}
+                <Checklist
+                    sx={{display: {xs: "block", sm: "none"}}}/> {/*Icon instead of Text logo when screen is small*/}
                 <Box sx={{display: "flex", alignItems: "center", gap: "10px"}}>
-                    <Typography sx={{color: "black"}}>Login</Typography>
+                    <Typography
+                        sx={{
+                            color: "black",
+                            textDecoration: "none"
+                        }}
+                        component="a"
+                        href="/login"
+                    >
+                        Login
+                    </Typography>
                     <Avatar src="/static/avatar.jpg"/>
                 </Box>
             </StyledToolbar>
