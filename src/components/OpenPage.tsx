@@ -1,9 +1,16 @@
-import {Box, Button, Stack} from "@mui/material";
+import {Box, Button, Stack, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 
 function OpenPage() {
     return (
-        <Stack direction="row" spacing={2} justifyContent="space-between" sx={{backgroundColor: "red"}}>
+        <Stack
+            direction="column"
+            spacing={2}
+            sx={{
+                backgroundColor: "red",
+                height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+                minHeight: '100%'
+            }}>
             <Box
                 bgcolor="green"
                 border={2}
@@ -11,20 +18,29 @@ function OpenPage() {
                 p={2}
                 textAlign="center"
                 sx={{
-                    display: {xs: "none", sm: "block"},
-                    height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-                    minHeight: '100%'
-                }}>
-                Here we can create our notes
-                <Box>
-                    <Button 
-                        variant="contained"
-                        component={Link}
-                        to="/registration"
-                    >
-                        Registration
-                    </Button>
-                </Box>
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                }}
+            >
+                <Typography component="p">
+                    Here we can create
+                </Typography>
+                <Typography sx={{fontSize:25}} component="p">
+                    Our Notes
+                </Typography>
+                <Button
+                    variant="contained"
+                    component={Link}
+                    to="/registration"
+                    sx={{
+                        width: "221px",
+                        alignSelf: "center",
+                        margin: "30px"
+                    }}
+                >
+                    Registration
+                </Button>
             </Box>
         </Stack>
     );

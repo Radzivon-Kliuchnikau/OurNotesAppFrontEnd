@@ -1,6 +1,7 @@
 import {useRef, useState, useEffect} from "react";
 import axios from "../api/axios";
 import {Box, Card, FormLabel, Stack, styled, TextField, Typography} from "@mui/material";
+import {Close, Done, Info} from "@mui/icons-material";
 
 
 // const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
@@ -9,9 +10,25 @@ const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 const REGISTER_URL = "/register";
 
+const FormCard = styled(Card)(({theme}) => ({
+    display: "flex",
+    flexDirection: "column",
+    alignSelf: "center",
+    width: "100%",
+    gap: theme.spacing(2),
+    margin: "auto",
+    [theme.breakpoints.up('sm')]: {
+        width: '450px',
+    },
+}))
+
 const RegistrationContainer = styled(Stack)(({theme}) => ({
     height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
     minHeight: '100%',
+    padding: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(4),
+    }
 }))
 
 const Registration = () => {
@@ -108,25 +125,20 @@ const Registration = () => {
                     </section>
                 ) : (
                     <RegistrationContainer>
-                        <Card>
+                        <FormCard variant="outlined">
                             <p ref={errorRef} className={errorMessage ? "errMsg" : "offscreen"}
                                aria-live="assertive">{errorMessage}</p>
-                            <Typography
-                                component="h1"
-                                variant="h4"
-                            >
-                                Register
-                            </Typography>
-                            <Box component="form" onSubmit={handleSubmit} sx={{display: "flex", flexDirection: "column", gap: 2}}>
-                                <FormLabel htmlFor="useremail">
-                                    User name:
-                                    <span
-                                        className={validName ? "valid" : "hide"}> {/* "hide" achieved by "display":none in css*/}
-                                        Valid icon
-                        </span>
-                                    <span className={validName || !user ? "hide" : "invalid"}>
-                            Invalid icon
-                        </span>
+                            <Typography component="h1" variant="h4">Register</Typography>
+                            <Box component="form" onSubmit={handleSubmit}
+                                 sx={{display: "flex", flexDirection: "column", gap: 2}}>
+                                <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
+                                    <Typography>User name</Typography>
+                                    <Box component="span" sx={{display: validName ? "block" : "none"}}>
+                                        <Done/>
+                                    </Box>
+                                    <Box component="span" sx={{display: validName || !user ? "none" : "block"}}>
+                                        <Close/>
+                                    </Box>
                                 </FormLabel>
                                 <TextField
                                     type="email"
@@ -140,14 +152,11 @@ const Registration = () => {
                                     onFocus={() => setUserFocus(true)}
                                     onBlur={() => setUserFocus(false)}
                                 />
-                                {/* offscreen achieved by "position":absolute in css */}
-                                <p id="userNameDescription"
-                                   className={userFocus && user && !validName ? "instructions" : "offscreen"}>
-                                    <span>some_icon</span>
-                                    Just type a valid email.
-                                </p>
-
-
+                                <Box id="userNameDescription" sx={{display: userFocus && user && !validName ? "flex" : "none", gap: 1}}>
+                                    <Info/>
+                                    <Typography component="p">Just type a valid email.</Typography>
+                                </Box>
+                                
                                 <label htmlFor="password">
                                     Password:
                                     <span className={validPassword ? "valid" : "hide"}>
@@ -211,10 +220,10 @@ const Registration = () => {
                             <p>
                                 Already registered? <br/>
                                 <span className="line">
-                        <a href="#">Sign In</a>
-                    </span>
+                                    <a href="#">Sign In</a>
+                                </span>
                             </p>
-                        </Card>
+                        </FormCard>
                     </RegistrationContainer>
                 )}
         </>
