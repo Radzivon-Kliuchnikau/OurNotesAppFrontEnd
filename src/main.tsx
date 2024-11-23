@@ -5,17 +5,20 @@ import './index.css'
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 import App from './App.tsx'
-import {ThemeProvider} from "@mui/material";
-import {theme} from "./utils/Theme.tsx";
+import {AuthProvider} from "./context/AuthProvider.tsx";
+// import {ThemeProvider} from "@mui/material";
+// import {theme} from "./utils/Theme.tsx";
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <ThemeProvider theme={theme}>
+        {/*<ThemeProvider theme={theme}>*/}
+        <AuthProvider>
             <BrowserRouter>
                 <Routes>
                     <Route path="/*" element={<App/>}/>
                 </Routes>
             </BrowserRouter>
-        </ThemeProvider>
+        </AuthProvider>
+        {/*</ThemeProvider>*/}
     </StrictMode>
 )
