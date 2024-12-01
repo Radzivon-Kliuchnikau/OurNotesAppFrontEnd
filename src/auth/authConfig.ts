@@ -1,6 +1,6 @@
 import {LogLevel} from "@azure/msal-browser";
 
-export const msalConfig = {
+export const msalConfig: any = {
     auth: {
         auth: {
             clientId: import.meta.env.VITE_CLIENT_ID,
@@ -38,4 +38,12 @@ export const msalConfig = {
 
         }
     }
+}
+
+export const LoginRequest = {
+    scopes: ["User.Read"]
+};
+
+export const graphConfig = {
+    graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
 }
