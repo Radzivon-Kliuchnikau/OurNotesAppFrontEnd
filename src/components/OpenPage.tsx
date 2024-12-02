@@ -1,20 +1,24 @@
 import {Box, Button, Stack, Typography} from "@mui/material";
-import {Link} from "react-router-dom";
+import SignInLink from "./SignInLink.tsx";
+import {useIsAuthenticated} from "@azure/msal-react";
+import {Link, useLocation} from "react-router-dom";
 
 function OpenPage() {
+
+    const isAuthenticated = useIsAuthenticated();
+
+
     return (
         <Stack
-            direction="column"
+            direction="row"
             spacing={2}
             sx={{
-                backgroundColor: "red",
                 height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
                 minHeight: '100%'
             }}>
             <Box
-                bgcolor="green"
                 border={2}
-                flex={12}
+                flex={2}
                 p={2}
                 textAlign="center"
                 sx={{
@@ -26,21 +30,24 @@ function OpenPage() {
                 <Typography component="p">
                     Here we can create
                 </Typography>
-                <Typography sx={{fontSize:25}} component="p">
+                <Typography sx={{fontSize: 25, marginBottom: "25px"}} component="p">
                     Our Notes
                 </Typography>
-                <Button
-                    variant="contained"
-                    component={Link}
-                    to="/registration"
-                    sx={{
-                        width: "221px",
-                        alignSelf: "center",
-                        margin: "30px"
-                    }}
-                >
-                    Registration
-                </Button>
+                {isAuthenticated
+                    ?
+                    <Button
+                        component={Link}
+                        to="/notes"
+                        sx={{
+                            color: "black",
+                            backgroundColor: "#F8EAEA",
+                            alignSelf: "center",
+                        }}>
+                        Create some Notes
+                    </Button>
+                    : <SignInLink buttonName="Sign In with Microsoft"/>
+
+                }
             </Box>
         </Stack>
     );

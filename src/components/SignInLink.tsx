@@ -1,8 +1,14 @@
 import {useMsal} from "@azure/msal-react";
 import {LoginRequest} from "../auth/authConfig.ts";
-import {Button} from "@mui/material";
+import {Button, styled} from "@mui/material";
 
-const SignInLink = () => {
+const SignInButton = styled(Button)(({theme}) => ({
+    color: "black",
+    backgroundColor: "#F8EAEA",
+    alignSelf:"center",
+}))
+
+const SignInLink = (props: any) => {
     const { instance } = useMsal();
     
     const handleLogin = () => {
@@ -12,9 +18,9 @@ const SignInLink = () => {
     }
     
     return (
-        <Button onClick={() => handleLogin()}>
-            Sign In
-        </Button>
+        <SignInButton onClick={() => handleLogin()}>
+            {props.buttonName}
+        </SignInButton>
     );
 };
 

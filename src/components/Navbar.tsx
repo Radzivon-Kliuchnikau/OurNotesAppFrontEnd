@@ -9,7 +9,7 @@ const Navbar = () => {
         display: "flex",
         justifyContent: "space-between"
     })
-    
+
     const isAuthenticated = useIsAuthenticated();
 
     return (
@@ -29,11 +29,18 @@ const Navbar = () => {
                     }}>
                     Our Notes
                 </Typography>
-                <Checklist
-                    sx={{display: {xs: "block", sm: "none"}}}/> {/*Icon instead of Text logo when screen is small*/}
+                <Checklist sx={{
+                    display: {xs: "block", sm: "none"},
+                    color: "black"
+                }}/> {/*Icon instead of Text logo when screen is small*/}
                 <Box sx={{display: "flex", alignItems: "center", gap: "10px"}}>
-                    {isAuthenticated ? <SignOutLink/> : <SignInLink/>}
-                    <Avatar src="/static/avatar.jpg"/>
+                    {isAuthenticated
+                        ?
+                        <>
+                            <SignOutLink/>
+                            <Avatar src="/static/avatar.jpg"/>
+                        </>
+                        : <SignInLink buttonName="Sign In"/>}
                 </Box>
             </StyledToolbar>
         </AppBar>

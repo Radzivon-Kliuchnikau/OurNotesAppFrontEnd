@@ -1,16 +1,20 @@
-import useAuth from "../hooks/UseAuth";
 import {Navigate, Outlet, useLocation} from "react-router-dom";
+import {AuthenticatedTemplate, UnauthenticatedTemplate} from "@azure/msal-react";
 
 const RequireAuth = () => {
-    const { auth } = useAuth();
     const location = useLocation();
-    
-    console.log(auth.userEmail)
-    
+
     return (
-        auth?.userEmail
-            ? <Outlet/>
-            : <Navigate to="/login" state={{from: location}} replace />
+        <>
+            <AuthenticatedTemplate>
+                <Outlet/>
+            </AuthenticatedTemplate>
+            
+            <UnauthenticatedTemplate>
+                {/*<SignInLink buttonName="Sign In"/>*/}
+                <Navigate to="/login" state={{from: location}} replace/>
+            </UnauthenticatedTemplate>
+        </>
     );
 };
 
