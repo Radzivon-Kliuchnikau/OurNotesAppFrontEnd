@@ -7,6 +7,7 @@ import useAuth from "../hooks/UseAuth.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 
 const LOGIN_URL = "/login";
+const USE_COOKIES = true;
 
 const RegistrationContainer = styled(Stack)(({theme}) => ({
     height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
@@ -69,8 +70,8 @@ const Login = () => {
             console.log(JSON.stringify(response));
 
             const accessToken = response?.data?.accessToken;
-            // const roles = response?.data?.roles || null;
-            setAuth({userEmail, password, accessToken});
+            const roles = response?.data?.roles || null;
+            setAuth({userEmail, roles, password, accessToken});
             setUserEmail("");
             setPassword("");
             navigate(from, {replace: true});
