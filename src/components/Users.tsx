@@ -7,24 +7,18 @@ const Users = () => {
 
     useEffect(() => {
         let isMounted = true;
-
         const controller = new AbortController();
-
         const getUsers = async () => {
             try {
-                const response = await axios.get("/api/users", {
+                    const response = await axios.get("/api/users", {
                     signal: controller.signal
                 });
-
                 console.log(response);
-
                 isMounted && setUsers(response.data);
-
             } catch (error: any) {
                 console.error(error);
             }
         }
-
         getUsers();
 
         return () => {

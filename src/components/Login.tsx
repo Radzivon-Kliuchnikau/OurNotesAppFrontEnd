@@ -7,7 +7,7 @@ import useAuth from "../hooks/UseAuth.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 
 const LOGIN_URL = "/login";
-const USE_COOKIES = true;
+const USE_COOKIES = "?useCookies=true";
 
 const RegistrationContainer = styled(Stack)(({theme}) => ({
     height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
@@ -59,7 +59,7 @@ const Login = () => {
 
         try {
             const response = await axios.post(
-                LOGIN_URL,
+                `${LOGIN_URL}${USE_COOKIES}`,
                 JSON.stringify({email: userEmail, password}),
                 {
                     headers: {"Content-Type": "application/json"},
