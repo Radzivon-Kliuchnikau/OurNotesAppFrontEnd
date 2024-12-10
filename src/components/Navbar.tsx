@@ -1,4 +1,4 @@
-import {AppBar, Avatar, Box, InputBase, styled, Toolbar, Typography} from "@mui/material";
+import {AppBar, Avatar, Box, styled, Toolbar, Typography} from "@mui/material";
 import {Checklist} from "@mui/icons-material";
 
 const Navbar = () => {

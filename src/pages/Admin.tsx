@@ -1,5 +1,5 @@
 import {Box, Typography} from "@mui/material";
-import Users from "./Users.tsx";
+import Users from "../components/Users.tsx";
 
 const Admin = () => {
     return (
