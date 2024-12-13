@@ -7,7 +7,7 @@ import Login from "./pages/Login.tsx";
 import Notes from "./pages/Notes.tsx";
 import Unauthorized from "./pages/Unauthorized.tsx";
 import MissingRoute from "./pages/MissingRoute.tsx";
-import RequireAuth from "./components/RequireAuth.tsx";
+// import RequireAuth from "./components/RequireAuth.tsx";
 import Admin from "./pages/Admin.tsx";
 
 function App() {
@@ -19,12 +19,12 @@ function App() {
                 <Route path="registration" element={<Registration/>}/>
                 <Route path="login" element={<Login/>}/>
                 <Route path="unauthorized" element={<Unauthorized/>}/>
-                <Route element={<RequireAuth allowedRoles={["adminRole"]}/>}>
+                {/*<Route element={<RequireAuth allowedRoles={["adminRole"]}/>}>*/}
                     <Route path="admin" element={<Admin/>}/>
-                </Route>
-                <Route element={<RequireAuth allowedRoles={["userRole"]}/>}>
+                {/*</Route>*/}
+                {/*<Route element={<RequireAuth allowedRoles={["userRole"]}/>}>*/}
                     <Route path="notes" element={<Notes/>}/>
-                </Route>
+                {/*</Route>*/}
                 <Route path="*" element={<MissingRoute/>}></Route>
             </Route>
         </Routes>

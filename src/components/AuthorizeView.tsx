@@ -4,19 +4,21 @@ import axios from "../api/axios.tsx";
 import API_URL from "../utils/Constants.tsx";
 import {Box, Typography} from "@mui/material";
 import {Navigate} from "react-router-dom";
+import InternalError from "../pages/InternalError.tsx";
 
 const UserContext = createContext({});
 
 const AuthorizeView = (props: { children: React.ReactNode }) => {
     const [authorized, setAuthorized] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [internalError, setInternalError] = useState(false);
 
     let emptyUser: User = {Email: "", Name: ""};
     const [user, setUser] = useState(emptyUser);
 
     useEffect(() => {
         let retryCount: number = 0;
-        let maxRetries: number = 10;
+        let maxRetries: number = 2;
         let delayTime: number = 1000;
 
         const waitForRetry = (delayTime: number) => {
@@ -25,7 +27,7 @@ const AuthorizeView = (props: { children: React.ReactNode }) => {
 
         const callAuthWithRetry = async (url: string) => {
             try {
-                const response = await axios.get(url);
+                const response = await axios.get(url, {withCredentials: true});
 
                 if (response.status == 200) {
                     console.log("Authorized");
@@ -33,22 +35,24 @@ const AuthorizeView = (props: { children: React.ReactNode }) => {
                     setAuthorized(true);
 
                     return response;
-                } else if (response.status == 401) {
+                }
+            } catch (error: any) {
+                console.error("Error during auth check:", error);
+
+                if (error.status == 401) {
                     console.log("Unauthorized");
 
-                    return response;
+                    return error;
                 } else {
-                    throw new Error("" + response.status);
-                }
-            } catch (error) {
-                retryCount++;
+                    retryCount++;
+                    if (retryCount > maxRetries) {
+                        setInternalError(true);
+                        throw error;
+                    } else {
+                        await waitForRetry(delayTime);
 
-                if (retryCount > maxRetries) {
-                    throw error;
-                } else {
-                    await waitForRetry(delayTime);
-
-                    return callAuthWithRetry(url);
+                        return callAuthWithRetry(url);
+                    }
                 }
             }
         }
@@ -69,7 +73,11 @@ const AuthorizeView = (props: { children: React.ReactNode }) => {
             </Box>
         )
     } else {
-        if (authorized && !loading) {
+        if (internalError) {
+            return (
+                <InternalError/>
+            )
+        } else if (authorized && !loading) {
             return (
                 <Box>
                     <UserContext.Provider value={user}>{props.children}</UserContext.Provider>

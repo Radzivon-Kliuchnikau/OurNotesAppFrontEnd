@@ -14,7 +14,6 @@ import {useEffect, useRef, useState} from "react";
 // @ts-ignore
 import Link from "@mui/material/Link";
 import axios from "../api/axios.tsx";
-import useAuth from "../hooks/UseAuth.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import API_URL from "../utils/Constants.tsx";
 
@@ -41,7 +40,7 @@ const FormCard = styled(Card)(({theme}) => ({
 
 const Login = () => {
     // @ts-ignore
-    const {setAuth} = useAuth();
+    // const {setAuth} = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -79,9 +78,9 @@ const Login = () => {
             // console.log(JSON.stringify(response?.data));
             console.log(JSON.stringify(response));
 
-            const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles || null;
-            setAuth({userEmail, roles, password, accessToken});
+            // const accessToken = response?.data?.accessToken;
+            // const roles = response?.data?.roles || null;
+            // setAuth({userEmail, password, accessToken});
             setUserEmail("");
             setPassword("");
             navigate(from, {replace: true});

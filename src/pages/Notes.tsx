@@ -1,6 +1,7 @@
 import {Box, Button, Typography} from "@mui/material";
 import axios from "../api/axios.tsx";
 import {useState} from "react";
+import AuthorizeView from "../components/AuthorizeView.tsx";
 
 const NOTES_URL = "/api/notes";
 
@@ -36,16 +37,18 @@ const Notes = () => {
     }
 
     return (
-        <div>
-            This is Notes!!!
+        <AuthorizeView>
             <Box>
-                <Button onClick={handleClick}>Call notes api</Button>
+                This is Notes!!!
+                <Box>
+                    <Button onClick={handleClick}>Call notes api</Button>
+                </Box>
+                <Typography>
+                    {errorMessage}
+                </Typography>
+                <Typography>{data}</Typography>
             </Box>
-            <Typography>
-                {errorMessage}
-            </Typography>
-            <Typography>{data}</Typography>
-        </div>
+        </AuthorizeView>
     );
 };
 
