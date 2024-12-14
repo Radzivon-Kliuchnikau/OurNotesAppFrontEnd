@@ -1,4 +1,5 @@
 import {Box, Button, Card, CardActions, CardContent, CardMedia, Stack, styled, Typography} from "@mui/material";
+import {Link} from "react-router-dom";
 
 const InternalErrorContainer = styled(Stack)(({theme}) => ({
     height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
@@ -9,11 +10,13 @@ const InternalErrorContainer = styled(Stack)(({theme}) => ({
     }
 }))
 
-const ErrorCard = styled(Card)(({theme}) => ({
+const ErrorBox = styled(Box)(({theme}) => ({
     display: "flex",
     flexDirection: "column",
     alignSelf: "center",
     width: "100%",
+    height: "600px",
+    textAlign: "center",
     gap: theme.spacing(2),
     margin: "auto",
     [theme.breakpoints.up('sm')]: {
@@ -21,30 +24,41 @@ const ErrorCard = styled(Card)(({theme}) => ({
     }
 }))
 
+const ErrorImage = styled("img")(({theme}) => ({
+    width: "100%", // Full width of its container
+    height: "auto", // Maintain aspect ratio
+    borderRadius: theme.shape.borderRadius, // Optional: Add rounded corners
+    boxShadow: theme.shadows[3],
+}))
+
 const InternalError = () => {
     return (
         <InternalErrorContainer>
-            <ErrorCard sx={{ maxWidth: 345 }}>
-                <CardMedia
-                    sx={{ height: 140 }}
-                    image="../static/error_img.jpg"
-                    title="green iguana"
-                />
-                <CardContent>
+            <ErrorBox sx={{width: 345}}>
+                <Box>
                     <Typography gutterBottom variant="h5" component="div">
-                        Lizard
+                        Opps... Something went wrong
                     </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Lizards are a widespread group of squamate reptiles, with over 6,000
-                        species, ranging across all continents except Antarctica
+                    <Typography variant="body2" sx={{color: 'text.secondary'}}>
+                        We're working on it. Try again later
                     </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small">Share</Button>
-                    <Button size="small">Learn More</Button>
-                </CardActions>
-            </ErrorCard>
-            
+                </Box>
+                <Box>
+                    <Button
+                        variant="contained"
+                        component={Link}
+                        to="/"
+                        sx={{
+                            width: "221px",
+                            alignSelf: "center",
+                            margin: "30px"
+                        }}
+                    >
+                        Home
+                    </Button>
+                </Box>
+            </ErrorBox>
+
         </InternalErrorContainer>
     );
 };
