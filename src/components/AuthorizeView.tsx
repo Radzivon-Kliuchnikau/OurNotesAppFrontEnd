@@ -2,13 +2,17 @@ import {createContext, useEffect, useState} from "react";
 import User from "../interfaces/User.tsx";
 import axios from "../api/axios.tsx";
 import API_URL from "../utils/Constants.tsx";
-import {Box, Typography} from "@mui/material";
-import {Navigate} from "react-router-dom";
+import {Box} from "@mui/material";
+import {Navigate, Outlet, useLocation} from "react-router-dom";
 import InternalError from "../pages/InternalError.tsx";
+import LoadingBox from "./LoadingBox.tsx";
+
 
 const UserContext = createContext({});
 
-const AuthorizeView = (props: { children: React.ReactNode }) => {
+const AuthorizeView = () => {
+    const location = useLocation();
+
     const [authorized, setAuthorized] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [internalError, setInternalError] = useState(false);
@@ -69,7 +73,7 @@ const AuthorizeView = (props: { children: React.ReactNode }) => {
     if (loading) {
         return (
             <Box>
-                <Typography>Loading...</Typography>
+                <LoadingBox/>
             </Box>
         )
     } else {
@@ -80,17 +84,20 @@ const AuthorizeView = (props: { children: React.ReactNode }) => {
         } else if (authorized && !loading) {
             return (
                 <Box>
-                    <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
+                    <UserContext.Provider value={user}>
+                        <Outlet/>
+                    </UserContext.Provider>
                 </Box>
             )
         } else {
             return (
                 <Box>
-                    <Navigate to={API_URL.LOGIN_URL}/>
+                    <Navigate to={API_URL.LOGIN_URL} state={{from: location}} replace/>
                 </Box>
             )
         }
     }
 };
 
+export { UserContext };
 export default AuthorizeView;

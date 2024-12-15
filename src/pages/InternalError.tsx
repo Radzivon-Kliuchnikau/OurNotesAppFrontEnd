@@ -1,14 +1,16 @@
-import {Box, Button, Card, CardActions, CardContent, CardMedia, Stack, styled, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Stack,
+    styled,
+    Typography
+} from "@mui/material";
 import {Link} from "react-router-dom";
-
-const InternalErrorContainer = styled(Stack)(({theme}) => ({
-    height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-    minHeight: '100%',
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(4),
-    }
-}))
+import MainContainer from "../components/MainContainer.tsx";
 
 const ErrorBox = styled(Box)(({theme}) => ({
     display: "flex",
@@ -33,7 +35,7 @@ const ErrorImage = styled("img")(({theme}) => ({
 
 const InternalError = () => {
     return (
-        <InternalErrorContainer>
+        <MainContainer>
             <ErrorBox sx={{width: 345}}>
                 <Box>
                     <Typography gutterBottom variant="h5" component="div">
@@ -59,7 +61,7 @@ const InternalError = () => {
                 </Box>
             </ErrorBox>
 
-        </InternalErrorContainer>
+        </MainContainer>
     );
 };
 
