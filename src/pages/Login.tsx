@@ -71,8 +71,7 @@ const Login = () => {
                 `${API_URL.LOGIN_URL}${rememberMe ? API_URL.USE_COOKIES : API_URL.USE_SESSION_COOKIES}`,
                 JSON.stringify({email: userEmail, password}),
                 {
-                    headers: {"Content-Type": "application/json"},
-                    withCredentials: true
+                    headers: {"Content-Type": "application/json"}
                 }
             );
             // console.log(JSON.stringify(response?.data));

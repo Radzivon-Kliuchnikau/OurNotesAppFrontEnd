@@ -98,8 +98,7 @@ const Registration = () => {
                 {
                     headers: {
                         "Content-Type": "application/json",
-                    },
-                    withCredentials: true
+                    }
                 }
             ) // TODO: backend expecting email. Change REGEX for valid email validation
             console.log(response.data);

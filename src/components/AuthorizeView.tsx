@@ -1,24 +1,17 @@
-import {createContext, useEffect, useState} from "react";
-import User from "../interfaces/User.tsx";
+import {useEffect, useState} from "react";
 import axios from "../api/axios.tsx";
 import API_URL from "../utils/Constants.tsx";
-import {Box} from "@mui/material";
 import {Navigate, Outlet, useLocation} from "react-router-dom";
 import InternalError from "../pages/InternalError.tsx";
 import LoadingBox from "./LoadingBox.tsx";
-
-
-const UserContext = createContext({});
+import useAuth from "../hooks/UseAuth.tsx";
 
 const AuthorizeView = () => {
     const location = useLocation();
 
-    const [authorized, setAuthorized] = useState<boolean>(false);
+    const {authUser, setAuthUser} = useAuth();
     const [loading, setLoading] = useState<boolean>(true);
     const [internalError, setInternalError] = useState(false);
-
-    let emptyUser: User = {Email: "", Name: ""};
-    const [user, setUser] = useState(emptyUser);
 
     useEffect(() => {
         let retryCount: number = 0;
@@ -31,27 +24,19 @@ const AuthorizeView = () => {
 
         const callAuthWithRetry = async (url: string) => {
             try {
-                const response = await axios.get(url, {withCredentials: true});
-
+                const response = await axios.get(url);
                 if (response.status == 200) {
-                    console.log("Authorized");
-                    setUser({Email: response.data.Email, Name: response.data.Name});
-                    setAuthorized(true);
-
-                    return response;
+                    setAuthUser({Email: response.data.email, Name: response.data.name});
                 }
             } catch (error: any) {
                 console.error("Error during auth check:", error);
-
                 if (error.status == 401) {
                     console.log("Unauthorized");
-
-                    return error;
+                    setAuthUser(null);
                 } else {
                     retryCount++;
                     if (retryCount > maxRetries) {
                         setInternalError(true);
-                        throw error;
                     } else {
                         await waitForRetry(delayTime);
 
@@ -62,42 +47,15 @@ const AuthorizeView = () => {
         }
 
         callAuthWithRetry(API_URL.CHECK_AUTH)
-            .catch((error) => {
-                console.log(error.message);
-            })
             .finally(() => {
-                setLoading(false);
-            })
-    }, [])
+                setLoading(false)
+            });
+    }, [setAuthUser])
 
-    if (loading) {
-        return (
-            <Box>
-                <LoadingBox/>
-            </Box>
-        )
-    } else {
-        if (internalError) {
-            return (
-                <InternalError/>
-            )
-        } else if (authorized && !loading) {
-            return (
-                <Box>
-                    <UserContext.Provider value={user}>
-                        <Outlet/>
-                    </UserContext.Provider>
-                </Box>
-            )
-        } else {
-            return (
-                <Box>
-                    <Navigate to={API_URL.LOGIN_URL} state={{from: location}} replace/>
-                </Box>
-            )
-        }
-    }
+    if (loading) return <LoadingBox/>;
+    if (internalError) return <InternalError/>;
+    if (!authUser) return <Navigate to={API_URL.LOGIN_URL} state={{from: location}} replace/>
+    return <Outlet/>;
 };
 
-export { UserContext };
 export default AuthorizeView;
