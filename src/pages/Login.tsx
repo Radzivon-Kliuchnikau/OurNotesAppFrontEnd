@@ -16,6 +16,7 @@ import Link from "@mui/material/Link";
 import axios from "../api/axios.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import API_URL from "../utils/Constants.tsx";
+import useAuth from "../hooks/UseAuth.tsx";
 
 const RegistrationContainer = styled(Stack)(({theme}) => ({
     height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
@@ -39,8 +40,7 @@ const FormCard = styled(Card)(({theme}) => ({
 }))
 
 const Login = () => {
-    // @ts-ignore
-    // const {setAuth} = useAuth();
+    const {setAuthUser} = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -79,7 +79,7 @@ const Login = () => {
 
             // const accessToken = response?.data?.accessToken;
             // const roles = response?.data?.roles || null;
-            // setAuth({userEmail, password, accessToken});
+            setAuthUser({Email: userEmail, Name: userEmail});
             setUserEmail("");
             setPassword("");
             navigate(from, {replace: true});
