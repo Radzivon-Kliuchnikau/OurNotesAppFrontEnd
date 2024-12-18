@@ -1,14 +1,13 @@
-import {AppBar, Avatar, Box, styled, Toolbar, Typography} from "@mui/material";
+import {AppBar, Avatar, Box, Button, styled, Toolbar, Typography} from "@mui/material";
 import {Checklist, Person} from "@mui/icons-material";
 import useAuth from "../hooks/UseAuth.tsx";
+import {Link} from "react-router-dom";
 
 const LogoImage = styled("img")(({theme}) => ({}))
 
 const Navbar = () => {
 
     const {authUser} = useAuth();
-    console.log("authUser");
-    console.log(authUser);
     const StyledToolbar = styled(Toolbar)({
         display: "flex",
         justifyContent: "space-between"
@@ -35,18 +34,33 @@ const Navbar = () => {
                     sx={{display: {xs: "block", sm: "none"}}}/> {/*Icon instead of Text logo when screen is small*/}
                 {!authUser ? (
                     <Box sx={{display: "flex", alignItems: "center", gap: "10px"}}>
-                        <Typography
+                        <Button
+                            component={Link}
+                            to="/login"
                             sx={{
+                                width: "80px",
+                                height: "30px",
                                 color: "black",
-                                textDecoration: "none"
+                                textDecoration: "none",
+                                textTransform: "none",
+                                fontSize: "16px"
                             }}
-                            component="a"
-                            href="/login"
-                        >
-                            Sign in
-                        </Typography>
+                        >Sign in</Button>
+                        <Button
+                            component={Link}
+                            to="/registration"
+                            sx={{
+                                width: "80px",
+                                height: "30px",
+                                border: "1px solid black",
+                                borderRadius: "10px",
+                                color: "black",
+                                textDecoration: "none",
+                                textTransform: "none",
+                                fontSize: "16px"
+                            }}
+                        >Sign up</Button>
                         {/*<Avatar src="/static/avatar.jpg"/>*/}
-                        <Person sx={{color: "black"}}/>
                     </Box>
                 ) : (
                     <Box sx={{display: "flex", alignItems: "center", gap: "10px"}}>
