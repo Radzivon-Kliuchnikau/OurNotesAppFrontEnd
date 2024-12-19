@@ -65,7 +65,6 @@ const Login = () => {
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
-
         try {
             const response = await axios.post(
                 `${API_URL.LOGIN_URL}${rememberMe ? API_URL.USE_COOKIES : API_URL.USE_SESSION_COOKIES}`,
@@ -74,11 +73,7 @@ const Login = () => {
                     headers: {"Content-Type": "application/json"}
                 }
             );
-            // console.log(JSON.stringify(response?.data));
-            console.log(JSON.stringify(response));
 
-            // const accessToken = response?.data?.accessToken;
-            // const roles = response?.data?.roles || null;
             setAuthUser({Email: userEmail, Name: userEmail});
             setUserEmail("");
             setPassword("");

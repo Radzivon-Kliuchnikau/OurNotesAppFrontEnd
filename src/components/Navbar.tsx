@@ -14,10 +14,13 @@ import {Checklist, Logout, Person} from "@mui/icons-material";
 import useAuth from "../hooks/UseAuth.tsx";
 import {Link} from "react-router-dom";
 import {useState} from "react";
+import useAuthCheck from "../hooks/UseAuthCheck.tsx";
 
 const LogoImage = styled("img")(({theme}) => ({}))
 
 const Navbar = () => {
+    const {authUser} = useAuth();
+    const { loading } = useAuthCheck();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -28,27 +31,29 @@ const Navbar = () => {
         setAnchorEl(null);
     };
 
-    const {authUser} = useAuth();
+
+    console.log("authUser " + authUser);
     const StyledToolbar = styled(Toolbar)({
         display: "flex",
         justifyContent: "space-between"
     })
 
     return (
-        <AppBar position="static" sx={{backgroundColor: "white"}}>
+        <AppBar 
+            position="static" 
+            sx={{
+                backgroundColor: "white",
+                opacity: loading ? 0 : 1,
+                transition: "opacity 0.2s ease-in-out",
+                pointerEvents: loading ? "none" : "auto",
+        }}>
             <StyledToolbar>
                 <Typography
                     variant="h6"
                     noWrap
                     component="a"
                     href="/"
-                    sx={{
-                        display: {xs: "none", sm: "block"},
-                        textDecoration: "none",
-                        color: "black",
-                        letterSpacing: ".1rem",
-                        fontWeight: 700,
-                    }}>
+                    sx={{ display: {xs: "none", sm: "block"} }}>
                     <LogoImage src="../public/static/logo.svg"/>
                 </Typography>
                 <Checklist
@@ -81,7 +86,6 @@ const Navbar = () => {
                                 fontSize: "16px"
                             }}
                         >Sign up</Button>
-                        {/*<Avatar src="/static/avatar.jpg"/>*/}
                     </Box>
                 ) : (
                     <Box sx={{display: "flex", alignItems: "center", gap: "10px"}}>
