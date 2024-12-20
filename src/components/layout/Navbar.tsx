@@ -11,10 +11,11 @@ import {
     Typography
 } from "@mui/material";
 import {Checklist, Logout, Person} from "@mui/icons-material";
-import useAuth from "../hooks/UseAuth.tsx";
+import useAuth from "../../hooks/UseAuth.tsx";
 import {Link} from "react-router-dom";
 import {useState} from "react";
-import useAuthCheck from "../hooks/UseAuthCheck.tsx";
+import useAuthCheck from "../../hooks/UseAuthCheck.tsx";
+import LogoutButton from "../auth/LogoutButton.tsx";
 
 const LogoImage = styled("img")(({theme}) => ({}))
 
@@ -146,7 +147,7 @@ const Navbar = () => {
                                 <ListItemIcon>
                                     <Logout fontSize="small"/>
                                 </ListItemIcon>
-                                Logout
+                                <LogoutButton/>
                             </MenuItem>
                         </Menu>
                     </Box>

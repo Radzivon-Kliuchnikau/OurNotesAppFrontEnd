@@ -1,4 +1,4 @@
-import useAuth from "../hooks/UseAuth";
+import useAuth from "../../hooks/UseAuth";
 import {Navigate, Outlet, useLocation} from "react-router-dom";
 
 const RequireAuth = ({ allowedRoles }) => {
