@@ -1,9 +1,9 @@
-import API_URL from "../utils/Constants.tsx";
+import API_URL from "../../utils/Constants.tsx";
 import {Navigate, Outlet, useLocation} from "react-router-dom";
-import InternalError from "../pages/InternalError.tsx";
-import LoadingBox from "./LoadingBox.tsx";
-import useAuth from "../hooks/UseAuth.tsx";
-import useAuthCheck from "../hooks/UseAuthCheck.tsx";
+import InternalError from "../../pages/InternalError.tsx";
+import LoadingBox from "../common/LoadingBox.tsx";
+import useAuth from "../../hooks/UseAuth.tsx";
+import useAuthCheck from "../../hooks/UseAuthCheck.tsx";
 
 const AuthorizeView = () => {
     const location = useLocation();

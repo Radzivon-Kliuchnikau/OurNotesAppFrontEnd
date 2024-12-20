@@ -1,6 +1,6 @@
-import {Box, Button, Stack, Typography} from "@mui/material";
+import {Box, Button, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
-import MainContainer from "../components/MainContainer.tsx";
+import MainContainer from "../components/common/MainContainer.tsx";
 
 function OpenPage() {
     return (
