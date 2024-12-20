@@ -140,7 +140,7 @@ const Navbar = () => {
                             }}
                             sx={{
                                 top: `25px`,
-                                left: `${anchorEl?.getBoundingClientRect()?.right - 135}px`,
+                                left: `${anchorEl?.getBoundingClientRect()?.right - 145}px`,
                                 transform: 'none'
                             }}>
                             <MenuItem onClick={handleClose}>
