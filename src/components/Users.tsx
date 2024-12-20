@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {Box, List, ListItem, ListItemText, Typography} from "@mui/material";
 import axios from "../api/axios.tsx";
+import API_URL from "../utils/Constants.tsx";
 
 const Users = () => {
     const [users, setUsers] = useState([]);
@@ -10,7 +11,7 @@ const Users = () => {
         const controller = new AbortController();
         const getUsers = async () => {
             try {
-                    const response = await axios.get("/api/users", {
+                const response = await axios.get(API_URL.USER_LIST, {
                     signal: controller.signal
                 });
                 console.log(response);
@@ -36,7 +37,7 @@ const Users = () => {
                     <List>
                         {users.map((user: any, i) => <ListItem key={i}>
                             <ListItemText
-                                primary={user?.username}
+                                primary={user}
                             />
                         </ListItem>)}
                     </List>

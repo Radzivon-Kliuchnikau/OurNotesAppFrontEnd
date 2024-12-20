@@ -1,13 +1,22 @@
-import {Box, Button, Card, FormLabel, Stack, styled, TextField, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    Checkbox,
+    FormControlLabel,
+    FormLabel,
+    Stack,
+    styled,
+    TextField,
+    Typography
+} from "@mui/material";
 import {useEffect, useRef, useState} from "react";
 // @ts-ignore
 import Link from "@mui/material/Link";
 import axios from "../api/axios.tsx";
-import useAuth from "../hooks/UseAuth.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
-
-const LOGIN_URL = "/login";
-const USE_COOKIES = "?useCookies=true";
+import API_URL from "../utils/Constants.tsx";
+import useAuth from "../hooks/UseAuth.tsx";
 
 const RegistrationContainer = styled(Stack)(({theme}) => ({
     height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
@@ -31,8 +40,7 @@ const FormCard = styled(Card)(({theme}) => ({
 }))
 
 const Login = () => {
-    // @ts-ignore
-    const {setAuth} = useAuth();
+    const {setAuthUser} = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -43,6 +51,7 @@ const Login = () => {
 
     const [userEmail, setUserEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [rememberMe, setRememberMe] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
@@ -56,22 +65,16 @@ const Login = () => {
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
-
         try {
             const response = await axios.post(
-                `${LOGIN_URL}${USE_COOKIES}`,
+                `${API_URL.LOGIN_URL}${rememberMe ? API_URL.USE_COOKIES : API_URL.USE_SESSION_COOKIES}`,
                 JSON.stringify({email: userEmail, password}),
                 {
-                    headers: {"Content-Type": "application/json"},
-                    withCredentials: true
+                    headers: {"Content-Type": "application/json"}
                 }
             );
-            // console.log(JSON.stringify(response?.data));
-            console.log(JSON.stringify(response));
 
-            const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles || null;
-            setAuth({userEmail, roles, password, accessToken});
+            setAuthUser({Email: userEmail, Name: userEmail});
             setUserEmail("");
             setPassword("");
             navigate(from, {replace: true});
@@ -124,6 +127,10 @@ const Login = () => {
                         value={password}
                         required
                     />
+
+                    <FormControlLabel 
+                        control={
+                            <Checkbox onChange={(event) => setRememberMe(event.target.checked)}/>} label="Remember me"/>
 
                     <Button
                         type="submit"

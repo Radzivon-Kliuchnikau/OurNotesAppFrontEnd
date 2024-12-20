@@ -1,19 +1,12 @@
 import {Box, Button, Stack, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
+import MainContainer from "../components/MainContainer.tsx";
 
 function OpenPage() {
     return (
-        <Stack
-            direction="column"
-            spacing={2}
-            sx={{
-                backgroundColor: "red",
-                height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-                minHeight: '100%'
-            }}>
+        <MainContainer>
             <Box
-                bgcolor="green"
-                border={2}
+                bgcolor="#f1e8b8"
                 flex={12}
                 p={2}
                 textAlign="center"
@@ -42,7 +35,7 @@ function OpenPage() {
                     Registration
                 </Button>
             </Box>
-        </Stack>
+        </MainContainer>
     );
 }
 

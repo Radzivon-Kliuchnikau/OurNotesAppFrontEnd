@@ -36,7 +36,7 @@ const Notes = () => {
     }
 
     return (
-        <div>
+        <Box>
             This is Notes!!!
             <Box>
                 <Button onClick={handleClick}>Call notes api</Button>
@@ -45,7 +45,7 @@ const Notes = () => {
                 {errorMessage}
             </Typography>
             <Typography>{data}</Typography>
-        </div>
+        </Box>
     );
 };
 
