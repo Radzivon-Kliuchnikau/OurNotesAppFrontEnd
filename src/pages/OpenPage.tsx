@@ -20,7 +20,7 @@ function OpenPage() {
                     <Typography
                         variant="h1"
                         sx={{
-                            fontSize: "4rem",
+                            fontSize: {xs: "2rem", sm: "3rem", md: "4rem"},
                             fontWeight: 600
                         }}
                     >

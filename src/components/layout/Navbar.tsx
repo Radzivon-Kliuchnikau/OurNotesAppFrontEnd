@@ -41,8 +41,10 @@ const Navbar = () => {
 
     return (
         <AppBar 
-            position="static" 
+            position="static"
+            elevation={0}
             sx={{
+                borderBottom: "1px solid black",
                 backgroundColor: "white",
                 opacity: loading ? 0 : 1,
                 transition: "opacity 0.2s ease-in-out",
@@ -53,12 +55,9 @@ const Navbar = () => {
                     variant="h6"
                     noWrap
                     component="a"
-                    href="/"
-                    sx={{ display: {xs: "none", sm: "block"} }}>
+                    href="/">
                     <LogoImage src="../public/static/logo.svg"/>
                 </Typography>
-                <Checklist
-                    sx={{display: {xs: "block", sm: "none"}}}/> {/*Icon instead of Text logo when screen is small*/}
                 {!authUser ? (
                     <Box sx={{display: "flex", alignItems: "center", gap: "10px"}}>
                         <Button
@@ -92,12 +91,12 @@ const Navbar = () => {
                     <Box sx={{display: "flex", alignItems: "center", gap: "10px"}}>
                         <Typography sx={{color: "black"}}>
                             Hey, {authUser.Name}</Typography>
-                        <Tooltip title="Account settings">
+                        <Tooltip title="Settings">
                             <IconButton
                                 onClick={handleClick}
                                 size="small"
                                 sx={{ml: 2}}
-                                aria-controls={open ? 'account-menu' : undefined}
+                                aria-controls="account-menu"
                                 aria-haspopup="true"
                                 aria-expanded={open ? 'true' : undefined}
                             >
