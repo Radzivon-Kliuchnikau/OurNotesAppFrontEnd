@@ -9,17 +9,28 @@ import Unauthorized from "./pages/Unauthorized.tsx";
 import MissingRoute from "./pages/MissingRoute.tsx";
 import Admin from "./pages/Admin.tsx";
 import AuthorizeView from "./components/auth/AuthorizeView.tsx";
+import useAuth from "./hooks/UseAuth.tsx";
+import useAuthCheck from "./hooks/UseAuthCheck.tsx";
+import LoadingBox from "./components/common/LoadingBox.tsx";
 
 function App() {
 
+    const {authUser} = useAuth();
+    const {loading} = useAuthCheck();
+
+    if(loading) return <LoadingBox/>
+    
     return (
         <Routes>
             <Route path="/" element={<Layout/>}>
-                <Route path="/" element={<OpenPage/>}/>
+                {authUser
+                    ? <Route path="/" element={<Notes/>}/>
+                    : <Route path="/" element={<OpenPage/>}/>
+                }
                 <Route path="registration" element={<Registration/>}/>
                 <Route path="login" element={<Login/>}/>
                 <Route path="unauthorized" element={<Unauthorized/>}/>
-                <Route element={<AuthorizeView />}>
+                <Route element={<AuthorizeView/>}>
                     <Route path="admin" element={<Admin/>}/>
                     <Route path="notes" element={<Notes/>}/>
                 </Route>
