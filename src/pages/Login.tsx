@@ -2,10 +2,7 @@ import {
     Box,
     Button,
     Card,
-    Checkbox,
-    FormControlLabel,
     FormLabel,
-    Stack,
     styled,
     TextField,
     Typography
@@ -17,26 +14,38 @@ import axios from "../api/axios.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import API_URL from "../utils/Constants.tsx";
 import useAuth from "../hooks/UseAuth.tsx";
-
-const RegistrationContainer = styled(Stack)(({theme}) => ({
-    height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-    minHeight: '100%',
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(4),
-    }
-}))
+import MainContainer from "../components/common/MainContainer.tsx";
 
 const FormCard = styled(Card)(({theme}) => ({
+
     display: "flex",
     flexDirection: "column",
     alignSelf: "center",
-    width: "100%",
-    gap: theme.spacing(2),
+    textAlign: "center",
+    width: "320px",
+    padding: "40px",
     margin: "auto",
-    [theme.breakpoints.up('sm')]: {
-        width: '450px',
+    border: "1px solid black",
+    borderRadius: "10px"
+}))
+
+const TextFieldCustom = styled(TextField)(({theme}) => ({
+    "& .MuiOutlinedInput-root": { // Target the root container of the input
+        border: "1px solid black", // Custom border
+        borderRadius: "10px", // Custom border radius
     },
+    "& .MuiOutlinedInput-notchedOutline": { // Target the outline specifically
+        border: "none", // Remove the default outline
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+        border: "1px solid black", // Optional: Add hover styles
+    },
+    "& .MuiOutlinedInput-input": {
+        padding: "10px", // Adjust padding if needed
+    },
+    width: "320px",
+    height: "50px",
+    marginBottom: "20px"
 }))
 
 const Login = () => {
@@ -94,20 +103,33 @@ const Login = () => {
     }
 
     return (
-        <RegistrationContainer>
+        <MainContainer>
             <FormCard variant="outlined">
                 <Typography ref={errorRef} aria-live="assertive"
                             sx={{display: errorMessage ? "block" : "none"}}>
                     {errorMessage}
                 </Typography>
-                <Typography component="h1" variant="h4">Sign In</Typography>
+                <Box sx={{marginTop: "30px", marginBottom: "40px"}}>
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        component="a"
+                        href="/">
+                        <img src="../public/static/logo.svg" alt="Logo" />
+                    </Typography>
+                </Box>
+                <Typography component="h1" variant="h5" sx={{marginBottom: "20px"}}>Sign In</Typography>
                 <Box component="form" onSubmit={handleSubmit}
-                     sx={{display: "flex", flexDirection: "column", gap: 2}}>
+                     sx={{
+                         width: "400px",
+                         display: "flex", 
+                         flexDirection: "column",
+                }}>
 
                     <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
-                        <Typography>Email</Typography>
+                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Email</Typography>
                     </FormLabel>
-                    <TextField
+                    <TextFieldCustom
                         type="email"
                         id="useremail"
                         inputRef={userEmailRef}
@@ -118,9 +140,9 @@ const Login = () => {
                     />
 
                     <FormLabel htmlFor="userPassword" sx={{display: "flex"}}>
-                        <Typography>Password</Typography>
+                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Password</Typography>
                     </FormLabel>
-                    <TextField
+                    <TextFieldCustom
                         type="password"
                         id="userPassword"
                         onChange={(event) => setPassword(event.target.value)}
@@ -128,16 +150,24 @@ const Login = () => {
                         required
                     />
 
-                    <FormControlLabel 
-                        control={
-                            <Checkbox onChange={(event) => setRememberMe(event.target.checked)}/>} label="Remember me"/>
-
                     <Button
                         type="submit"
-                        fullWidth
-                        variant="contained"
-                        disabled={userEmail == "" || password == ""}>
-                        Sign Up
+                        disabled={userEmail == "" || password == ""}
+                        disableRipple
+                        sx={{
+                            width: "320px",
+                            height: "50px",
+                            border: "1px solid black",
+                            borderRadius: "10px",
+                            color: "black",
+                            textDecoration: "none",
+                            textTransform: "none",
+                            fontSize: "20px",
+                            marginBottom: "40px",
+                            marginTop: "30px"
+                        }}
+                    >
+                        Sign in
                     </Button>
                 </Box>
                 <Typography sx={{textAlign: "center"}}>
@@ -149,7 +179,7 @@ const Login = () => {
                     </Link>
                 </Typography>
             </FormCard>
-        </RegistrationContainer>
+        </MainContainer>
     )
 };
 

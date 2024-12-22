@@ -22,13 +22,13 @@ function App() {
     
     return (
         <Routes>
+            <Route path="registration" element={<Registration/>}/>
+            <Route path="login" element={<Login/>}/>
             <Route path="/" element={<Layout/>}>
                 {authUser
                     ? <Route path="/" element={<Notes/>}/>
                     : <Route path="/" element={<OpenPage/>}/>
                 }
-                <Route path="registration" element={<Registration/>}/>
-                <Route path="login" element={<Login/>}/>
                 <Route path="unauthorized" element={<Unauthorized/>}/>
                 <Route element={<AuthorizeView/>}>
                     <Route path="admin" element={<Admin/>}/>
