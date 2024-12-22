@@ -10,7 +10,7 @@ import {
     Tooltip,
     Typography
 } from "@mui/material";
-import {Checklist, Logout, Person} from "@mui/icons-material";
+import {Logout, Person} from "@mui/icons-material";
 import useAuth from "../../hooks/UseAuth.tsx";
 import {Link} from "react-router-dom";
 import {useState} from "react";
