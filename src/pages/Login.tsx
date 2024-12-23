@@ -18,14 +18,20 @@ import MainContainer from "../components/common/MainContainer.tsx";
 
 const FormCard = styled(Card)(({theme}) => ({
     display: "flex",
+    boxShadow: "none", // Removes the default shadow
     flexDirection: "column",
     alignSelf: "center",
     textAlign: "center",
     width: "320px",
     padding: "40px",
-    margin: "auto",
+    marginTop: "130px",
     border: "1px solid black",
-    borderRadius: "10px"
+    borderRadius: "10px",
+    [theme.breakpoints.down("sm")]: {
+        border: "none",
+        padding: "0px 40px 40px 40px",
+        marginTop: "50px"
+    }
 }))
 
 const TextFieldCustom = styled(TextField)(({theme}) => ({

@@ -19,9 +19,14 @@ const FormCard = styled(Card)(({theme}) => ({
     textAlign: "center",
     width: "320px",
     padding: "10px 40px 10px 40px",
-    margin: "auto",
+    marginTop: "70px",
     border: "1px solid black",
     borderRadius: "10px",
+    [theme.breakpoints.down("sm")]: {
+        border: "none",
+        padding: "0px 40px 10px 40px",
+        marginTop: "30px"
+    }
 }))
 
 const TextFieldCustom = styled(TextField)(({theme}) => ({
@@ -308,7 +313,7 @@ const Registration = () => {
                                         marginTop: "20px"
                                     }}
                                     >
-                                    Sign Up
+                                    Sign up
                                 </Button>
                             </Box>
                             <Typography sx={{textAlign: "center", marginBottom: "10px"}}>
