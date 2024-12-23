@@ -4,13 +4,12 @@ import {Box, Button, Card, FormLabel, Stack, styled, TextField, Typography} from
 import {Close, Done, Info} from "@mui/icons-material";
 import Link from '@mui/material/Link';
 import MainContainer from "../components/common/MainContainer.tsx";
+import API_URL from "../utils/Constants.tsx";
 
 
 const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWA_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-
-const REGISTER_URL = "/api/account/register";
 
 const FormCard = styled(Card)(({theme}) => ({
     display: "flex",
@@ -109,8 +108,8 @@ const Registration = () => {
         }
         try {
             const response = await axios.post(
-                REGISTER_URL,
-                JSON.stringify({email: userEmail, password}),
+                API_URL.REGISTER_URL,
+                JSON.stringify({userName: userName, email: userEmail, password}),
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -204,10 +203,12 @@ const Registration = () => {
                                 <Box id="userNameDescription"
                                      sx={{
                                          display: userNameFocus && userName && !validUserName ? "flex" : "none",
-                                         gap: 1
+                                         marginTop: "-10px",
+                                         marginBottom: "20px",
+                                         alignItems: "center"
                                      }}>
                                     <Info/>
-                                    <Typography component="p">Just type a valid name. Min 4 chars.</Typography>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Just type a valid name. Min 4 chars.</Typography>
                                 </Box>
 
                                 <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
@@ -232,9 +233,14 @@ const Registration = () => {
                                     onBlur={() => setEmailFocus(false)}
                                 />
                                 <Box id="userNameDescription"
-                                     sx={{display: emailFocus && userEmail && !validEmail ? "flex" : "none", gap: 1}}>
+                                     sx={{
+                                         display: emailFocus && userEmail && !validEmail ? "flex" : "none",
+                                         marginTop: "-10px",
+                                         marginBottom: "20px",
+                                         alignItems: "center"
+                                     }}>
                                     <Info/>
-                                    <Typography component="p">Just type a valid email.</Typography>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Just type a valid email.</Typography>
                                 </Box>
 
                                 <FormLabel htmlFor="password" sx={{display: "flex"}}>
@@ -258,11 +264,18 @@ const Registration = () => {
                                     onBlur={() => setPasswordFocus(false)}
                                 />
                                 <Box id="passwordDescription"
-                                     sx={{display: passwordFocus && !validPassword ? "flex" : "none", gap: 1}}>
+                                     sx={{
+                                         display: passwordFocus && !validPassword ? "flex" : "none",
+                                         marginTop: "-10px",
+                                         marginBottom: "20px",
+                                         alignItems: "center",
+                                         textAlign: "left"
+                                }}>
                                     <Info/>
-                                    <Typography>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>
                                         8 to 24 characters. <br/>
-                                        Must include uppercase and lowercase letters, a number and a special
+                                        Must include uppercase and lowercase <br/> 
+                                        letters, a number and a special
                                         character. <br/>
                                         Allowed special characters: <span aria-label="exclamation mark">!</span><span
                                         aria-label="at symbol">@</span><span aria-label="hashtag">#</span><span
@@ -291,9 +304,15 @@ const Registration = () => {
                                     onBlur={() => setMatchFocus(false)}
                                 />
                                 <Box id="confirmPasswordDescription"
-                                     sx={{display: matchFocus && !validMatch ? "flex" : "none"}}>
+                                     sx={{
+                                         display: matchFocus && !validMatch ? "flex" : "none",
+                                         marginTop: "-10px",
+                                         marginBottom: "20px",
+                                         alignItems: "center",
+                                         textAlign: "left"
+                                }}>
                                     <Info/>
-                                    <Typography>Must match the first password input field.</Typography>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Must match the first password input field.</Typography>
                                 </Box>
 
                                 <Button
