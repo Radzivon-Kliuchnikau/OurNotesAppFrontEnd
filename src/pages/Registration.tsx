@@ -11,8 +11,6 @@ const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWA_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-const REGISTER_URL = "/api/account/register";
-
 const FormCard = styled(Card)(({theme}) => ({
     display: "flex",
     flexDirection: "column",
