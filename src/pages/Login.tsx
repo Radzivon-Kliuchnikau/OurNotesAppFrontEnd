@@ -17,7 +17,6 @@ import useAuth from "../hooks/UseAuth.tsx";
 import MainContainer from "../components/common/MainContainer.tsx";
 
 const FormCard = styled(Card)(({theme}) => ({
-
     display: "flex",
     flexDirection: "column",
     alignSelf: "center",

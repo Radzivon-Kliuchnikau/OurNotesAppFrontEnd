@@ -3,6 +3,7 @@ import axios from "../api/axios";
 import {Box, Button, Card, FormLabel, Stack, styled, TextField, Typography} from "@mui/material";
 import {Close, Done, Info} from "@mui/icons-material";
 import Link from '@mui/material/Link';
+import MainContainer from "../components/common/MainContainer.tsx";
 
 
 const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
@@ -15,21 +16,31 @@ const FormCard = styled(Card)(({theme}) => ({
     display: "flex",
     flexDirection: "column",
     alignSelf: "center",
-    width: "100%",
-    gap: theme.spacing(2),
+    textAlign: "center",
+    width: "320px",
+    padding: "10px 40px 10px 40px",
     margin: "auto",
-    [theme.breakpoints.up('sm')]: {
-        width: '450px',
-    },
+    border: "1px solid black",
+    borderRadius: "10px",
 }))
 
-const RegistrationContainer = styled(Stack)(({theme}) => ({
-    height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-    minHeight: '100%',
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(4),
-    }
+const TextFieldCustom = styled(TextField)(({theme}) => ({
+    "& .MuiOutlinedInput-root": { // Target the root container of the input
+        border: "1px solid black", // Custom border
+        borderRadius: "10px", // Custom border radius
+    },
+    "& .MuiOutlinedInput-notchedOutline": { // Target the outline specifically
+        border: "none", // Remove the default outline
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+        border: "1px solid black", // Optional: Add hover styles
+    },
+    "& .MuiOutlinedInput-input": {
+        padding: "10px", // Adjust padding if needed
+    },
+    width: "320px",
+    height: "50px",
+    marginBottom: "15px"
 }))
 
 const Registration = () => {
@@ -39,7 +50,7 @@ const Registration = () => {
     const [userName, setUserName] = useState("");
     const [validUserName, setValidUserName] = useState(false);
     const [userNameFocus, setUserNameFocus] = useState(false);
-    
+
     const [userEmail, setUserEmail] = useState("");
     const [validEmail, setValidEmail] = useState(false);
     const [emailFocus, setEmailFocus] = useState(false);
@@ -63,7 +74,7 @@ const Registration = () => {
         const result = EMAIL_REGEX.test(userEmail);
         setValidEmail(result);
     }, [userEmail])
-    
+
     useEffect(() => {
         const result = USERNAME_REGEX.test(userName);
         setValidUserName(result);
@@ -121,11 +132,11 @@ const Registration = () => {
         <>
             {
                 success ? (
-                    <Box 
+                    <Box
                         sx={{
-                            display: "flex", 
-                            justifyContent: "center", 
-                            flexDirection:"column", 
+                            display: "flex",
+                            justifyContent: "center",
+                            flexDirection: "column",
                             textAlign: "center",
                             height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)'
                         }}>
@@ -137,7 +148,7 @@ const Registration = () => {
                         </Link>
                     </Box>
                 ) : (
-                    <RegistrationContainer>
+                    <MainContainer>
                         <FormCard variant="outlined">
                             <Typography
                                 ref={errorRef}
@@ -146,12 +157,25 @@ const Registration = () => {
                             >
                                 {errorMessage}
                             </Typography>
-                            <Typography component="h1" variant="h4">Register</Typography>
+                            <Box sx={{marginTop: "20px", marginBottom: "10px"}}>
+                                <Typography
+                                    variant="h6"
+                                    noWrap
+                                    component="a"
+                                    href="/">
+                                    <img src="../public/static/logo.svg" alt="Logo" />
+                                </Typography>
+                            </Box>
+                            <Typography component="h1" variant="h5" sx={{marginBottom: "15px"}}>Sign up</Typography>
                             <Box component="form" onSubmit={handleSubmit}
-                                 sx={{display: "flex", flexDirection: "column", gap: 2}}>
+                                 sx={{
+                                     width: "400px",
+                                     display: "flex", 
+                                     flexDirection: "column" 
+                            }}>
 
                                 <FormLabel htmlFor="username" sx={{display: "flex"}}>
-                                    <Typography>Name</Typography>
+                                    <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Name</Typography>
                                     <Box component="span" sx={{display: validUserName ? "block" : "none"}}>
                                         <Done/>
                                     </Box>
@@ -159,7 +183,7 @@ const Registration = () => {
                                         <Close/>
                                     </Box>
                                 </FormLabel>
-                                <TextField
+                                <TextFieldCustom
                                     type="text"
                                     id="username"
                                     inputRef={userNameRef}
@@ -173,13 +197,16 @@ const Registration = () => {
                                     onBlur={() => setUserNameFocus(false)}
                                 />
                                 <Box id="userNameDescription"
-                                     sx={{display: userNameFocus && userName && !validUserName ? "flex" : "none", gap: 1}}>
+                                     sx={{
+                                         display: userNameFocus && userName && !validUserName ? "flex" : "none",
+                                         gap: 1
+                                     }}>
                                     <Info/>
                                     <Typography component="p">Just type a valid name. Min 4 chars.</Typography>
                                 </Box>
-                                
+
                                 <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
-                                    <Typography>Email</Typography>
+                                    <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Email</Typography>
                                     <Box component="span" sx={{display: validEmail ? "block" : "none"}}>
                                         <Done/>
                                     </Box>
@@ -187,7 +214,7 @@ const Registration = () => {
                                         <Close/>
                                     </Box>
                                 </FormLabel>
-                                <TextField
+                                <TextFieldCustom
                                     type="email"
                                     id="useremail"
                                     autoComplete="off"
@@ -206,7 +233,7 @@ const Registration = () => {
                                 </Box>
 
                                 <FormLabel htmlFor="password" sx={{display: "flex"}}>
-                                    <Typography>Password</Typography>
+                                    <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Password</Typography>
                                     <Box component="span" sx={{display: validPassword ? "block" : "none"}}>
                                         <Done/>
                                     </Box>
@@ -214,7 +241,7 @@ const Registration = () => {
                                         <Close/>
                                     </Box>
                                 </FormLabel>
-                                <TextField
+                                <TextFieldCustom
                                     type="password"
                                     id="password"
                                     onChange={(event) => setPassword(event.target.value)}
@@ -239,7 +266,7 @@ const Registration = () => {
                                 </Box>
 
                                 <FormLabel htmlFor="confirmPassword" sx={{display: "flex"}}>
-                                    <Typography>Confirm Password</Typography>
+                                    <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Confirm Password</Typography>
                                     <Box sx={{display: validMatch && matchPassword ? "block" : "none"}}>
                                         <Done/>
                                     </Box>
@@ -247,7 +274,7 @@ const Registration = () => {
                                         <Close/>
                                     </Box>
                                 </FormLabel>
-                                <TextField
+                                <TextFieldCustom
                                     type="password"
                                     id="confirmPassword"
                                     onChange={(event) => setMatchPassword(event.target.value)}
@@ -266,22 +293,34 @@ const Registration = () => {
 
                                 <Button
                                     type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    disabled={!validEmail || !validUserName || !validPassword || !validMatch}>
+                                    disabled={!validEmail || !validUserName || !validPassword || !validMatch}
+                                    disableRipple
+                                    sx={{
+                                        width: "320px",
+                                        height: "50px",
+                                        border: "1px solid black",
+                                        borderRadius: "10px",
+                                        color: "black",
+                                        textDecoration: "none",
+                                        textTransform: "none",
+                                        fontSize: "20px",
+                                        marginBottom: "30px",
+                                        marginTop: "20px"
+                                    }}
+                                    >
                                     Sign Up
                                 </Button>
                             </Box>
-                            <Typography sx={{textAlign: "center"}}>
+                            <Typography sx={{textAlign: "center", marginBottom: "10px"}}>
                                 Already registered?{" "}
                                 <Link
                                     href="/login"
-                                    sx={{ color: "black", textDecoration: "none"}}>
+                                    sx={{color: "black", textDecoration: "none"}}>
                                     Sign in
                                 </Link>
                             </Typography>
                         </FormCard>
-                    </RegistrationContainer>
+                    </MainContainer>
                 )}
         </>
     )
