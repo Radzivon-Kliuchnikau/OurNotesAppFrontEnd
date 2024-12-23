@@ -205,10 +205,12 @@ const Registration = () => {
                                 <Box id="userNameDescription"
                                      sx={{
                                          display: userNameFocus && userName && !validUserName ? "flex" : "none",
-                                         gap: 1
+                                         marginTop: "-10px",
+                                         marginBottom: "20px",
+                                         alignItems: "center"
                                      }}>
                                     <Info/>
-                                    <Typography component="p">Just type a valid name. Min 4 chars.</Typography>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Just type a valid name. Min 4 chars.</Typography>
                                 </Box>
 
                                 <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
@@ -233,9 +235,14 @@ const Registration = () => {
                                     onBlur={() => setEmailFocus(false)}
                                 />
                                 <Box id="userNameDescription"
-                                     sx={{display: emailFocus && userEmail && !validEmail ? "flex" : "none", gap: 1}}>
+                                     sx={{
+                                         display: emailFocus && userEmail && !validEmail ? "flex" : "none",
+                                         marginTop: "-10px",
+                                         marginBottom: "20px",
+                                         alignItems: "center"
+                                     }}>
                                     <Info/>
-                                    <Typography component="p">Just type a valid email.</Typography>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Just type a valid email.</Typography>
                                 </Box>
 
                                 <FormLabel htmlFor="password" sx={{display: "flex"}}>
@@ -259,11 +266,18 @@ const Registration = () => {
                                     onBlur={() => setPasswordFocus(false)}
                                 />
                                 <Box id="passwordDescription"
-                                     sx={{display: passwordFocus && !validPassword ? "flex" : "none", gap: 1}}>
+                                     sx={{
+                                         display: passwordFocus && !validPassword ? "flex" : "none",
+                                         marginTop: "-10px",
+                                         marginBottom: "20px",
+                                         alignItems: "center",
+                                         textAlign: "left"
+                                }}>
                                     <Info/>
-                                    <Typography>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>
                                         8 to 24 characters. <br/>
-                                        Must include uppercase and lowercase letters, a number and a special
+                                        Must include uppercase and lowercase <br/> 
+                                        letters, a number and a special
                                         character. <br/>
                                         Allowed special characters: <span aria-label="exclamation mark">!</span><span
                                         aria-label="at symbol">@</span><span aria-label="hashtag">#</span><span
@@ -292,9 +306,15 @@ const Registration = () => {
                                     onBlur={() => setMatchFocus(false)}
                                 />
                                 <Box id="confirmPasswordDescription"
-                                     sx={{display: matchFocus && !validMatch ? "flex" : "none"}}>
+                                     sx={{
+                                         display: matchFocus && !validMatch ? "flex" : "none",
+                                         marginTop: "-10px",
+                                         marginBottom: "20px",
+                                         alignItems: "center",
+                                         textAlign: "left"
+                                }}>
                                     <Info/>
-                                    <Typography>Must match the first password input field.</Typography>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Must match the first password input field.</Typography>
                                 </Box>
 
                                 <Button
