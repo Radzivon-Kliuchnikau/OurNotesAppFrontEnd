@@ -132,10 +132,10 @@ const Login = () => {
                 }}>
 
                     <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
-                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Email</Typography>
+                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Username or email address</Typography>
                     </FormLabel>
                     <TextFieldCustom
-                        type="email"
+                        type="text"
                         id="useremail"
                         inputRef={userEmailRef}
                         autoComplete="off"

@@ -4,6 +4,7 @@ import {Box, Button, Card, FormLabel, Stack, styled, TextField, Typography} from
 import {Close, Done, Info} from "@mui/icons-material";
 import Link from '@mui/material/Link';
 import MainContainer from "../components/common/MainContainer.tsx";
+import API_URL from "../utils/Constants.tsx";
 
 
 const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
@@ -109,8 +110,8 @@ const Registration = () => {
         }
         try {
             const response = await axios.post(
-                REGISTER_URL,
-                JSON.stringify({email: userEmail, password}),
+                API_URL.REGISTER_URL,
+                JSON.stringify({userName: userName, email: userEmail, password}),
                 {
                     headers: {
                         "Content-Type": "application/json",
