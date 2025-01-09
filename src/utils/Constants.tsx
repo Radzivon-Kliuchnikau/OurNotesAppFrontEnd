@@ -7,6 +7,7 @@ const API_URL = {
     USE_SESSION_COOKIES: "?useSessionCookies=true",
     CHECK_AUTH: "/api/account/checkAuth",
     USER_LIST: "/api/admin/users",
+    NOTES_URL: "/api/notes",
     CREATE_NOTE: "/api/notes/create"
 }
 
