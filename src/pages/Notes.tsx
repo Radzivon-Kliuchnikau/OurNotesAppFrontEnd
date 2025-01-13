@@ -1,4 +1,4 @@
-import {Box, Button, Card, CardActions, CardContent, IconButton, Typography} from "@mui/material";
+import {Box, Button, Card, CardActions, CardContent, CircularProgress, IconButton, Typography} from "@mui/material";
 import axios from "../api/axios.tsx";
 import {useEffect, useState} from "react";
 import MainContainer from "../components/common/MainContainer.tsx";
@@ -6,6 +6,7 @@ import {Add, Delete} from "@mui/icons-material";
 import NoteObject from "../interfaces/NoteObject.tsx";
 import {Link} from "react-router-dom";
 import API_URL from "../utils/Constants.tsx";
+import LoadingBox from "../components/common/LoadingBox.tsx";
 
 const Notes = () => {
     const maxHeaderLength = 30;
@@ -14,8 +15,37 @@ const Notes = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [error, setError] = useState(false);
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const handleDelete = async (id: string) => {
+        try {
+            const response = await axios.delete(
+                `${API_URL.DELETE_NOTE}/${id}`,
+                {
+                    headers: {"Content-Type": "application/json"},
+                    withCredentials: true
+                }
+            )
+            const updatedData = data.filter((note: NoteObject) => note.id !== id);
+            setData([...updatedData]);
+        } catch (error: any) {
+            if (!error.response) {
+                setErrorMessage("No Server Response")
+            } else if (error.response?.status === 401) {
+                setErrorMessage("Unauthorized")
+            } else {
+                setErrorMessage("Can't remove notes, we're working on it");
+            }
+
+            setError(true);
+        }
+
+
+    }
+
     const getAllNotes = async () => {
         try {
+            setLoading(true);
             const response = await axios.get(
                 API_URL.NOTES_URL,
                 {
@@ -35,6 +65,8 @@ const Notes = () => {
             }
 
             setError(true);
+        } finally {
+            setLoading(false);
         }
 
     }
@@ -46,14 +78,15 @@ const Notes = () => {
     return (
         <MainContainer>
             {
-                error ? (
-
+                loading ? (
+                    <LoadingBox/>
+                ) : error ? (
                     <Typography aria-live="assertive"
                                 sx={{display: errorMessage ? "block" : "none"}}>
                         {errorMessage}
                     </Typography>
                 ) : (
-                    <Box>
+                    <Box sx={{padding: "20px", marginTop: "40px"}}>
                         <Box>
                             <Button
                                 component={Link}
@@ -74,6 +107,7 @@ const Notes = () => {
                         </Box>
                         <Box
                             sx={{
+                                marginTop: "40px",
                                 display: "flex",
                                 flexWrap: "wrap",
                                 gap: 2,
@@ -105,8 +139,8 @@ const Notes = () => {
                                             }
                                         </Typography>
                                     </CardContent>
-                                    <CardActions>
-                                        <IconButton aria-label="delete">
+                                    <CardActions sx={{justifyContent: "flex-end"}}>
+                                        <IconButton onClick={() => handleDelete(note.id)} aria-label="delete">
                                             <Delete/>
                                         </IconButton>
                                     </CardActions>
@@ -114,8 +148,7 @@ const Notes = () => {
                             ))}
                         </Box>
                     </Box>
-                )
-            }
+                )}
         </MainContainer>
     );
 };

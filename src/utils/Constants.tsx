@@ -8,7 +8,8 @@ const API_URL = {
     CHECK_AUTH: "/api/account/checkAuth",
     USER_LIST: "/api/admin/users",
     NOTES_URL: "/api/notes",
-    CREATE_NOTE: "/api/notes/create"
+    CREATE_NOTE: "/api/notes/create",
+    DELETE_NOTE: "/api/notes"
 }
 
 export default API_URL;
