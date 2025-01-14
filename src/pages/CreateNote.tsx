@@ -4,6 +4,7 @@ import axios from "../api/axios.tsx";
 import API_URL from "../utils/Constants.tsx";
 import {useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
+import {ArrowBack} from "@mui/icons-material";
 
 const FormCard = styled(Card)(({theme}) => ({
     display: "flex",
@@ -39,6 +40,7 @@ const CreateNote = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
+    const goBack = () => navigate(-1);
 
     const [noteTitle, setNoteTitle] = useState("");
     const [noteContent, setNoteContent] = useState("");
@@ -123,30 +125,45 @@ const CreateNote = () => {
                                     value={noteContent}
                                     required
                                 />
+                                <Box sx={{display: "flex", gap: 2, marginTop: "30px", marginBottom: "40px"}}>
 
-                                <Button
-                                    type="submit"
-                                    disabled={noteTitle == "" || noteContent == ""}
-                                    disableRipple
-                                    sx={{
-                                        width: "320px",
-                                        height: "50px",
-                                        border: "1px solid black",
-                                        borderRadius: "10px",
-                                        color: "black",
-                                        textDecoration: "none",
-                                        textTransform: "none",
-                                        fontSize: "20px",
-                                        marginBottom: "40px",
-                                        marginTop: "30px"
-                                    }}
-                                >
-                                    Create note
-                                </Button>
+                                    <Button
+                                        type="submit"
+                                        disabled={noteTitle == "" || noteContent == ""}
+                                        disableRipple
+                                        sx={{
+                                            width: "320px",
+                                            height: "50px",
+                                            border: "1px solid black",
+                                            borderRadius: "10px",
+                                            color: "black",
+                                            textDecoration: "none",
+                                            textTransform: "none",
+                                            fontSize: "20px",
+                                        }}
+                                    >
+                                        Create note
+                                    </Button>
+                                    <Button
+                                        startIcon={<ArrowBack />}
+                                        disableRipple
+                                        onClick={goBack}
+                                        sx={{
+                                            width: "150px",
+                                            height: "50px",
+                                            border: "1px solid black",
+                                            borderRadius: "10px",
+                                            color: "black",
+                                            textDecoration: "none",
+                                            textTransform: "none",
+                                            fontSize: "20px",
+                                        }}>
+                                        Go back
+                                    </Button>
+                                </Box>
                             </Box>
                         </FormCard>
-                    )
-            }
+                    )}
         </MainContainer>
     );
 };

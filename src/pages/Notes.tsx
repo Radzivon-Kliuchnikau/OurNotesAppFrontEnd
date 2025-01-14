@@ -1,4 +1,14 @@
-import {Box, Button, Card, CardActions, CardContent, CircularProgress, IconButton, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CircularProgress,
+    Dialog, DialogActions, DialogContent, DialogTitle,
+    IconButton,
+    Typography
+} from "@mui/material";
 import axios from "../api/axios.tsx";
 import {useEffect, useState} from "react";
 import MainContainer from "../components/common/MainContainer.tsx";
@@ -16,17 +26,30 @@ const Notes = () => {
     const [error, setError] = useState(false);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
 
-    const handleDelete = async (id: string) => {
+    const handleOpenModal = (id: string) => {
+        setSelectedNoteId(id);
+        setOpenModal(true);
+    }
+
+    const handleCloseModel = () => {
+        setOpenModal(false);
+        setSelectedNoteId(null);
+    }
+    const handleDelete = async () => {
+        if (!selectedNoteId) return;
+
         try {
             const response = await axios.delete(
-                `${API_URL.DELETE_NOTE}/${id}`,
+                `${API_URL.DELETE_NOTE}/${selectedNoteId}`,
                 {
                     headers: {"Content-Type": "application/json"},
                     withCredentials: true
                 }
             )
-            const updatedData = data.filter((note: NoteObject) => note.id !== id);
+            const updatedData = data.filter((note: NoteObject) => note.id !== selectedNoteId);
             setData([...updatedData]);
         } catch (error: any) {
             if (!error.response) {
@@ -38,9 +61,9 @@ const Notes = () => {
             }
 
             setError(true);
+        } finally {
+            handleCloseModel();
         }
-
-
     }
 
     const getAllNotes = async () => {
@@ -77,6 +100,16 @@ const Notes = () => {
 
     return (
         <MainContainer>
+            <Dialog open={openModal} onClose={handleCloseModel}>
+                <DialogTitle>Are you sure?</DialogTitle>
+                <DialogContent>
+                    <Typography>Do you actually want to remove this note?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseModel}>Cancel</Button>
+                    <Button onClick={handleDelete} color="error">Delete</Button>
+                </DialogActions>
+            </Dialog>
             {
                 loading ? (
                     <LoadingBox/>
@@ -140,7 +173,7 @@ const Notes = () => {
                                         </Typography>
                                     </CardContent>
                                     <CardActions sx={{justifyContent: "flex-end"}}>
-                                        <IconButton onClick={() => handleDelete(note.id)} aria-label="delete">
+                                        <IconButton onClick={() => handleOpenModal(note.id)} aria-label="delete">
                                             <Delete/>
                                         </IconButton>
                                     </CardActions>
