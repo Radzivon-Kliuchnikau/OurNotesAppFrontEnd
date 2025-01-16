@@ -1,12 +1,17 @@
-import MainContainer from "./MainContainer.tsx";
-import {CircularProgress} from "@mui/material";
+import {Box, CircularProgress} from "@mui/material";
 
 const LoadingBox = () => {
     return (
-        // TODO: Style this component properly
-        <MainContainer>
-            <CircularProgress />
-        </MainContainer>
+        <Box
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+            }}
+        >
+            <CircularProgress/>
+        </Box>
     );
 };
 

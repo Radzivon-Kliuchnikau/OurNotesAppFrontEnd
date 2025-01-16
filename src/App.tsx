@@ -12,14 +12,15 @@ import AuthorizeView from "./components/auth/AuthorizeView.tsx";
 import useAuth from "./hooks/UseAuth.tsx";
 import useAuthCheck from "./hooks/UseAuthCheck.tsx";
 import LoadingBox from "./components/common/LoadingBox.tsx";
+import CreateNote from "./pages/CreateNote.tsx";
 
 function App() {
 
     const {authUser} = useAuth();
     const {loading} = useAuthCheck();
 
-    if(loading) return <LoadingBox/>
-    
+    if (loading) return <LoadingBox/>
+
     return (
         <Routes>
             <Route path="registration" element={<Registration/>}/>
@@ -32,7 +33,7 @@ function App() {
                 <Route path="unauthorized" element={<Unauthorized/>}/>
                 <Route element={<AuthorizeView/>}>
                     <Route path="admin" element={<Admin/>}/>
-                    <Route path="notes" element={<Notes/>}/>
+                    <Route path="createnote" element={<CreateNote/>}/>
                 </Route>
                 <Route path="*" element={<MissingRoute/>}></Route>
             </Route>
