@@ -4,8 +4,8 @@ import {
     Card,
     CardActions,
     CardContent,
-    Dialog, DialogActions, DialogContent, DialogTitle,
-    IconButton, TextField,
+    Dialog, DialogActions, DialogContent, DialogTitle, FormLabel,
+    IconButton, styled, TextField,
     Typography
 } from "@mui/material";
 import axios from "../api/axios.tsx";
@@ -16,6 +16,38 @@ import NoteObject from "../interfaces/NoteObject.tsx";
 import {Link} from "react-router-dom";
 import API_URL from "../utils/Constants.tsx";
 import LoadingBox from "../components/common/LoadingBox.tsx";
+import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
+
+const RemoveNoteDialog = styled(Dialog)(({theme}) => ({
+    "& .MuiDialog-paper": {
+        width: "400px",
+        padding: theme.spacing(2),
+        borderRadius: "10px",
+        backgroundColor: "#f9f6f2"
+    }
+}))
+
+const EditNoteDialog = styled(Dialog)(({theme}) => ({
+    "& .MuiDialog-paper": {
+        height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+        width: "1000px",
+        padding: theme.spacing(2),
+        borderRadius: "10px",
+        backgroundColor: "#f9f6f2"
+    }
+}))
+
+const StyledButton = styled(Button)(({theme}) => ({
+    width: "120px",
+    height: "40px",
+    borderRadius: "10px",
+    textTransform: "none",
+    fontSize: "16px",
+    fontWeight: "500",
+    border: "1px solid black",
+    color: "black",
+
+}))
 
 const Notes = () => {
     const maxHeaderLength = 30;
@@ -151,40 +183,82 @@ const Notes = () => {
 
     return (
         <MainContainer>
-            <Dialog open={openRemoveModal} onClose={handleCloseRemoveModel}>
+            <RemoveNoteDialog open={openRemoveModal} onClose={handleCloseRemoveModel}>
                 <DialogTitle>Are you sure?</DialogTitle>
                 <DialogContent>
                     <Typography>Do you actually want to remove this note?</Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseRemoveModel}>Cancel</Button>
-                    <Button onClick={handleNoteDelete} color="error">Delete</Button>
+                    <StyledButton
+                        onClick={handleCloseRemoveModel}
+                        sx={{
+                            transition: "background-color 0.3s ease",
+                            "&:hover": {
+                                backgroundColor: "#cacfcb",
+                            }
+                        }}>Cancel</StyledButton>
+                    <StyledButton
+                        onClick={handleNoteDelete}
+                        sx={{
+                            transition: "background-color 0.3s ease",
+                            "&:hover": {
+                                backgroundColor: "#f53333",
+                            },
+                        }}
+                    >Delete</StyledButton>
                 </DialogActions>
-            </Dialog>
-            <Dialog open={openEditModal} onClose={handleCloseEditModal}>
+            </RemoveNoteDialog>
+            <EditNoteDialog open={openEditModal} onClose={handleCloseEditModal}>
                 <DialogTitle>Edit your note</DialogTitle>
                 <DialogContent>
-                    <TextField
+                    <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
+                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note title</Typography>
+                    </FormLabel>
+                    <TextFieldCustom
                         value={noteTitle}
-                        onChange={(e) => setNoteTitle(e.target.value)}
-                        label="Title"
-                        fullWidth
+                        type="text"
+                        id="useremail"
+                        autoComplete="off"
+                        onChange={(event) => setNoteTitle(event.target.value)}
+                        required
                     />
 
-                    <TextField
+                    <FormLabel htmlFor="noteContent" sx={{display: "flex"}}>
+                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note content</Typography>
+                    </FormLabel>
+                    <TextFieldCustom
+                        id="noteContent"
                         value={noteContent}
-                        onChange={(e) => setNoteContent(e.target.value)}
-                        label="Note content"
-                        fullWidth
+                        onChange={(event) => setNoteContent(event.target.value)}
+                        sx={{}}
+                        type="text"
                         multiline
-                        rows={4}
+                        fullWidth
+                        rows={10}
+                        required
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseEditModal}>Cancel</Button>
-                    <Button onClick={() => handleEditNote(selectedNote)}>Save</Button>
+                    <StyledButton
+                        onClick={handleCloseEditModal}
+                        sx={{
+                            transition: "background-color 0.3s ease",
+                            "&:hover": {
+                                backgroundColor: "#cacfcb",
+                            },
+                        }}
+                    >Cancel</StyledButton>
+                    <StyledButton
+                        onClick={handleEditNote}
+                        sx={{
+                            transition: "background-color 0.3s ease",
+                            "&:hover": {
+                                backgroundColor: "#16db65",
+                            },
+                        }}
+                    >Save</StyledButton>
                 </DialogActions>
-            </Dialog>
+            </EditNoteDialog>
             {
                 loading ? (
                     <LoadingBox/>
@@ -233,7 +307,7 @@ const Notes = () => {
                                         display: "flex",
                                         flexDirection: "column",
                                         justifyContent: "space-between",
-                                        cursor: "pointer"
+                                        cursor: "pointer",
                                     }}>
                                     <CardContent sx={{margin: 0, padding: "10px 10px 0 10px"}}>
                                         <Typography component="h1" variant="h6">
@@ -254,7 +328,7 @@ const Notes = () => {
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleOpenRemoveModal(note.id)
-                                            }} 
+                                            }}
                                             aria-label="delete">
                                             <Delete/>
                                         </IconButton>
