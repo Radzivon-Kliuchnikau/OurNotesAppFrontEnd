@@ -5,15 +5,14 @@ import {
     CardActions,
     CardContent,
     Dialog, DialogActions, DialogContent, DialogTitle, FormLabel,
-    IconButton, styled, TextField,
+    IconButton, styled,
     Typography
 } from "@mui/material";
 import axios from "../api/axios.tsx";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import MainContainer from "../components/common/MainContainer.tsx";
 import {Add, Delete} from "@mui/icons-material";
 import NoteObject from "../interfaces/NoteObject.tsx";
-import {Link} from "react-router-dom";
 import API_URL from "../utils/Constants.tsx";
 import LoadingBox from "../components/common/LoadingBox.tsx";
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
@@ -27,7 +26,7 @@ const RemoveNoteDialog = styled(Dialog)(({theme}) => ({
     }
 }))
 
-const EditNoteDialog = styled(Dialog)(({theme}) => ({
+const NoteDialog = styled(Dialog)(({theme}) => ({
     "& .MuiDialog-paper": {
         height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
         width: "1000px",
@@ -60,25 +59,66 @@ const Notes = () => {
     const [noteContent, setNoteContent] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const [openRemoveModal, setOpenRemoveModal] = useState(false);
-    const [openEditModal, setOpenEditModal] = useState(false);
+    const [openEditNoteModal, setOpenEditNoteModal] = useState(false);
+    const [openCreateNoteModal, setOpenCreateNoteModal] = useState(false);
     const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
     const [selectedNote, setSelectedNote] = useState<NoteObject | null>(null);
 
+    const errorRef: any = useRef();
+
+    const handleOpenCreateModal = () => {
+        setOpenCreateNoteModal(true);
+    }
+    
+    const handleCloseCreateModal = () => {
+        setOpenCreateNoteModal(false);
+    }
+
+    const handleCreateNote = async () => {
+        try {
+            const response = await axios.post(
+                `${API_URL.NOTES_URL}`,
+                JSON.stringify({title: noteTitle, content: noteContent}),
+                {
+                    headers: {"Content-Type": "application/json"}
+                }
+            );
+            const newNote = response.data;
+            setData((prevData) => [...prevData, newNote]);
+            setNoteTitle("");
+            setNoteContent("");
+        } catch (error: any) {
+            if (!error.response) {
+                setErrorMessage("No Server Response")
+            } else if (error.response?.status === 400) {
+                setErrorMessage("Missing note title or content ")
+            } else if (error.response?.status === 401) {
+                setErrorMessage("Unauthorized")
+            } else {
+                setErrorMessage("Note creation failed");
+            }
+            setError(true);
+            errorRef.current.focus();
+        } finally {
+            handleCloseCreateModal();
+        }
+
+    }
+    
     const handleOpenEditModal = (note: NoteObject) => {
-        if (openRemoveModal) return;
         setSelectedNote(note);
         setNoteTitle(note.title);
         setNoteContent(note.content);
-        setOpenEditModal(true);
+        setOpenEditNoteModal(true);
     }
 
     const handleCloseEditModal = () => {
-        setOpenEditModal(false);
+        setOpenEditNoteModal(false);
         setSelectedNote(null);
         setNoteTitle("");
         setNoteContent("");
     }
-
+    
     const handleEditNote = async () => {
         if (!selectedNote) return;
 
@@ -208,16 +248,16 @@ const Notes = () => {
                     >Delete</StyledButton>
                 </DialogActions>
             </RemoveNoteDialog>
-            <EditNoteDialog open={openEditModal} onClose={handleCloseEditModal}>
+            <NoteDialog open={openEditNoteModal} onClose={handleCloseEditModal}>
                 <DialogTitle>Edit your note</DialogTitle>
                 <DialogContent>
-                    <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
+                    <FormLabel htmlFor="noteTitle" sx={{display: "flex"}}>
                         <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note title</Typography>
                     </FormLabel>
                     <TextFieldCustom
                         value={noteTitle}
                         type="text"
-                        id="useremail"
+                        id="noteTitle"
                         autoComplete="off"
                         onChange={(event) => setNoteTitle(event.target.value)}
                         required
@@ -258,7 +298,58 @@ const Notes = () => {
                         }}
                     >Save</StyledButton>
                 </DialogActions>
-            </EditNoteDialog>
+            </NoteDialog>
+            <NoteDialog open={openCreateNoteModal} onClose={handleCloseCreateModal}>
+                <DialogTitle>Create a new note</DialogTitle>
+                <DialogContent>
+                    <FormLabel htmlFor="noteTitle" sx={{display: "flex"}}>
+                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note title</Typography>
+                    </FormLabel>
+                    <TextFieldCustom
+                        value={noteTitle}
+                        type="text"
+                        id="noteTitle"
+                        autoComplete="off"
+                        onChange={(event) => setNoteTitle(event.target.value)}
+                        required
+                    />
+
+                    <FormLabel htmlFor="noteContent" sx={{display: "flex"}}>
+                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note content</Typography>
+                    </FormLabel>
+                    <TextFieldCustom
+                        id="noteContent"
+                        value={noteContent}
+                        onChange={(event) => setNoteContent(event.target.value)}
+                        sx={{}}
+                        type="text"
+                        multiline
+                        fullWidth
+                        rows={10}
+                        required
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <StyledButton
+                        onClick={handleCloseCreateModal}
+                        sx={{
+                            transition: "background-color 0.3s ease",
+                            "&:hover": {
+                                backgroundColor: "#cacfcb",
+                            },
+                        }}
+                    >Cancel</StyledButton>
+                    <StyledButton
+                        onClick={handleCreateNote}
+                        sx={{
+                            transition: "background-color 0.3s ease",
+                            "&:hover": {
+                                backgroundColor: "#16db65",
+                            },
+                        }}
+                    >Save</StyledButton>
+                </DialogActions>
+            </NoteDialog>
             {
                 loading ? (
                     <LoadingBox/>
@@ -271,8 +362,10 @@ const Notes = () => {
                     <Box sx={{padding: "20px", marginTop: "40px"}}>
                         <Box>
                             <Button
-                                component={Link}
-                                to="/createnote"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleOpenCreateModal()
+                                }}
                                 disableRipple
                                 startIcon={<Add/>}
                                 sx={{
