@@ -16,15 +16,8 @@ import NoteObject from "../interfaces/NoteObject.tsx";
 import API_URL from "../utils/Constants.tsx";
 import LoadingBox from "../components/common/LoadingBox.tsx";
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
-
-const RemoveNoteDialog = styled(Dialog)(({theme}) => ({
-    "& .MuiDialog-paper": {
-        width: "400px",
-        padding: theme.spacing(2),
-        borderRadius: "10px",
-        backgroundColor: "#f9f6f2"
-    }
-}))
+import NoteRemoveDialog from "../components/common/NoteRemoveDialog.tsx";
+import {createNote, deleteNote, editNote, getNotes} from "../api/notesApi.ts";
 
 const NoteDialog = styled(Dialog)(({theme}) => ({
     "& .MuiDialog-paper": {
@@ -76,14 +69,7 @@ const Notes = () => {
 
     const handleCreateNote = async () => {
         try {
-            const response = await axios.post(
-                `${API_URL.NOTES_URL}`,
-                JSON.stringify({title: noteTitle, content: noteContent}),
-                {
-                    headers: {"Content-Type": "application/json"}
-                }
-            );
-            const newNote = response.data;
+            const newNote = await createNote(noteTitle, noteContent);
             setData((prevData) => [...prevData, newNote]);
             setNoteTitle("");
             setNoteContent("");
@@ -123,13 +109,7 @@ const Notes = () => {
         if (!selectedNote) return;
 
         try {
-            const response = await axios.put(
-                `${API_URL.NOTES_URL}/${selectedNote.id}`,
-                JSON.stringify({title: noteTitle, content: noteContent}),
-                {
-                    headers: {"Content-Type": "application/json"},
-                }
-            )
+            await editNote(selectedNote.id, noteTitle, noteContent);
             const updatedData: NoteObject[] = data.map((item: NoteObject) =>
                 item.id === selectedNote.id ? {
                     ...item,
@@ -166,13 +146,7 @@ const Notes = () => {
         if (!selectedNoteId) return;
 
         try {
-            const response = await axios.delete(
-                `${API_URL.NOTES_URL}/${selectedNoteId}`,
-                {
-                    headers: {"Content-Type": "application/json"},
-                    withCredentials: true
-                }
-            )
+            await deleteNote(selectedNoteId);
             const updatedData = data.filter((note: NoteObject) => note.id !== selectedNoteId);
             setData([...updatedData]);
         } catch (error: any) {
@@ -193,14 +167,8 @@ const Notes = () => {
     const getAllNotes = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(
-                API_URL.NOTES_URL,
-                {
-                    headers: {"Content-Type": "application/json"},
-                    withCredentials: true
-                }
-            );
-            setData(response.data);
+            const notes = await getNotes();
+            setData(notes);
 
         } catch (error: any) {
             if (!error.response) {
@@ -223,31 +191,7 @@ const Notes = () => {
 
     return (
         <MainContainer>
-            <RemoveNoteDialog open={openRemoveModal} onClose={handleCloseRemoveModel}>
-                <DialogTitle>Are you sure?</DialogTitle>
-                <DialogContent>
-                    <Typography>Do you actually want to remove this note?</Typography>
-                </DialogContent>
-                <DialogActions>
-                    <StyledButton
-                        onClick={handleCloseRemoveModel}
-                        sx={{
-                            transition: "background-color 0.3s ease",
-                            "&:hover": {
-                                backgroundColor: "#cacfcb",
-                            }
-                        }}>Cancel</StyledButton>
-                    <StyledButton
-                        onClick={handleNoteDelete}
-                        sx={{
-                            transition: "background-color 0.3s ease",
-                            "&:hover": {
-                                backgroundColor: "#f53333",
-                            },
-                        }}
-                    >Delete</StyledButton>
-                </DialogActions>
-            </RemoveNoteDialog>
+            <NoteRemoveDialog open={openRemoveModal} onClose={handleCloseRemoveModel} onDelete={handleNoteDelete}/>
             <NoteDialog open={openEditNoteModal} onClose={handleCloseEditModal}>
                 <DialogTitle>Edit your note</DialogTitle>
                 <DialogContent>
