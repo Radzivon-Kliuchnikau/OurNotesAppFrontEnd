@@ -1,10 +1,11 @@
-import {Box, Button, Card, FormLabel, styled, TextField, Typography} from "@mui/material";
+import {Box, Button, Card, FormLabel, styled, Typography} from "@mui/material";
 import MainContainer from "../components/common/MainContainer.tsx";
 import axios from "../api/axios.tsx";
 import API_URL from "../utils/Constants.tsx";
 import {useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {ArrowBack} from "@mui/icons-material";
+import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
 
 const FormCard = styled(Card)(({theme}) => ({
     display: "flex",
@@ -15,25 +16,6 @@ const FormCard = styled(Card)(({theme}) => ({
     marginTop: "30px",
     width: "100%",
     border: "none",
-}))
-
-const TextFieldCustom = styled(TextField)(({theme}) => ({
-    "& .MuiOutlinedInput-root": { // Target the root container of the input
-        border: "1px solid black", // Custom border
-        borderRadius: "10px", // Custom border radius
-    },
-    "& .MuiOutlinedInput-notchedOutline": { // Target the outline specifically
-        border: "none", // Remove the default outline
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-        border: "1px solid black", // Optional: Add hover styles
-    },
-    "& .MuiOutlinedInput-input": {
-        padding: "10px", // Adjust padding if needed
-    },
-    width: "100%",
-    height: "50px",
-    marginBottom: "20px"
 }))
 
 const CreateNote = () => {
@@ -145,7 +127,7 @@ const CreateNote = () => {
                                         Create note
                                     </Button>
                                     <Button
-                                        startIcon={<ArrowBack />}
+                                        startIcon={<ArrowBack/>}
                                         disableRipple
                                         onClick={goBack}
                                         sx={{
