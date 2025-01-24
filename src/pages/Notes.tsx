@@ -8,12 +8,10 @@ import {
     IconButton, styled,
     Typography
 } from "@mui/material";
-import axios from "../api/axios.tsx";
 import {useEffect, useRef, useState} from "react";
 import MainContainer from "../components/common/MainContainer.tsx";
 import {Add, Delete} from "@mui/icons-material";
 import NoteObject from "../interfaces/NoteObject.tsx";
-import API_URL from "../utils/Constants.tsx";
 import LoadingBox from "../components/common/LoadingBox.tsx";
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
 import NoteRemoveDialog from "../components/common/NoteRemoveDialog.tsx";

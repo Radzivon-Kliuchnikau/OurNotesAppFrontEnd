@@ -7,7 +7,6 @@ export const getNotes = async (): Promise<NoteObject[]> => {
         API_URL.NOTES_URL,
         {
             headers: {"Content-Type": "application/json"},
-            withCredentials: true
         }
     );
     
@@ -43,7 +42,6 @@ export const deleteNote = async (id: string): Promise<void> => {
         `${API_URL.NOTES_URL}/${id}`,
         {
             headers: {"Content-Type": "application/json"},
-            withCredentials: true
         }
     )
     

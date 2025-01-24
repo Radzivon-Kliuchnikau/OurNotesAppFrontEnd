@@ -1,4 +1,4 @@
-import {Box, Button, Card, FormLabel, styled, TextField, Typography} from "@mui/material";
+import {Box, Button, Card, FormLabel, styled, Typography} from "@mui/material";
 import MainContainer from "../components/common/MainContainer.tsx";
 import axios from "../api/axios.tsx";
 import API_URL from "../utils/Constants.tsx";
@@ -127,7 +127,7 @@ const CreateNote = () => {
                                         Create note
                                     </Button>
                                     <Button
-                                        startIcon={<ArrowBack />}
+                                        startIcon={<ArrowBack/>}
                                         disableRipple
                                         onClick={goBack}
                                         sx={{
