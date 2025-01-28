@@ -4,17 +4,16 @@ import {
     Card,
     FormLabel,
     styled,
-    TextField,
     Typography
 } from "@mui/material";
 import {useEffect, useRef, useState} from "react";
 // @ts-ignore
 import Link from "@mui/material/Link";
-import axios from "../api/axios.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
-import API_URL from "../utils/Constants.tsx";
 import useAuth from "../hooks/UseAuth.tsx";
 import MainContainer from "../components/common/MainContainer.tsx";
+import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
+import {login} from "../api/authApi.ts";
 
 const FormCard = styled(Card)(({theme}) => ({
     display: "flex",
@@ -32,25 +31,6 @@ const FormCard = styled(Card)(({theme}) => ({
         padding: "0px 40px 40px 40px",
         marginTop: "50px"
     }
-}))
-
-const TextFieldCustom = styled(TextField)(({theme}) => ({
-    "& .MuiOutlinedInput-root": { // Target the root container of the input
-        border: "1px solid black", // Custom border
-        borderRadius: "10px", // Custom border radius
-    },
-    "& .MuiOutlinedInput-notchedOutline": { // Target the outline specifically
-        border: "none", // Remove the default outline
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-        border: "1px solid black", // Optional: Add hover styles
-    },
-    "& .MuiOutlinedInput-input": {
-        padding: "10px", // Adjust padding if needed
-    },
-    width: "320px",
-    height: "50px",
-    marginBottom: "20px"
 }))
 
 const Login = () => {
@@ -79,13 +59,7 @@ const Login = () => {
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         try {
-            const response = await axios.post(
-                `${API_URL.LOGIN_URL}${API_URL.USE_SESSION_COOKIES}`,
-                JSON.stringify({email: userEmail, password}),
-                {
-                    headers: {"Content-Type": "application/json"}
-                }
-            );
+            await login(userEmail, password)
 
             setAuthUser({Email: userEmail, Name: userEmail});
             setUserEmail("");
