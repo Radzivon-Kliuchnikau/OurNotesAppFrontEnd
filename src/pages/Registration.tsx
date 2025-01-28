@@ -1,10 +1,10 @@
 import {useRef, useState, useEffect} from "react";
-import axios from "../api/axios";
-import {Box, Button, Card, FormLabel, styled, TextField, Typography} from "@mui/material";
+import {Box, Button, Card, FormLabel, styled, Typography} from "@mui/material";
 import {Close, Done, Info} from "@mui/icons-material";
 import Link from '@mui/material/Link';
 import MainContainer from "../components/common/MainContainer.tsx";
-import API_URL from "../utils/Constants.tsx";
+import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
+import {registration} from "../api/authApi.ts";
 
 
 const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
@@ -26,25 +26,6 @@ const FormCard = styled(Card)(({theme}) => ({
         padding: "0px 40px 10px 40px",
         marginTop: "30px"
     }
-}))
-
-const TextFieldCustom = styled(TextField)(({theme}) => ({
-    "& .MuiOutlinedInput-root": { // Target the root container of the input
-        border: "1px solid black", // Custom border
-        borderRadius: "10px", // Custom border radius
-    },
-    "& .MuiOutlinedInput-notchedOutline": { // Target the outline specifically
-        border: "none", // Remove the default outline
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-        border: "1px solid black", // Optional: Add hover styles
-    },
-    "& .MuiOutlinedInput-input": {
-        padding: "10px", // Adjust padding if needed
-    },
-    width: "320px",
-    height: "50px",
-    marginBottom: "15px"
 }))
 
 const Registration = () => {
@@ -107,17 +88,8 @@ const Registration = () => {
             return;
         }
         try {
-            const response = await axios.post(
-                API_URL.REGISTER_URL,
-                JSON.stringify({userName: userName, email: userEmail, password}),
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                }
-            ) // TODO: backend expecting email. Change REGEX for valid email validation
-            console.log(response.data);
-            console.log(JSON.stringify(response));
+            await registration(userName, userEmail, password);
+            
             setSuccess(true);
             // clear input fields
         } catch (error: any) {
