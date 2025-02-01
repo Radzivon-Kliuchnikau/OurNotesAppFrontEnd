@@ -5,6 +5,7 @@ import Link from '@mui/material/Link';
 import MainContainer from "../components/common/MainContainer.tsx";
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
 import {registration} from "../api/authApi.ts";
+import {FieldValues, useForm} from "react-hook-form";
 
 
 const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
@@ -32,24 +33,32 @@ const Registration = () => {
     const userNameRef: any = useRef();
     const errorRef: any = useRef();
 
-    const [userName, setUserName] = useState("");
-    const [validUserName, setValidUserName] = useState(false);
-    const [userNameFocus, setUserNameFocus] = useState(false);
+    const {
+        register,
+        handleSubmit,
+        formState: {errors, isSubmitting},
+        reset,
+        getValues
+    } = useForm();
 
-    const [userEmail, setUserEmail] = useState("");
-    const [validEmail, setValidEmail] = useState(false);
-    const [emailFocus, setEmailFocus] = useState(false);
-
-    const [password, setPassword] = useState("");
-    const [validPassword, setValidPassword] = useState(false);
-    const [passwordFocus, setPasswordFocus] = useState(false);
-
-    const [matchPassword, setMatchPassword] = useState("");
-    const [validMatch, setValidMatch] = useState(false);
-    const [matchFocus, setMatchFocus] = useState(false);
-
-    const [errorMessage, setErrorMessage] = useState("");
-    const [success, setSuccess] = useState(false);
+    // const [userName, setUserName] = useState("");
+    // const [validUserName, setValidUserName] = useState(false);
+    // const [userNameFocus, setUserNameFocus] = useState(false);
+    //
+    // const [userEmail, setUserEmail] = useState("");
+    // const [validEmail, setValidEmail] = useState(false);
+    // const [emailFocus, setEmailFocus] = useState(false);
+    //
+    // const [password, setPassword] = useState("");
+    // const [validPassword, setValidPassword] = useState(false);
+    // const [passwordFocus, setPasswordFocus] = useState(false);
+    //
+    // const [matchPassword, setMatchPassword] = useState("");
+    // const [validMatch, setValidMatch] = useState(false);
+    // const [matchFocus, setMatchFocus] = useState(false);
+    //
+    // const [errorMessage, setErrorMessage] = useState("");
+    // const [success, setSuccess] = useState(false);
 
     useEffect(() => {
         userNameRef.current.focus();
@@ -77,10 +86,9 @@ const Registration = () => {
         setErrorMessage("");
     }, [userEmail, userName, password, matchPassword]);
 
-    const handleSubmit = async (event: any) => {
-        event.preventDefault();
+    const onSubmit = async (data: FieldValues) => {
 
-        const v1 = EMAIL_REGEX.test(userEmail);
+        const v1 = EMAIL_REGEX.test(data.userEmail);
         const v2 = PWA_REGEX.test(password);
 
         if (!v1 || !v2) {
@@ -89,7 +97,7 @@ const Registration = () => {
         }
         try {
             await registration(userName, userEmail, password);
-            
+
             setSuccess(true);
             // clear input fields
         } catch (error: any) {
@@ -101,6 +109,8 @@ const Registration = () => {
                 setErrorMessage("Registration failed");
             }
             errorRef.current.focus();
+        } finally {
+            reset();
         }
     }
 
@@ -139,16 +149,16 @@ const Registration = () => {
                                     noWrap
                                     component="a"
                                     href="/">
-                                    <img src="../public/static/logo.svg" alt="Logo" />
+                                    <img src="../public/static/logo.svg" alt="Logo"/>
                                 </Typography>
                             </Box>
                             <Typography component="h1" variant="h5" sx={{marginBottom: "15px"}}>Sign up</Typography>
-                            <Box component="form" onSubmit={handleSubmit}
+                            <Box component="form" onSubmit={handleSubmit(onSubmit)}
                                  sx={{
                                      width: "400px",
-                                     display: "flex", 
-                                     flexDirection: "column" 
-                            }}>
+                                     display: "flex",
+                                     flexDirection: "column"
+                                 }}>
 
                                 <FormLabel htmlFor="username" sx={{display: "flex"}}>
                                     <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Name</Typography>
@@ -160,28 +170,32 @@ const Registration = () => {
                                     </Box>
                                 </FormLabel>
                                 <TextFieldCustom
+                                    {...register("username", {
+                                        required: "User name is required",
+                                        pattern: {
+                                            value: USERNAME_REGEX,
+                                            message: "Just type a valid name. Min 4 chars"
+                                        }
+                                    })}
                                     type="text"
                                     id="username"
                                     inputRef={userNameRef}
                                     autoComplete="off"
                                     placeholder="Jonny D"
-                                    onChange={(event) => setUserName(event.target.value)}
-                                    required
                                     aria-invalid={validUserName}
                                     aria-describedby="userNameDescription"
                                     onFocus={() => setUserNameFocus(true)}
                                     onBlur={() => setUserNameFocus(false)}
                                 />
-                                <Box id="userNameDescription"
+                                {errors.username && (<Box id="userNameDescription"
                                      sx={{
-                                         display: userNameFocus && userName && !validUserName ? "flex" : "none",
                                          marginTop: "-10px",
                                          marginBottom: "20px",
                                          alignItems: "center"
                                      }}>
                                     <Info/>
-                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Just type a valid name. Min 4 chars.</Typography>
-                                </Box>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>{`${errors.username.message}`}</Typography>
+                                </Box>)}
 
                                 <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
                                     <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Email</Typography>
@@ -193,27 +207,31 @@ const Registration = () => {
                                     </Box>
                                 </FormLabel>
                                 <TextFieldCustom
+                                    {...register("useremail", {
+                                        required: "Email is required",
+                                        pattern: {
+                                            value: EMAIL_REGEX,
+                                            message: "Just type a valid email"
+                                        }
+                                    })}
                                     type="email"
                                     id="useremail"
                                     autoComplete="off"
                                     placeholder="example@example.com"
-                                    onChange={(event) => setUserEmail(event.target.value)}
-                                    required
                                     aria-invalid={validEmail}
                                     aria-describedby="userNameDescription"
                                     onFocus={() => setEmailFocus(true)}
                                     onBlur={() => setEmailFocus(false)}
                                 />
-                                <Box id="userNameDescription"
+                                {errors.useremail && (<Box id="userNameDescription"
                                      sx={{
-                                         display: emailFocus && userEmail && !validEmail ? "flex" : "none",
                                          marginTop: "-10px",
                                          marginBottom: "20px",
                                          alignItems: "center"
                                      }}>
                                     <Info/>
-                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Just type a valid email.</Typography>
-                                </Box>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>{`${errors.useremail.message}`}</Typography>
+                                </Box>)}
 
                                 <FormLabel htmlFor="password" sx={{display: "flex"}}>
                                     <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Password</Typography>
@@ -225,38 +243,41 @@ const Registration = () => {
                                     </Box>
                                 </FormLabel>
                                 <TextFieldCustom
+                                    {...register("password", {
+                                        required: "Password is required",
+                                        pattern: {
+                                            value: PWA_REGEX,
+                                            message: `8 to 24 characters. <br/>
+                                                Must include uppercase and lowercase <br/> 
+                                                letters, a number and a special
+                                                character. <br/>
+                                                Allowed special characters: <span aria-label="exclamation mark">!</span><span
+                                                aria-label="at symbol">@</span><span aria-label="hashtag">#</span><span
+                                                aria-label="dollar sign">$</span><span aria-label="percent"></span>`
+                                        }
+                                    })}
                                     type="password"
                                     id="password"
-                                    onChange={(event) => setPassword(event.target.value)}
-                                    required
                                     placeholder="*********"
                                     aria-invalid={validPassword}
                                     aria-describedby="passwordDescription"
                                     onFocus={() => setPasswordFocus(true)}
                                     onBlur={() => setPasswordFocus(false)}
                                 />
-                                <Box id="passwordDescription"
+                                {errors.password && (<Box id="passwordDescription"
                                      sx={{
-                                         display: passwordFocus && !validPassword ? "flex" : "none",
                                          marginTop: "-10px",
                                          marginBottom: "20px",
                                          alignItems: "center",
                                          textAlign: "left"
-                                }}>
+                                     }}>
                                     <Info/>
-                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>
-                                        8 to 24 characters. <br/>
-                                        Must include uppercase and lowercase <br/> 
-                                        letters, a number and a special
-                                        character. <br/>
-                                        Allowed special characters: <span aria-label="exclamation mark">!</span><span
-                                        aria-label="at symbol">@</span><span aria-label="hashtag">#</span><span
-                                        aria-label="dollar sign">$</span><span aria-label="percent"></span>
-                                    </Typography>
-                                </Box>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>{`${errors.password.message}`}</Typography>
+                                </Box>)}
 
                                 <FormLabel htmlFor="confirmPassword" sx={{display: "flex"}}>
-                                    <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Confirm Password</Typography>
+                                    <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Confirm
+                                        Password</Typography>
                                     <Box sx={{display: validMatch && matchPassword ? "block" : "none"}}>
                                         <Done/>
                                     </Box>
@@ -265,27 +286,27 @@ const Registration = () => {
                                     </Box>
                                 </FormLabel>
                                 <TextFieldCustom
+                                    {...register("confirmPassword", {
+                                        required: "Confirm password required"
+                                    })}
                                     type="password"
                                     id="confirmPassword"
-                                    onChange={(event) => setMatchPassword(event.target.value)}
-                                    required
                                     placeholder="*********"
                                     aria-invalid={validMatch}
                                     aria-describedby="confirmPasswordDescription"
                                     onFocus={() => setMatchFocus(true)}
                                     onBlur={() => setMatchFocus(false)}
                                 />
-                                <Box id="confirmPasswordDescription"
+                                {errors.confirmPassword && (<Box id="confirmPasswordDescription"
                                      sx={{
-                                         display: matchFocus && !validMatch ? "flex" : "none",
                                          marginTop: "-10px",
                                          marginBottom: "20px",
                                          alignItems: "center",
                                          textAlign: "left"
-                                }}>
+                                     }}>
                                     <Info/>
-                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Must match the first password input field.</Typography>
-                                </Box>
+                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>{`${errors.confirmPassword.message}`}</Typography>
+                                </Box>)}
 
                                 <Button
                                     type="submit"
@@ -303,7 +324,7 @@ const Registration = () => {
                                         marginBottom: "30px",
                                         marginTop: "20px"
                                     }}
-                                    >
+                                >
                                     Sign up
                                 </Button>
                             </Box>
