@@ -16,7 +16,7 @@ const TextFieldCustom = styled(TextField)(({theme}) => ({
     },
     width: "100%",
     height: "50px",
-    marginBottom: "20px"
+    marginBottom: "30px"
 }))
 
 export default TextFieldCustom;
