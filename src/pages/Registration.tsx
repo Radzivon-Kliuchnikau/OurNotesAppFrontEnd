@@ -1,4 +1,4 @@
-import {useRef, useEffect} from "react";
+import {useRef, useEffect, useState} from "react";
 import {Box, Button, Card, Container, FormLabel, styled, Typography} from "@mui/material";
 import {Close, Done, Info} from "@mui/icons-material";
 import Link from '@mui/material/Link';
@@ -7,7 +7,7 @@ import {registration} from "../api/authApi.ts";
 import {FieldValues, useForm} from "react-hook-form";
 
 
-const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
+const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_ ]{3,23}$/;
 const PWA_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -32,19 +32,22 @@ type FormInputs = {
     username: string,
     useremail: string,
     password: string,
-    confirmPassword: string
+    confirmPassword: string,
+    serverResponse: string
 }
 
 const Registration = () => {
+    const [success, setSuccess] = useState(false);
     const errorRef: any = useRef();
 
     const {
         register,
         handleSubmit,
-        formState: {errors, isSubmitting},
+        formState: {errors, isSubmitting, isValid},
         reset,
         getValues,
         setFocus,
+        setError
     } = useForm<FormInputs>({mode: "onChange"});
 
     useEffect(() => {
@@ -52,37 +55,39 @@ const Registration = () => {
     }, [])
 
     const onSubmit = async (data: FieldValues) => {
-
-        const v1 = EMAIL_REGEX.test(data.userEmail);
-        const v2 = PWA_REGEX.test(data.password);
-
-        // if (!v1 || !v2) {
-        //     setErrorMessage("Invalid Input");
-        //     return;
-        // }
         try {
-            await registration(data.userName, data.userEmail, data.password);
-
-            // setSuccess(true);
-            // clear input fields
+            await registration(data.username, data.useremail, data.password);
+            setSuccess(true);
+            reset();
         } catch (error: any) {
             if (!error?.response) {
-                // setErrorMessage("No server response");
-            } else if (error.response?.status === 409) {
-                // setErrorMessage("User name taken");
+                setError("serverResponse",{
+                    type: "server",
+                    message: "No answer from the server"
+                });
+            } else if (error.response.data) {
+                Object.entries(error.response.data).forEach(([field, messages]) => {
+                    if(Array.isArray(messages)) {
+                        setError("serverResponse",{
+                            type: "server",
+                            message: messages.join(" ")
+                        });
+                    }
+                })
             } else {
-                // setErrorMessage("Registration failed");
+                setError("serverResponse",{
+                    type: "server",
+                    message: "Registration failed. Please try again"
+                });
             }
             errorRef.current.focus();
-        } finally {
-            reset();
         }
     }
 
     return (
         <>
             {
-                false ? (
+                success ? (
                     <Box
                         sx={{
                             display: "flex",
@@ -105,13 +110,13 @@ const Registration = () => {
                         justifyContent: "center"
                     }}>
                         <FormCard variant="outlined">
-                            {/*<Typography*/}
-                            {/*    ref={errorRef}*/}
-                            {/*    aria-live="assertive"*/}
-                            {/*    sx={{display: errorMessage ? "block" : "none"}}*/}
-                            {/*>*/}
-                            {/*    {errorMessage}*/}
-                            {/*</Typography>*/}
+                            <Typography
+                                ref={errorRef}
+                                aria-live="assertive"
+                                sx={{display: errors.serverResponse ? "block" : "none"}}
+                            >
+                                {errors.serverResponse?.message}
+                            </Typography>
                             <Box sx={{marginTop: "20px", marginBottom: "10px"}}>
                                 <Typography
                                     variant="h6"
@@ -281,7 +286,7 @@ const Registration = () => {
 
                                 <Button
                                     type="submit"
-                                    // disabled={!validEmail || !validUserName || !validPassword || !validMatch}
+                                    disabled={!isValid || isSubmitting}
                                     disableRipple
                                     sx={{
                                         width: "100%",
