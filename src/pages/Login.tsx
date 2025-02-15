@@ -1,9 +1,7 @@
 import {
     Box,
-    Button,
-    Card,
+    Button, Container,
     FormLabel,
-    styled,
     Typography
 } from "@mui/material";
 import {useEffect, useRef, useState} from "react";
@@ -11,46 +9,39 @@ import {useEffect, useRef, useState} from "react";
 import Link from "@mui/material/Link";
 import {useLocation, useNavigate} from "react-router-dom";
 import useAuth from "../hooks/UseAuth.tsx";
-import MainContainer from "../components/common/MainContainer.tsx";
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
 import {login} from "../api/authApi.ts";
+import FormCard from "../components/common/FormCard.tsx";
+import {useForm} from "react-hook-form";
 
-const FormCard = styled(Card)(({theme}) => ({
-    display: "flex",
-    boxShadow: "none", // Removes the default shadow
-    flexDirection: "column",
-    alignSelf: "center",
-    textAlign: "center",
-    width: "320px",
-    padding: "40px",
-    marginTop: "130px",
-    border: "1px solid black",
-    borderRadius: "10px",
-    [theme.breakpoints.down("sm")]: {
-        border: "none",
-        padding: "0px 40px 40px 40px",
-        marginTop: "50px"
-    }
-}))
+type FormInputs = {
+    username: string,
+    password: string,
+}
 
 const Login = () => {
+    const {
+        register, 
+        formState: {isValid, isSubmitting}, 
+        setFocus,
+        setError
+    } = useForm<FormInputs>();
+
+    useEffect(() => {
+        setFocus("username");
+    }, [])
+    
     const {setAuthUser} = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
 
-    const userEmailRef = useRef();
     const errorRef: any = useRef();
 
     const [userEmail, setUserEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-
-    useEffect(() => {
-        // @ts-ignore
-        userEmailRef.current.focus();
-    }, [])
 
     useEffect(() => {
         setErrorMessage("");
@@ -80,8 +71,12 @@ const Login = () => {
     }
 
     return (
-        <MainContainer>
-            <FormCard variant="outlined">
+        <Container sx={{
+            minHeight: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+            display: "flex",
+            justifyContent: "center"
+        }}>
+            <FormCard>
                 <Typography ref={errorRef} aria-live="assertive"
                             sx={{display: errorMessage ? "block" : "none"}}>
                     {errorMessage}
@@ -103,36 +98,35 @@ const Login = () => {
                          flexDirection: "column",
                 }}>
 
-                    <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
+                    <FormLabel htmlFor="username" sx={{display: "flex"}}>
                         <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Username or email address</Typography>
                     </FormLabel>
                     <TextFieldCustom
+                        {...register("username", {
+                            required: "User name or email is required",
+                        })}
                         type="text"
-                        id="useremail"
-                        inputRef={userEmailRef}
+                        id="username"
                         autoComplete="off"
-                        onChange={(event) => setUserEmail(event.target.value)}
-                        value={userEmail}
-                        required
                     />
 
                     <FormLabel htmlFor="userPassword" sx={{display: "flex"}}>
                         <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Password</Typography>
                     </FormLabel>
                     <TextFieldCustom
+                        {...register("password", {
+                            required: "Password is required"
+                        })}
                         type="password"
                         id="userPassword"
-                        onChange={(event) => setPassword(event.target.value)}
-                        value={password}
-                        required
                     />
 
                     <Button
                         type="submit"
-                        disabled={userEmail == "" || password == ""}
+                        disabled={!isValid || isSubmitting}
                         disableRipple
                         sx={{
-                            width: "320px",
+                            width: "100%",
                             height: "50px",
                             border: "1px solid black",
                             borderRadius: "10px",
@@ -156,7 +150,7 @@ const Login = () => {
                     </Link>
                 </Typography>
             </FormCard>
-        </MainContainer>
+        </Container>
     )
 };
 

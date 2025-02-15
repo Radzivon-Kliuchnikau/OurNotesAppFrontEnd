@@ -1,32 +1,15 @@
 import {useRef, useEffect, useState} from "react";
-import {Box, Button, Card, Container, FormLabel, styled, Typography} from "@mui/material";
+import {Box, Button, Container, FormLabel, Typography} from "@mui/material";
 import {Close, Done, Info} from "@mui/icons-material";
 import Link from '@mui/material/Link';
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
 import {registration} from "../api/authApi.ts";
 import {FieldValues, useForm} from "react-hook-form";
-
+import FormCard from "../components/common/FormCard.tsx";
 
 const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_ ]{3,23}$/;
 const PWA_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-
-const FormCard = styled(Card)(({theme}) => ({
-    display: "flex",
-    flexDirection: "column",
-    alignSelf: "center",
-    textAlign: "center",
-    width: "420px",
-    padding: "10px 40px 10px 40px",
-    marginTop: "70px",
-    border: "1px solid black",
-    borderRadius: "10px",
-    [theme.breakpoints.down("sm")]: {
-        border: "none",
-        padding: "0px 40px 10px 40px",
-        marginTop: "30px"
-    }
-}))
 
 type FormInputs = {
     username: string,
@@ -109,7 +92,7 @@ const Registration = () => {
                         display: "flex",
                         justifyContent: "center"
                     }}>
-                        <FormCard variant="outlined">
+                        <FormCard>
                             <Typography
                                 ref={errorRef}
                                 aria-live="assertive"
