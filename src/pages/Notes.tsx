@@ -3,41 +3,17 @@ import {
     Button,
     Card,
     CardActions,
-    CardContent,
-    Dialog, DialogActions, DialogContent, DialogTitle, FormLabel,
-    IconButton, styled,
+    CardContent, Container,
+    IconButton,
     Typography
 } from "@mui/material";
 import {useEffect, useRef, useState} from "react";
-import MainContainer from "../components/common/MainContainer.tsx";
 import {Add, Delete} from "@mui/icons-material";
 import NoteObject from "../interfaces/NoteObject.tsx";
 import LoadingBox from "../components/common/LoadingBox.tsx";
-import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
 import NoteRemoveDialog from "../components/common/NoteRemoveDialog.tsx";
 import {createNote, deleteNote, editNote, getNotes} from "../api/notesApi.ts";
-
-const NoteDialog = styled(Dialog)(({theme}) => ({
-    "& .MuiDialog-paper": {
-        height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-        width: "1000px",
-        padding: theme.spacing(2),
-        borderRadius: "10px",
-        backgroundColor: "#f9f6f2"
-    }
-}))
-
-const StyledButton = styled(Button)(({theme}) => ({
-    width: "120px",
-    height: "40px",
-    borderRadius: "10px",
-    textTransform: "none",
-    fontSize: "16px",
-    fontWeight: "500",
-    border: "1px solid black",
-    color: "black",
-
-}))
+import NoteDialog from "../components/common/NoteDialog.tsx";
 
 const Notes = () => {
     const maxHeaderLength = 30;
@@ -46,8 +22,6 @@ const Notes = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [error, setError] = useState(false);
     const [data, setData] = useState<NoteObject[] | []>([]);
-    const [noteTitle, setNoteTitle] = useState<string>("");
-    const [noteContent, setNoteContent] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const [openRemoveModal, setOpenRemoveModal] = useState(false);
     const [openEditNoteModal, setOpenEditNoteModal] = useState(false);
@@ -65,12 +39,10 @@ const Notes = () => {
         setOpenCreateNoteModal(false);
     }
 
-    const handleCreateNote = async () => {
+    const handleCreateNote = async (title: string, content: string) => {
         try {
-            const newNote = await createNote(noteTitle, noteContent);
+            const newNote = await createNote(title, content);
             setData((prevData) => [...prevData, newNote]);
-            setNoteTitle("");
-            setNoteContent("");
         } catch (error: any) {
             if (!error.response) {
                 setErrorMessage("No Server Response")
@@ -91,28 +63,24 @@ const Notes = () => {
     
     const handleOpenEditModal = (note: NoteObject) => {
         setSelectedNote(note);
-        setNoteTitle(note.title);
-        setNoteContent(note.content);
         setOpenEditNoteModal(true);
     }
 
     const handleCloseEditModal = () => {
         setOpenEditNoteModal(false);
         setSelectedNote(null);
-        setNoteTitle("");
-        setNoteContent("");
     }
     
-    const handleEditNote = async () => {
+    const handleEditNote = async (title: string, content: string) => {
         if (!selectedNote) return;
 
         try {
-            await editNote(selectedNote.id, noteTitle, noteContent);
+            await editNote(selectedNote.id, title, content);
             const updatedData: NoteObject[] = data.map((item: NoteObject) =>
                 item.id === selectedNote.id ? {
                     ...item,
-                    title: noteTitle,
-                    content: noteContent
+                    title: title,
+                    content: content
                 } : item)
             setData(updatedData);
         } catch (error: any) {
@@ -188,110 +156,25 @@ const Notes = () => {
     }, [])
 
     return (
-        <MainContainer>
+        <Container sx={{
+            minHeight: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+            display: "flex",
+            justifyContent: "center"
+        }}>
             <NoteRemoveDialog open={openRemoveModal} onClose={handleCloseRemoveModel} onDelete={handleNoteDelete}/>
-            <NoteDialog open={openEditNoteModal} onClose={handleCloseEditModal}>
-                <DialogTitle>Edit your note</DialogTitle>
-                <DialogContent>
-                    <FormLabel htmlFor="noteTitle" sx={{display: "flex"}}>
-                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note title</Typography>
-                    </FormLabel>
-                    <TextFieldCustom
-                        value={noteTitle}
-                        type="text"
-                        id="noteTitle"
-                        autoComplete="off"
-                        onChange={(event) => setNoteTitle(event.target.value)}
-                        required
-                    />
-
-                    <FormLabel htmlFor="noteContent" sx={{display: "flex"}}>
-                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note content</Typography>
-                    </FormLabel>
-                    <TextFieldCustom
-                        id="noteContent"
-                        value={noteContent}
-                        onChange={(event) => setNoteContent(event.target.value)}
-                        sx={{}}
-                        type="text"
-                        multiline
-                        fullWidth
-                        rows={10}
-                        required
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <StyledButton
-                        onClick={handleCloseEditModal}
-                        sx={{
-                            transition: "background-color 0.3s ease",
-                            "&:hover": {
-                                backgroundColor: "#cacfcb",
-                            },
-                        }}
-                    >Cancel</StyledButton>
-                    <StyledButton
-                        onClick={handleEditNote}
-                        sx={{
-                            transition: "background-color 0.3s ease",
-                            "&:hover": {
-                                backgroundColor: "#16db65",
-                            },
-                        }}
-                    >Save</StyledButton>
-                </DialogActions>
-            </NoteDialog>
-            <NoteDialog open={openCreateNoteModal} onClose={handleCloseCreateModal}>
-                <DialogTitle>Create a new note</DialogTitle>
-                <DialogContent>
-                    <FormLabel htmlFor="noteTitle" sx={{display: "flex"}}>
-                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note title</Typography>
-                    </FormLabel>
-                    <TextFieldCustom
-                        value={noteTitle}
-                        type="text"
-                        id="noteTitle"
-                        autoComplete="off"
-                        onChange={(event) => setNoteTitle(event.target.value)}
-                        required
-                    />
-
-                    <FormLabel htmlFor="noteContent" sx={{display: "flex"}}>
-                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note content</Typography>
-                    </FormLabel>
-                    <TextFieldCustom
-                        id="noteContent"
-                        value={noteContent}
-                        onChange={(event) => setNoteContent(event.target.value)}
-                        sx={{}}
-                        type="text"
-                        multiline
-                        fullWidth
-                        rows={10}
-                        required
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <StyledButton
-                        onClick={handleCloseCreateModal}
-                        sx={{
-                            transition: "background-color 0.3s ease",
-                            "&:hover": {
-                                backgroundColor: "#cacfcb",
-                            },
-                        }}
-                    >Cancel</StyledButton>
-                    <StyledButton
-                        onClick={handleCreateNote}
-                        sx={{
-                            transition: "background-color 0.3s ease",
-                            "&:hover": {
-                                backgroundColor: "#16db65",
-                            },
-                        }}
-                    >Save</StyledButton>
-                </DialogActions>
-            </NoteDialog>
+            <NoteDialog
+                open={openCreateNoteModal}
+                onClose={handleCloseCreateModal}
+                dialogTitle="Create a new note"
+                onSave={(title, content) => handleCreateNote(title, content)}
+            />
+            <NoteDialog
+                open={openEditNoteModal}
+                onClose={handleCloseEditModal}
+                dialogTitle="Edit your note"
+                defaultValues={selectedNote ? {title: selectedNote.title, content: selectedNote.content} : undefined}
+                onSave={(title, content) => handleEditNote(title, content)}
+            />
             {
                 loading ? (
                     <LoadingBox/>
@@ -373,7 +256,7 @@ const Notes = () => {
                         </Box>
                     </Box>
                 )}
-        </MainContainer>
+        </Container>
     );
 };
 

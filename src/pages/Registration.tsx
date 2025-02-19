@@ -1,132 +1,67 @@
-import {useRef, useState, useEffect} from "react";
-import axios from "../api/axios";
-import {Box, Button, Card, FormLabel, styled, TextField, Typography} from "@mui/material";
+import {useRef, useEffect, useState} from "react";
+import {Box, Button, Container, FormLabel, Typography} from "@mui/material";
 import {Close, Done, Info} from "@mui/icons-material";
 import Link from '@mui/material/Link';
-import MainContainer from "../components/common/MainContainer.tsx";
-import API_URL from "../utils/Constants.tsx";
+import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
+import {registration} from "../api/authApi.ts";
+import {FieldValues, useForm} from "react-hook-form";
+import FormCard from "../components/common/FormCard.tsx";
 
-
-const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
+const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_ ]{3,23}$/;
 const PWA_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-const FormCard = styled(Card)(({theme}) => ({
-    display: "flex",
-    flexDirection: "column",
-    alignSelf: "center",
-    textAlign: "center",
-    width: "320px",
-    padding: "10px 40px 10px 40px",
-    marginTop: "70px",
-    border: "1px solid black",
-    borderRadius: "10px",
-    [theme.breakpoints.down("sm")]: {
-        border: "none",
-        padding: "0px 40px 10px 40px",
-        marginTop: "30px"
-    }
-}))
-
-const TextFieldCustom = styled(TextField)(({theme}) => ({
-    "& .MuiOutlinedInput-root": { // Target the root container of the input
-        border: "1px solid black", // Custom border
-        borderRadius: "10px", // Custom border radius
-    },
-    "& .MuiOutlinedInput-notchedOutline": { // Target the outline specifically
-        border: "none", // Remove the default outline
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-        border: "1px solid black", // Optional: Add hover styles
-    },
-    "& .MuiOutlinedInput-input": {
-        padding: "10px", // Adjust padding if needed
-    },
-    width: "320px",
-    height: "50px",
-    marginBottom: "15px"
-}))
+type FormInputs = {
+    username: string,
+    useremail: string,
+    password: string,
+    confirmPassword: string,
+    serverResponse: string
+}
 
 const Registration = () => {
-    const userNameRef: any = useRef();
+    const [success, setSuccess] = useState(false);
     const errorRef: any = useRef();
 
-    const [userName, setUserName] = useState("");
-    const [validUserName, setValidUserName] = useState(false);
-    const [userNameFocus, setUserNameFocus] = useState(false);
-
-    const [userEmail, setUserEmail] = useState("");
-    const [validEmail, setValidEmail] = useState(false);
-    const [emailFocus, setEmailFocus] = useState(false);
-
-    const [password, setPassword] = useState("");
-    const [validPassword, setValidPassword] = useState(false);
-    const [passwordFocus, setPasswordFocus] = useState(false);
-
-    const [matchPassword, setMatchPassword] = useState("");
-    const [validMatch, setValidMatch] = useState(false);
-    const [matchFocus, setMatchFocus] = useState(false);
-
-    const [errorMessage, setErrorMessage] = useState("");
-    const [success, setSuccess] = useState(false);
+    const {
+        register,
+        handleSubmit,
+        formState: {errors, isSubmitting, isValid},
+        reset,
+        getValues,
+        setFocus,
+        setError
+    } = useForm<FormInputs>({mode: "onChange"});
 
     useEffect(() => {
-        userNameRef.current.focus();
+        setFocus("username");
     }, [])
 
-    useEffect(() => {
-        const result = EMAIL_REGEX.test(userEmail);
-        setValidEmail(result);
-    }, [userEmail])
-
-    useEffect(() => {
-        const result = USERNAME_REGEX.test(userName);
-        setValidUserName(result);
-    }, [userName])
-
-    useEffect(() => {
-        const result = PWA_REGEX.test(password);
-        setValidPassword(result);
-        const match = password == matchPassword;
-        setValidMatch(match);
-
-    }, [password, matchPassword]);
-
-    useEffect(() => {
-        setErrorMessage("");
-    }, [userEmail, userName, password, matchPassword]);
-
-    const handleSubmit = async (event: any) => {
-        event.preventDefault();
-
-        const v1 = EMAIL_REGEX.test(userEmail);
-        const v2 = PWA_REGEX.test(password);
-
-        if (!v1 || !v2) {
-            setErrorMessage("Invalid Input");
-            return;
-        }
+    const onSubmit = async (data: FieldValues) => {
         try {
-            const response = await axios.post(
-                API_URL.REGISTER_URL,
-                JSON.stringify({userName: userName, email: userEmail, password}),
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                }
-            ) // TODO: backend expecting email. Change REGEX for valid email validation
-            console.log(response.data);
-            console.log(JSON.stringify(response));
+            await registration(data.username, data.useremail, data.password);
             setSuccess(true);
-            // clear input fields
+            reset();
         } catch (error: any) {
             if (!error?.response) {
-                setErrorMessage("No server response");
-            } else if (error.response?.status === 409) {
-                setErrorMessage("User name taken");
+                setError("serverResponse",{
+                    type: "server",
+                    message: "No answer from the server"
+                });
+            } else if (error.response.data) {
+                Object.entries(error.response.data).forEach(([field, messages]) => {
+                    if(Array.isArray(messages)) {
+                        setError("serverResponse",{
+                            type: "server",
+                            message: messages.join(" ")
+                        });
+                    }
+                })
             } else {
-                setErrorMessage("Registration failed");
+                setError("serverResponse",{
+                    type: "server",
+                    message: "Registration failed. Please try again"
+                });
             }
             errorRef.current.focus();
         }
@@ -152,14 +87,18 @@ const Registration = () => {
                         </Link>
                     </Box>
                 ) : (
-                    <MainContainer>
-                        <FormCard variant="outlined">
+                    <Container sx={{
+                        minHeight: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+                        display: "flex",
+                        justifyContent: "center"
+                    }}>
+                        <FormCard>
                             <Typography
                                 ref={errorRef}
                                 aria-live="assertive"
-                                sx={{display: errorMessage ? "block" : "none"}}
+                                sx={{display: errors.serverResponse ? "block" : "none"}}
                             >
-                                {errorMessage}
+                                {errors.serverResponse?.message}
                             </Typography>
                             <Box sx={{marginTop: "20px", marginBottom: "10px"}}>
                                 <Typography
@@ -167,160 +106,173 @@ const Registration = () => {
                                     noWrap
                                     component="a"
                                     href="/">
-                                    <img src="../public/static/logo.svg" alt="Logo" />
+                                    <img src="../public/static/logo.svg" alt="Logo"/>
                                 </Typography>
                             </Box>
                             <Typography component="h1" variant="h5" sx={{marginBottom: "15px"}}>Sign up</Typography>
-                            <Box component="form" onSubmit={handleSubmit}
+                            <Box component="form" onSubmit={handleSubmit(onSubmit)}
                                  sx={{
                                      width: "400px",
-                                     display: "flex", 
-                                     flexDirection: "column" 
-                            }}>
+                                     display: "flex",
+                                     flexDirection: "column"
+                                 }}>
 
                                 <FormLabel htmlFor="username" sx={{display: "flex"}}>
                                     <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Name</Typography>
-                                    <Box component="span" sx={{display: validUserName ? "block" : "none"}}>
+                                    <Box component="span"
+                                         sx={{display: getValues("username") && !errors.username ? "block" : "none"}}>
                                         <Done/>
                                     </Box>
-                                    <Box component="span" sx={{display: validUserName || !userName ? "none" : "block"}}>
+                                    <Box component="span" sx={{display: !errors.username ? "none" : "block"}}>
                                         <Close/>
                                     </Box>
                                 </FormLabel>
                                 <TextFieldCustom
+                                    {...register("username", {
+                                        required: "User name is required",
+                                        pattern: {
+                                            value: USERNAME_REGEX,
+                                            message: "Just type a valid name. Min 4 chars"
+                                        }
+                                    })}
                                     type="text"
                                     id="username"
-                                    inputRef={userNameRef}
                                     autoComplete="off"
                                     placeholder="Jonny D"
-                                    onChange={(event) => setUserName(event.target.value)}
-                                    required
-                                    aria-invalid={validUserName}
                                     aria-describedby="userNameDescription"
-                                    onFocus={() => setUserNameFocus(true)}
-                                    onBlur={() => setUserNameFocus(false)}
                                 />
                                 <Box id="userNameDescription"
                                      sx={{
-                                         display: userNameFocus && userName && !validUserName ? "flex" : "none",
-                                         marginTop: "-10px",
-                                         marginBottom: "20px",
+                                         display: errors.username ? "flex" : "none",
+                                         marginTop: "-30px",
+                                         marginBottom: "10px",
                                          alignItems: "center"
                                      }}>
-                                    <Info/>
-                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Just type a valid name. Min 4 chars.</Typography>
+                                    <Info sx={{fontSize: "12px"}}/>
+                                    <Typography sx={{
+                                        fontSize: "12px",
+                                        marginLeft: "5px"
+                                    }}>{`${errors.username?.message}`}</Typography>
                                 </Box>
 
                                 <FormLabel htmlFor="useremail" sx={{display: "flex"}}>
                                     <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Email</Typography>
-                                    <Box component="span" sx={{display: validEmail ? "block" : "none"}}>
+                                    <Box component="span"
+                                         sx={{display: getValues("useremail") && !errors.useremail ? "block" : "none"}}>
                                         <Done/>
                                     </Box>
-                                    <Box component="span" sx={{display: validEmail || !userEmail ? "none" : "block"}}>
+                                    <Box component="span" sx={{display: !errors.useremail ? "none" : "block"}}>
                                         <Close/>
                                     </Box>
                                 </FormLabel>
                                 <TextFieldCustom
+                                    {...register("useremail", {
+                                        required: "Email is required",
+                                        pattern: {
+                                            value: EMAIL_REGEX,
+                                            message: "Just type a valid email"
+                                        }
+                                    })}
                                     type="email"
                                     id="useremail"
                                     autoComplete="off"
                                     placeholder="example@example.com"
-                                    onChange={(event) => setUserEmail(event.target.value)}
-                                    required
-                                    aria-invalid={validEmail}
                                     aria-describedby="userNameDescription"
-                                    onFocus={() => setEmailFocus(true)}
-                                    onBlur={() => setEmailFocus(false)}
                                 />
                                 <Box id="userNameDescription"
                                      sx={{
-                                         display: emailFocus && userEmail && !validEmail ? "flex" : "none",
-                                         marginTop: "-10px",
-                                         marginBottom: "20px",
+                                         display: errors.useremail ? "flex" : "none",
+                                         marginTop: "-30px",
+                                         marginBottom: "10px",
                                          alignItems: "center"
                                      }}>
-                                    <Info/>
-                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Just type a valid email.</Typography>
+                                    <Info sx={{fontSize: "12px"}}/>
+                                    <Typography sx={{
+                                        fontSize: "12px",
+                                        marginLeft: "5px"
+                                    }}>{`${errors.useremail?.message}`}</Typography>
                                 </Box>
 
                                 <FormLabel htmlFor="password" sx={{display: "flex"}}>
                                     <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Password</Typography>
-                                    <Box component="span" sx={{display: validPassword ? "block" : "none"}}>
+                                    <Box component="span"
+                                         sx={{display: getValues("password") && !errors.password ? "block" : "none"}}>
                                         <Done/>
                                     </Box>
-                                    <Box component="span" sx={{display: validPassword || !password ? "none" : "block"}}>
+                                    <Box component="span" sx={{display: !errors.password ? "none" : "block"}}>
                                         <Close/>
                                     </Box>
                                 </FormLabel>
                                 <TextFieldCustom
+                                    {...register("password", {
+                                        required: "Password is required",
+                                        pattern: {
+                                            value: PWA_REGEX,
+                                            message: "8 to 24 characters. Must include uppercase and lowercase letters, a number and a special character"
+                                        }
+                                    })}
                                     type="password"
                                     id="password"
-                                    onChange={(event) => setPassword(event.target.value)}
-                                    required
                                     placeholder="*********"
-                                    aria-invalid={validPassword}
                                     aria-describedby="passwordDescription"
-                                    onFocus={() => setPasswordFocus(true)}
-                                    onBlur={() => setPasswordFocus(false)}
                                 />
                                 <Box id="passwordDescription"
                                      sx={{
-                                         display: passwordFocus && !validPassword ? "flex" : "none",
-                                         marginTop: "-10px",
-                                         marginBottom: "20px",
+                                         display: errors.password ? "flex" : "none",
+                                         marginTop: "-30px",
+                                         marginBottom: "10px",
                                          alignItems: "center",
                                          textAlign: "left"
-                                }}>
-                                    <Info/>
-                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>
-                                        8 to 24 characters. <br/>
-                                        Must include uppercase and lowercase <br/> 
-                                        letters, a number and a special
-                                        character. <br/>
-                                        Allowed special characters: <span aria-label="exclamation mark">!</span><span
-                                        aria-label="at symbol">@</span><span aria-label="hashtag">#</span><span
-                                        aria-label="dollar sign">$</span><span aria-label="percent"></span>
-                                    </Typography>
+                                     }}>
+                                    <Info sx={{fontSize: "12px"}}/>
+                                    <Typography sx={{
+                                        fontSize: "12px",
+                                        marginLeft: "5px"
+                                    }}>{`${errors.password?.message}`}</Typography>
                                 </Box>
 
                                 <FormLabel htmlFor="confirmPassword" sx={{display: "flex"}}>
-                                    <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Confirm Password</Typography>
-                                    <Box sx={{display: validMatch && matchPassword ? "block" : "none"}}>
+                                    <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Confirm
+                                        Password</Typography>
+                                    <Box
+                                        sx={{display: getValues("confirmPassword") && !errors.confirmPassword ? "block" : "none"}}>
                                         <Done/>
                                     </Box>
-                                    <Box sx={{display: validMatch || !matchPassword ? "none" : "block"}}>
+                                    <Box sx={{display: !errors.confirmPassword ? "none" : "block"}}>
                                         <Close/>
                                     </Box>
                                 </FormLabel>
                                 <TextFieldCustom
+                                    {...register("confirmPassword", {
+                                        required: "Confirm password required",
+                                        validate: (value) => value === getValues("password") || "Passwords must match"
+                                    })}
                                     type="password"
                                     id="confirmPassword"
-                                    onChange={(event) => setMatchPassword(event.target.value)}
-                                    required
                                     placeholder="*********"
-                                    aria-invalid={validMatch}
                                     aria-describedby="confirmPasswordDescription"
-                                    onFocus={() => setMatchFocus(true)}
-                                    onBlur={() => setMatchFocus(false)}
                                 />
                                 <Box id="confirmPasswordDescription"
                                      sx={{
-                                         display: matchFocus && !validMatch ? "flex" : "none",
-                                         marginTop: "-10px",
-                                         marginBottom: "20px",
+                                         display: errors.confirmPassword ? "flex" : "none",
+                                         marginTop: "-30px",
+                                         marginBottom: "10px",
                                          alignItems: "center",
                                          textAlign: "left"
-                                }}>
-                                    <Info/>
-                                    <Typography sx={{fontSize: "13px", marginLeft: "5px"}}>Must match the first password input field.</Typography>
+                                     }}>
+                                    <Info sx={{fontSize: "12px"}}/>
+                                    <Typography sx={{
+                                        fontSize: "12px",
+                                        marginLeft: "5px"
+                                    }}>{`${errors.confirmPassword?.message}`}</Typography>
                                 </Box>
 
                                 <Button
                                     type="submit"
-                                    disabled={!validEmail || !validUserName || !validPassword || !validMatch}
+                                    disabled={!isValid || isSubmitting}
                                     disableRipple
                                     sx={{
-                                        width: "320px",
+                                        width: "100%",
                                         height: "50px",
                                         border: "1px solid black",
                                         borderRadius: "10px",
@@ -329,9 +281,10 @@ const Registration = () => {
                                         textTransform: "none",
                                         fontSize: "20px",
                                         marginBottom: "30px",
-                                        marginTop: "20px"
+                                        marginTop: "20px",
+                                        alignContent: "center"
                                     }}
-                                    >
+                                >
                                     Sign up
                                 </Button>
                             </Box>
@@ -344,7 +297,7 @@ const Registration = () => {
                                 </Link>
                             </Typography>
                         </FormCard>
-                    </MainContainer>
+                    </Container>
                 )}
         </>
     )
