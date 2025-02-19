@@ -10,7 +10,7 @@ import {
     Typography
 } from "@mui/material";
 import TextFieldCustom from "./TextFieldCustom.tsx";
-import {useForm} from "react-hook-form";
+import {FieldValues, useForm} from "react-hook-form";
 import {useEffect} from "react";
 
 type FormInputs = {
@@ -44,7 +44,7 @@ interface NoteDialogProps {
     open: boolean;
     onClose: () => void;
     dialogTitle: string;
-    defaultValues?: { title: string; content: string };
+    defaultValues?: FormInputs;
     onSave: (title: string, content: string) => void;
 }
 
@@ -65,7 +65,7 @@ const NoteDialog: React.FC<NoteDialogProps> = ({open, onClose, dialogTitle, defa
         }
     }, [defaultValues, setValue])
 
-    const onSubmit = (data: { title: string; content: string }) => {
+    const onSubmit = (data: FieldValues) => {
         onSave(data.title, data.content);
         onClose();
     }
