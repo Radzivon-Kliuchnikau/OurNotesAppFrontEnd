@@ -1,5 +1,22 @@
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, styled, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormLabel,
+    styled,
+    Typography
+} from "@mui/material";
 import TextFieldCustom from "./TextFieldCustom.tsx";
+import {useForm} from "react-hook-form";
+import {useEffect} from "react";
+
+type FormInputs = {
+    title: string,
+    content: string,
+}
 
 const CustomNoteDialog = styled(Dialog)(({theme}) => ({
     "& .MuiDialog-paper": {
@@ -27,74 +44,91 @@ interface NoteDialogProps {
     open: boolean;
     onClose: () => void;
     dialogTitle: string;
-    noteTitle: string;
-    noteContent: string;
-    setNoteTitle: (value: string) => void;
-    setNoteContent: (value: string) => void;
-    onSave: () => void;
+    defaultValues?: { title: string; content: string };
+    onSave: (title: string, content: string) => void;
 }
 
-const NoteDialog: React.FC<NoteDialogProps> = ({
-   open,
-   onClose,
-   dialogTitle,
-   noteTitle,
-   noteContent,
-   setNoteTitle,
-   setNoteContent,
-   onSave,
-}) => {
+const NoteDialog: React.FC<NoteDialogProps> = ({open, onClose, dialogTitle, defaultValues, onSave}) => {
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: {errors},
+    } = useForm<FormInputs>({
+        defaultValues: defaultValues || {title: "", content: ""}
+    });
+
+    useEffect(() => {
+        if (defaultValues) {
+            setValue("title", defaultValues.title);
+            setValue("content", defaultValues.content);
+        }
+    }, [defaultValues, setValue])
+
+    const onSubmit = (data: { title: string; content: string }) => {
+        onSave(data.title, data.content);
+        onClose();
+    }
+
     return (
         <CustomNoteDialog open={open} onClose={onClose}>
-            <DialogTitle>{dialogTitle}</DialogTitle>
-            <DialogContent>
-                <FormLabel htmlFor="noteTitle" sx={{display: "flex"}}>
-                    <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note title</Typography>
-                </FormLabel>
-                <TextFieldCustom
-                    value={noteTitle}
-                    type="text"
-                    id="noteTitle"
-                    autoComplete="off"
-                    onChange={(event) => setNoteTitle(event.target.value)}
-                    required
-                />
+            <Box 
+                component="form" 
+                onSubmit={handleSubmit(onSubmit)}
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                }}
+            >
+                <DialogTitle>{dialogTitle}</DialogTitle>
+                <DialogContent>
+                    <FormLabel htmlFor="noteTitle" sx={{display: "flex"}}>
+                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note title</Typography>
+                    </FormLabel>
+                    <TextFieldCustom
+                        {...register("title", {
+                            required: "Hey, mate. Title is required!"
+                        })}
+                        type="text"
+                        id="noteTitle"
+                        autoComplete="off"
+                    />
+                    {errors.title && (
+                        <Typography sx={{color: "red", fontSize: "12px"}}>{errors.title.message}</Typography>
+                    )}
 
-                <FormLabel htmlFor="noteContent" sx={{display: "flex"}}>
-                    <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note content</Typography>
-                </FormLabel>
-                <TextFieldCustom
-                    id="noteContent"
-                    value={noteContent}
-                    onChange={(event) => setNoteContent(event.target.value)}
-                    sx={{}}
-                    type="text"
-                    multiline
-                    fullWidth
-                    rows={10}
-                    required
-                />
-            </DialogContent>
-            <DialogActions>
-                <StyledButton
-                    onClick={onClose}
-                    sx={{
-                        transition: "background-color 0.3s ease",
-                        "&:hover": {
-                            backgroundColor: "#cacfcb",
-                        },
-                    }}
-                >Cancel</StyledButton>
-                <StyledButton
-                    onClick={onSave}
-                    sx={{
-                        transition: "background-color 0.3s ease",
-                        "&:hover": {
-                            backgroundColor: "#16db65",
-                        },
-                    }}
-                >Save</StyledButton>
-            </DialogActions>
+                    <FormLabel htmlFor="noteContent" sx={{display: "flex"}}>
+                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note content</Typography>
+                    </FormLabel>
+                    <TextFieldCustom
+                        {...register("content")}
+                        id="noteContent"
+                        type="text"
+                        multiline
+                        fullWidth
+                        rows={10}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <StyledButton
+                        onClick={onClose}
+                        sx={{
+                            transition: "background-color 0.3s ease",
+                            "&:hover": {
+                                backgroundColor: "#cacfcb",
+                            },
+                        }}>Cancel</StyledButton>
+                    <StyledButton
+                        type="submit"
+                        sx={{
+                            transition: "background-color 0.3s ease",
+                            "&:hover": {
+                                backgroundColor: "#16db65",
+                            }
+                        }}>Save</StyledButton>
+                </DialogActions>
+            </Box>
         </CustomNoteDialog>
     );
 };

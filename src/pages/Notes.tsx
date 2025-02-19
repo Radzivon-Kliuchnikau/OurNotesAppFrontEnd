@@ -22,8 +22,6 @@ const Notes = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [error, setError] = useState(false);
     const [data, setData] = useState<NoteObject[] | []>([]);
-    const [noteTitle, setNoteTitle] = useState<string>("");
-    const [noteContent, setNoteContent] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const [openRemoveModal, setOpenRemoveModal] = useState(false);
     const [openEditNoteModal, setOpenEditNoteModal] = useState(false);
@@ -41,12 +39,10 @@ const Notes = () => {
         setOpenCreateNoteModal(false);
     }
 
-    const handleCreateNote = async () => {
+    const handleCreateNote = async (title: string, content: string) => {
         try {
-            const newNote = await createNote(noteTitle, noteContent);
+            const newNote = await createNote(title, content);
             setData((prevData) => [...prevData, newNote]);
-            setNoteTitle("");
-            setNoteContent("");
         } catch (error: any) {
             if (!error.response) {
                 setErrorMessage("No Server Response")
@@ -67,28 +63,24 @@ const Notes = () => {
     
     const handleOpenEditModal = (note: NoteObject) => {
         setSelectedNote(note);
-        setNoteTitle(note.title);
-        setNoteContent(note.content);
         setOpenEditNoteModal(true);
     }
 
     const handleCloseEditModal = () => {
         setOpenEditNoteModal(false);
         setSelectedNote(null);
-        setNoteTitle("");
-        setNoteContent("");
     }
     
-    const handleEditNote = async () => {
+    const handleEditNote = async (title: string, content: string) => {
         if (!selectedNote) return;
 
         try {
-            await editNote(selectedNote.id, noteTitle, noteContent);
+            await editNote(selectedNote.id, title, content);
             const updatedData: NoteObject[] = data.map((item: NoteObject) =>
                 item.id === selectedNote.id ? {
                     ...item,
-                    title: noteTitle,
-                    content: noteContent
+                    title: title,
+                    content: content
                 } : item)
             setData(updatedData);
         } catch (error: any) {
@@ -174,21 +166,14 @@ const Notes = () => {
                 open={openCreateNoteModal}
                 onClose={handleCloseCreateModal}
                 dialogTitle="Create a new note"
-                noteTitle={noteTitle}
-                noteContent={noteContent}
-                setNoteTitle={setNoteTitle}
-                setNoteContent={setNoteContent}
-                onSave={handleCreateNote}
+                onSave={(title, content) => handleCreateNote(title, content)}
             />
             <NoteDialog
                 open={openEditNoteModal}
                 onClose={handleCloseEditModal}
                 dialogTitle="Edit your note"
-                noteTitle={noteTitle}
-                noteContent={noteContent}
-                setNoteTitle={setNoteTitle}
-                setNoteContent={setNoteContent}
-                onSave={handleEditNote}
+                defaultValues={selectedNote ? {title: selectedNote.title, content: selectedNote.content} : undefined}
+                onSave={(title, content) => handleEditNote(title, content)}
             />
             {
                 loading ? (
