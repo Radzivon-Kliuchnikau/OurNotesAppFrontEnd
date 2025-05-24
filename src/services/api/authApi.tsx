@@ -1,11 +1,14 @@
 import axios from "../axiosBase.tsx";
 import API_URL from "../../utils/Constants.tsx";
 import { ErrorHandler } from "../../utils/ErrorHandler.tsx";
-import { UserProfileRegistrationType } from "../../types/User.ts";
+import {
+  UserProfileLoginType,
+  UserProfileRegistrationType,
+} from "../../types/User.ts";
 
 export const loginApi = async (userEmail: string, password: string) => {
   try {
-    const response = await axios.post(
+    const response = await axios.post<UserProfileLoginType>(
       `${API_URL.LOGIN_URL}`,
       JSON.stringify({ email: userEmail, password }),
       {
@@ -13,7 +16,7 @@ export const loginApi = async (userEmail: string, password: string) => {
       },
     );
 
-    return response.data;
+    return response;
   } catch (error) {
     ErrorHandler(error);
   }
