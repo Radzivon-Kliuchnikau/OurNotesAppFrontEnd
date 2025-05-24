@@ -1,4 +1,5 @@
 import {Card, styled} from "@mui/material";
+import * as React from "react";
 
 const CustomFormCard = styled(Card)(({theme}) => ({
     display: "flex",
@@ -17,7 +18,11 @@ const CustomFormCard = styled(Card)(({theme}) => ({
     }
 }))
 
-const FormCard = (props: { children: React.ReactNode }) => {
+interface Props {
+    children: React.ReactNode
+}
+
+const FormCard: React.FC<Props> = (props: { children: React.ReactNode }): React.ReactElement => {
     return (
         <CustomFormCard>
             {props.children}

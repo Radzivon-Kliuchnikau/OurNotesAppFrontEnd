@@ -1,7 +1,8 @@
 import {useNavigate} from "react-router-dom";
 import {Box, Button, Typography} from "@mui/material";
+import * as React from "react";
 
-const Unauthorized = () => {
+const Unauthorized = (): React.ReactElement => {
     const navigate = useNavigate();
     const goBack = () => navigate(-1);
     return (

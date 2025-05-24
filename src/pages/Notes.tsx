@@ -7,34 +7,36 @@ import {
     IconButton,
     Typography
 } from "@mui/material";
+import {v4 as uuidv4} from 'uuid';
 import {useEffect, useRef, useState} from "react";
 import {Add, Delete} from "@mui/icons-material";
-import NoteObject from "../interfaces/NoteObject.tsx";
-import LoadingBox from "../components/common/LoadingBox.tsx";
 import NoteRemoveDialog from "../components/common/NoteRemoveDialog.tsx";
-import {createNote, deleteNote, editNote, getNotes} from "../api/notesApi.ts";
 import NoteDialog from "../components/common/NoteDialog.tsx";
+import * as React from "react";
+import {createNote, deleteNote, editNote, getNotes} from "../services/api/notesApi.tsx";
+import {Note} from "../types/general";
+import Spinner from "../components/common/Spinner.tsx";
 
-const Notes = () => {
+const Notes = (): React.ReactElement => {
     const maxHeaderLength = 30;
     const maxContentLength = 70;
 
-    const [errorMessage, setErrorMessage] = useState("");
-    const [error, setError] = useState(false);
-    const [data, setData] = useState<NoteObject[] | []>([]);
-    const [loading, setLoading] = useState(false);
-    const [openRemoveModal, setOpenRemoveModal] = useState(false);
-    const [openEditNoteModal, setOpenEditNoteModal] = useState(false);
-    const [openCreateNoteModal, setOpenCreateNoteModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [error, setError] = useState<boolean>(false);
+    const [data, setData] = useState<Note[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [openRemoveModal, setOpenRemoveModal] = useState<boolean>(false);
+    const [openEditNoteModal, setOpenEditNoteModal] = useState<boolean>(false);
+    const [openCreateNoteModal, setOpenCreateNoteModal] = useState<boolean>(false);
     const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
-    const [selectedNote, setSelectedNote] = useState<NoteObject | null>(null);
+    const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
     const errorRef: any = useRef();
 
     const handleOpenCreateModal = () => {
         setOpenCreateNoteModal(true);
     }
-    
+
     const handleCloseCreateModal = () => {
         setOpenCreateNoteModal(false);
     }
@@ -60,8 +62,8 @@ const Notes = () => {
         }
 
     }
-    
-    const handleOpenEditModal = (note: NoteObject) => {
+
+    const handleOpenEditModal = (note: Note) => {
         setSelectedNote(note);
         setOpenEditNoteModal(true);
     }
@@ -70,13 +72,13 @@ const Notes = () => {
         setOpenEditNoteModal(false);
         setSelectedNote(null);
     }
-    
+
     const handleEditNote = async (title: string, content: string) => {
         if (!selectedNote) return;
 
         try {
             await editNote(selectedNote.id, title, content);
-            const updatedData: NoteObject[] = data.map((item: NoteObject) =>
+            const updatedData: Note[] = data.map((item: Note) =>
                 item.id === selectedNote.id ? {
                     ...item,
                     title: title,
@@ -113,7 +115,7 @@ const Notes = () => {
 
         try {
             await deleteNote(selectedNoteId);
-            const updatedData = data.filter((note: NoteObject) => note.id !== selectedNoteId);
+            const updatedData = data.filter((note: Note) => note.id !== selectedNoteId);
             setData([...updatedData]);
         } catch (error: any) {
             if (!error.response) {
@@ -130,13 +132,12 @@ const Notes = () => {
         }
     }
 
-    const getAllNotes = async () => {
+    const getAllNotes = async () => { // TODO: Think about error handling. Should we move try/catch block to the service level?
         try {
             setLoading(true);
             const notes = await getNotes();
             setData(notes);
-
-        } catch (error: any) {
+        } catch (error: any) { // TODO: Should we list our variants for errors here or just show what API returns to us: Error code and error description? 
             if (!error.response) {
                 setErrorMessage("No Server Response")
             } else if (error.response?.status === 401) {
@@ -177,7 +178,7 @@ const Notes = () => {
             />
             {
                 loading ? (
-                    <LoadingBox/>
+                    <Spinner/>
                 ) : error ? (
                     <Typography aria-live="assertive"
                                 sx={{display: errorMessage ? "block" : "none"}}>
@@ -215,9 +216,9 @@ const Notes = () => {
                                 alignContent: "start",
                                 padding: 4
                             }}>
-                            {data.map((note: NoteObject, index) => (
+                            {data.length > 0 ? (data.map((note: Note) => (
                                 <Card
-                                    key={index}
+                                    key={uuidv4()}
                                     onClick={() => handleOpenEditModal(note)}
                                     sx={{
                                         width: "300px",
@@ -252,7 +253,7 @@ const Notes = () => {
                                         </IconButton>
                                     </CardActions>
                                 </Card>
-                            ))}
+                            ))) : (<h1>You don't have any notes at the moment</h1>)}
                         </Box>
                     </Box>
                 )}

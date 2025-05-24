@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import {Link} from "react-router-dom";
 import MainContainer from "../components/common/MainContainer.tsx";
+import * as React from "react";
 
 const ErrorBox = styled(Box)(({theme}) => ({
     display: "flex",
@@ -28,7 +29,7 @@ const ErrorImage = styled("img")(({theme}) => ({
     boxShadow: theme.shadows[3],
 }))
 
-const InternalError = () => {
+const InternalError = (): React.ReactElement => {
     return (
         <MainContainer>
             <ErrorBox sx={{width: 345}}>

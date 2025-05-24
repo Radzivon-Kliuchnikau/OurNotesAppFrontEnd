@@ -1,10 +1,12 @@
 import {useEffect, useState} from "react";
 import {Box, List, ListItem, ListItemText, Typography} from "@mui/material";
-import axios from "../api/axios.tsx";
 import API_URL from "../utils/Constants.tsx";
+import * as React from "react";
+import User from "../interfaces/User.tsx";
+import axios from "../services/api/axiosBase.tsx";
 
-const Users = () => {
-    const [users, setUsers] = useState([]);
+const Users = (): React.ReactElement => {
+    const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
         let isMounted = true;

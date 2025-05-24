@@ -1,14 +1,14 @@
 import {useNavigate} from "react-router-dom";
 import {Button} from "@mui/material";
 import API_URL from "../../utils/Constants.tsx";
-import axios from "../../api/axios.tsx";
-import UseAuth from "../../hooks/UseAuth.tsx";
 import {useState} from "react";
+import * as React from "react";
+import axios from "../../services/api/axiosBase.tsx";
 
-const LogoutButton = () => {
+const LogoutButton = (): React.ReactElement => {
     const navigate = useNavigate();
     const {setAuthUser} = UseAuth();
-    const [internalError, setInternalError] = useState(false);
+    const [internalError, setInternalError] = useState<boolean>(false);
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         try {

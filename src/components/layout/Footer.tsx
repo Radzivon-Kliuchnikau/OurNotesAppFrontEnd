@@ -1,6 +1,7 @@
 import {Box, Typography} from "@mui/material";
+import * as React from "react";
 
-const Footer = () => {
+const Footer = (): React.ReactElement => {
     return (
         <Box 
             sx={{

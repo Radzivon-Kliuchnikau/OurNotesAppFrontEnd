@@ -1,13 +1,14 @@
 import {Box, Button, Card, FormLabel, styled, Typography} from "@mui/material";
 import MainContainer from "../components/common/MainContainer.tsx";
-import axios from "../api/axios.tsx";
 import API_URL from "../utils/Constants.tsx";
 import {useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {ArrowBack} from "@mui/icons-material";
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
+import * as React from "react";
+import axios from "../services/api/axios.tsx";
 
-const FormCard = styled(Card)(({theme}) => ({
+const FormCard = styled(Card)(({theme}) => ({ // TODO: We already have this component as a wrapper. Could we use it here? 
     display: "flex",
     boxShadow: "none", // Removes the default shadow
     flexDirection: "column",
@@ -18,16 +19,16 @@ const FormCard = styled(Card)(({theme}) => ({
     border: "none",
 }))
 
-const CreateNote = () => {
+const CreateNote = (): React.ReactElement => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
     const goBack = () => navigate(-1);
 
-    const [noteTitle, setNoteTitle] = useState("");
-    const [noteContent, setNoteContent] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [error, setError] = useState(false);
+    const [noteTitle, setNoteTitle] = useState<string>("");
+    const [noteContent, setNoteContent] = useState<string>("");
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [error, setError] = useState<boolean>(false);
 
     const errorRef: any = useRef();
 

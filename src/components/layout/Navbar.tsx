@@ -11,16 +11,16 @@ import {
     Typography
 } from "@mui/material";
 import {Logout, Person} from "@mui/icons-material";
-import useAuth from "../../hooks/UseAuth.tsx";
 import {Link} from "react-router-dom";
 import {useState} from "react";
-import useAuthCheck from "../../hooks/UseAuthCheck.tsx";
 import LogoutButton from "../auth/LogoutButton.tsx";
+import * as React from "react";
+import {useAuth} from "../../context/UseAuth.tsx";
 
 const LogoImage = styled("img")(({theme}) => ({}))
 
-const Navbar = () => {
-    const {authUser} = useAuth();
+const Navbar = (): React.ReactElement => {
+    const {user} = useAuth();
     const { loading } = useAuthCheck();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -32,8 +32,7 @@ const Navbar = () => {
         setAnchorEl(null);
     };
 
-
-    console.log("authUser " + authUser);
+    console.log("authUser " + user);
     const StyledToolbar = styled(Toolbar)({
         display: "flex",
         justifyContent: "space-between"
@@ -58,7 +57,7 @@ const Navbar = () => {
                     href="/">
                     <LogoImage src="../public/static/logo.svg"/>
                 </Typography>
-                {!authUser ? (
+                {!user ? (
                     <Box sx={{display: "flex", alignItems: "center", gap: "10px"}}>
                         <Button
                             component={Link}
@@ -90,7 +89,7 @@ const Navbar = () => {
                 ) : (
                     <Box sx={{display: "flex", alignItems: "center", gap: "10px"}}>
                         <Typography sx={{color: "black"}}>
-                            Hey, {authUser.Name}</Typography>
+                            Hey, {user.userName}</Typography>
                         <Tooltip title="Settings">
                             <IconButton
                                 onClick={handleClick}

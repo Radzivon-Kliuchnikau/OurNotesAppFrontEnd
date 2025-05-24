@@ -5,14 +5,13 @@ import {
     Typography
 } from "@mui/material";
 import {useEffect, useRef} from "react";
-// @ts-ignore
 import Link from "@mui/material/Link";
 import {useLocation, useNavigate} from "react-router-dom";
-import useAuth from "../hooks/UseAuth.tsx";
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
-import {login} from "../api/authApi.ts";
 import FormCard from "../components/common/FormCard.tsx";
 import {FieldValues, useForm} from "react-hook-form";
+import * as React from "react";
+import {loginApi} from "../services/api/authApi.tsx";
 
 type FormInputs = {
     username: string,
@@ -20,12 +19,12 @@ type FormInputs = {
     serverResponse: string
 }
 
-const Login = () => {
+const Login = (): React.ReactElement => {
     const {
         register,
         handleSubmit,
         reset,
-        formState: {errors, isValid, isSubmitting}, 
+        formState: {errors, isValid, isSubmitting},
         setFocus,
         setError
     } = useForm<FormInputs>();
@@ -33,7 +32,7 @@ const Login = () => {
     useEffect(() => {
         setFocus("username");
     }, [])
-    
+
     const {setAuthUser} = useAuth();
 
     const navigate = useNavigate();
@@ -43,36 +42,10 @@ const Login = () => {
     const errorRef: any = useRef();
 
     const onSubmit = async (data: FieldValues) => {
-        try {
-            await login(data.username, data.password)
-
-            setAuthUser({Email: data.username, Name: data.username});
-            reset();
-            navigate(from, {replace: true});
-        } catch (error: any) {
-            if (!error.response) {
-                setError("serverResponse", {
-                    type: "server",
-                    message: "No Server Response"
-                })
-            } else if (error.response?.status === 400) {
-                setError("serverResponse", {
-                    type: "server",
-                    message: "Missing User email or password"
-                })
-            } else if (error.response?.status === 401) {
-                setError("serverResponse", {
-                    type: "server",
-                    message: "Unauthorized"
-                })
-            } else {
-                setError("serverResponse", {
-                    type: "server",
-                    message: "Login failed"
-                })
-            }
-            errorRef.current.focus();
-        }
+        await loginApi(data.username, data.password)
+        setAuthUser({Email: data.username, Name: data.username});
+        reset();
+        navigate(from, {replace: true});
     }
 
     return (
@@ -82,26 +55,26 @@ const Login = () => {
             justifyContent: "center"
         }}>
             <FormCard>
-                <Typography ref={errorRef} aria-live="assertive"
-                            sx={{display: errors.serverResponse ? "block" : "none"}}>
-                    {errors.serverResponse?.message}
-                </Typography>
+                {/*<Typography ref={errorRef} aria-live="assertive"*/}
+                {/*            sx={{display: errors.serverResponse ? "block" : "none"}}>*/}
+                {/*    {errors.serverResponse?.message}*/}
+                {/*</Typography>*/}
                 <Box sx={{marginTop: "30px", marginBottom: "40px"}}>
                     <Typography
                         variant="h6"
                         noWrap
                         component="a"
                         href="/">
-                        <img src="../public/static/logo.svg" alt="Logo" />
+                        <img src="../public/static/logo.svg" alt="Logo"/>
                     </Typography>
                 </Box>
                 <Typography component="h1" variant="h5" sx={{marginBottom: "20px"}}>Sign In</Typography>
                 <Box component="form" onSubmit={handleSubmit(onSubmit)}
                      sx={{
                          width: "400px",
-                         display: "flex", 
+                         display: "flex",
                          flexDirection: "column",
-                }}>
+                     }}>
 
                     <FormLabel htmlFor="username" sx={{display: "flex"}}>
                         <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Username or email address</Typography>

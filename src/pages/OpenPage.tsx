@@ -1,8 +1,9 @@
 import {Box, Button, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import MainContainer from "../components/common/MainContainer.tsx";
+import * as React from "react";
 
-function OpenPage() {
+const OpenPage = (): React.ReactElement => {
     return (
         <MainContainer>
             <Box

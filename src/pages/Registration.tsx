@@ -3,9 +3,10 @@ import {Box, Button, Container, FormLabel, Typography} from "@mui/material";
 import {Close, Done, Info} from "@mui/icons-material";
 import Link from '@mui/material/Link';
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
-import {registration} from "../api/authApi.ts";
 import {FieldValues, useForm} from "react-hook-form";
 import FormCard from "../components/common/FormCard.tsx";
+import * as React from "react";
+import {registrationApi} from "../services/api/authApi.tsx";
 
 const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_ ]{3,23}$/;
 const PWA_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -19,8 +20,8 @@ type FormInputs = {
     serverResponse: string
 }
 
-const Registration = () => {
-    const [success, setSuccess] = useState(false);
+const Registration = (): React.ReactElement => {
+    const [success, setSuccess] = useState<boolean>(false);
     const errorRef: any = useRef();
 
     const {
@@ -38,33 +39,9 @@ const Registration = () => {
     }, [])
 
     const onSubmit = async (data: FieldValues) => {
-        try {
-            await registration(data.username, data.useremail, data.password);
-            setSuccess(true);
-            reset();
-        } catch (error: any) {
-            if (!error?.response) {
-                setError("serverResponse",{
-                    type: "server",
-                    message: "No answer from the server"
-                });
-            } else if (error.response.data) {
-                Object.entries(error.response.data).forEach(([field, messages]) => {
-                    if(Array.isArray(messages)) {
-                        setError("serverResponse",{
-                            type: "server",
-                            message: messages.join(" ")
-                        });
-                    }
-                })
-            } else {
-                setError("serverResponse",{
-                    type: "server",
-                    message: "Registration failed. Please try again"
-                });
-            }
-            errorRef.current.focus();
-        }
+        await registrationApi(data.username, data.useremail, data.password);
+        setSuccess(true);
+        reset();
     }
 
     return (
@@ -93,13 +70,13 @@ const Registration = () => {
                         justifyContent: "center"
                     }}>
                         <FormCard>
-                            <Typography
-                                ref={errorRef}
-                                aria-live="assertive"
-                                sx={{display: errors.serverResponse ? "block" : "none"}}
-                            >
-                                {errors.serverResponse?.message}
-                            </Typography>
+                            {/*<Typography*/}
+                            {/*    ref={errorRef}*/}
+                            {/*    aria-live="assertive"*/}
+                            {/*    sx={{display: errors.serverResponse ? "block" : "none"}}*/}
+                            {/*>*/}
+                            {/*    {errors.serverResponse?.message}*/}
+                            {/*</Typography>*/}
                             <Box sx={{marginTop: "20px", marginBottom: "10px"}}>
                                 <Typography
                                     variant="h6"

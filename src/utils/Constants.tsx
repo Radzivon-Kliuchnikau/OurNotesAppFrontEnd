@@ -1,6 +1,6 @@
 const API_URL = {
     MAINPAGE_URL: "/",
-    LOGIN_URL: "/login",
+    LOGIN_URL: "/api/account/login",
     REGISTER_URL: "/api/account/register",
     LOGOUT_URL: "/api/account/logout",
     USE_COOKIES: "?useCookies=true",

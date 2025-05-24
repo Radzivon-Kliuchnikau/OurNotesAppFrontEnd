@@ -1,4 +1,5 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, styled, Typography} from "@mui/material";
+import * as React from "react";
 
 interface CustomDialogProps {
     open: boolean;
@@ -27,7 +28,7 @@ const StyledButton = styled(Button)(({theme}) => ({
 
 }))
 
-const NoteRemoveDialog: React.FC<CustomDialogProps> = ({open, onClose, onDelete}) => {
+const NoteRemoveDialog: React.FC<CustomDialogProps> = ({open, onClose, onDelete}): React.ReactElement => {
     return (
         <CustomDialog open={open}>
             <DialogTitle>Are you sure?</DialogTitle>

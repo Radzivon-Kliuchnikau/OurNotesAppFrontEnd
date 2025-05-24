@@ -12,6 +12,7 @@ import {
 import TextFieldCustom from "./TextFieldCustom.tsx";
 import {FieldValues, useForm} from "react-hook-form";
 import {useEffect} from "react";
+import * as React from "react";
 
 type FormInputs = {
     title: string,
@@ -48,7 +49,13 @@ interface NoteDialogProps {
     onSave: (title: string, content: string) => void;
 }
 
-const NoteDialog: React.FC<NoteDialogProps> = ({open, onClose, dialogTitle, defaultValues, onSave}) => {
+const NoteDialog: React.FC<NoteDialogProps> = ({
+                                                   open,
+                                                   onClose,
+                                                   dialogTitle,
+                                                   defaultValues,
+                                                   onSave
+                                               }): React.ReactElement => {
     const {
         register,
         handleSubmit,
@@ -72,8 +79,8 @@ const NoteDialog: React.FC<NoteDialogProps> = ({open, onClose, dialogTitle, defa
 
     return (
         <CustomNoteDialog open={open} onClose={onClose}>
-            <Box 
-                component="form" 
+            <Box
+                component="form"
                 onSubmit={handleSubmit(onSubmit)}
                 sx={{
                     display: "flex",
