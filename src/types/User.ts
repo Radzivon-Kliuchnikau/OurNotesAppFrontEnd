@@ -1,14 +1,14 @@
 export type UserProfileLoginType = {
-    userName: string
-    email: string
-    token: string
-}
+    userName: string;
+    email: string;
+    token: string;
+};
 
 export type UserProfileRegistrationType = {
-    registered: boolean
-}
+    registered: boolean;
+};
 
 export type UserProfile = {
-    userName: string
-    email: string
-}
+    userName: string;
+    email: string;
+};

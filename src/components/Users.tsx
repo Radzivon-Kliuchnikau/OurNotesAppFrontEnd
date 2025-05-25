@@ -1,34 +1,34 @@
-import { useEffect, useState } from 'react'
-import { Box, List, ListItem, ListItemText, Typography } from '@mui/material'
-import API_URL from '../utils/Constants.tsx'
-import * as React from 'react'
-import User from '../interfaces/User.tsx'
-import axios from '../services/api/axiosBase.tsx'
+import { useEffect, useState } from "react";
+import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
+import API_URL from "../utils/Constants.tsx";
+import * as React from "react";
+import User from "../interfaces/User.tsx";
+import axios from "../services/api/axiosBase.tsx";
 
 const Users = (): React.ReactElement => {
-    const [users, setUsers] = useState<User[]>([])
+    const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
-        let isMounted = true
-        const controller = new AbortController()
+        let isMounted = true;
+        const controller = new AbortController();
         const getUsers = async () => {
             try {
                 const response = await axios.get(API_URL.USER_LIST, {
                     signal: controller.signal,
-                })
-                console.log(response)
-                isMounted && setUsers(response.data)
+                });
+                console.log(response);
+                isMounted && setUsers(response.data);
             } catch (error: any) {
-                console.error(error)
+                console.error(error);
             }
-        }
-        getUsers()
+        };
+        getUsers();
 
         return () => {
-            isMounted = false
-            controller.abort()
-        }
-    }, [])
+            isMounted = false;
+            controller.abort();
+        };
+    }, []);
 
     return (
         <Box>
@@ -45,7 +45,7 @@ const Users = (): React.ReactElement => {
                 <Typography>No users to display</Typography>
             )}
         </Box>
-    )
-}
+    );
+};
 
-export default Users
+export default Users;

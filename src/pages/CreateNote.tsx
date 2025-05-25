@@ -1,76 +1,83 @@
-import { Box, Button, Card, FormLabel, styled, Typography } from '@mui/material'
-import MainContainer from '../components/common/MainContainer.tsx'
-import API_URL from '../utils/Constants.tsx'
-import { useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { ArrowBack } from '@mui/icons-material'
-import TextFieldCustom from '../components/common/TextFieldCustom.tsx'
-import * as React from 'react'
-import axios from '../services/api/axios.tsx'
+import {
+    Box,
+    Button,
+    Card,
+    FormLabel,
+    styled,
+    Typography,
+} from "@mui/material";
+import MainContainer from "../components/common/MainContainer.tsx";
+import API_URL from "../utils/Constants.tsx";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ArrowBack } from "@mui/icons-material";
+import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
+import * as React from "react";
+import axios from "../services/api/axios.tsx";
 
 const FormCard = styled(Card)(({ theme }) => ({
     // TODO: We already have this component as a wrapper. Could we use it here?
-    display: 'flex',
-    boxShadow: 'none', // Removes the default shadow
-    flexDirection: 'column',
-    alignSelf: 'center',
-    textAlign: 'center',
-    marginTop: '30px',
-    width: '100%',
-    border: 'none',
-}))
+    display: "flex",
+    boxShadow: "none", // Removes the default shadow
+    flexDirection: "column",
+    alignSelf: "center",
+    textAlign: "center",
+    marginTop: "30px",
+    width: "100%",
+    border: "none",
+}));
 
 const CreateNote = (): React.ReactElement => {
-    const navigate = useNavigate()
-    const location = useLocation()
-    const from = location.state?.from?.pathname || '/'
-    const goBack = () => navigate(-1)
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+    const goBack = () => navigate(-1);
 
-    const [noteTitle, setNoteTitle] = useState<string>('')
-    const [noteContent, setNoteContent] = useState<string>('')
-    const [errorMessage, setErrorMessage] = useState<string>('')
-    const [error, setError] = useState<boolean>(false)
+    const [noteTitle, setNoteTitle] = useState<string>("");
+    const [noteContent, setNoteContent] = useState<string>("");
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [error, setError] = useState<boolean>(false);
 
-    const errorRef: any = useRef()
+    const errorRef: any = useRef();
 
     useEffect(() => {
-        setErrorMessage('')
-    }, [noteTitle, noteContent])
+        setErrorMessage("");
+    }, [noteTitle, noteContent]);
 
     const handleSubmit = async (event: any) => {
-        event.preventDefault()
+        event.preventDefault();
         try {
             const response = await axios.post(
                 `${API_URL.NOTES_URL}`,
                 JSON.stringify({ title: noteTitle, content: noteContent }),
                 {
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { "Content-Type": "application/json" },
                 }
-            )
-            setNoteTitle('')
-            setNoteContent('')
-            navigate(from, { replace: true })
+            );
+            setNoteTitle("");
+            setNoteContent("");
+            navigate(from, { replace: true });
         } catch (error: any) {
             if (!error.response) {
-                setErrorMessage('No Server Response')
+                setErrorMessage("No Server Response");
             } else if (error.response?.status === 400) {
-                setErrorMessage('Missing note title or content ')
+                setErrorMessage("Missing note title or content ");
             } else if (error.response?.status === 401) {
-                setErrorMessage('Unauthorized')
+                setErrorMessage("Unauthorized");
             } else {
-                setErrorMessage('Note creation failed')
+                setErrorMessage("Note creation failed");
             }
-            setError(true)
-            errorRef.current.focus()
+            setError(true);
+            errorRef.current.focus();
         }
-    }
+    };
 
     return (
         <MainContainer>
             {error ? (
                 <Typography
                     aria-live="assertive"
-                    sx={{ display: errorMessage ? 'block' : 'none' }}
+                    sx={{ display: errorMessage ? "block" : "none" }}
                 >
                     {errorMessage}
                 </Typography>
@@ -79,7 +86,7 @@ const CreateNote = (): React.ReactElement => {
                     <Typography
                         component="h1"
                         variant="h5"
-                        sx={{ marginBottom: '20px' }}
+                        sx={{ marginBottom: "20px" }}
                     >
                         Your note
                     </Typography>
@@ -87,14 +94,14 @@ const CreateNote = (): React.ReactElement => {
                         component="form"
                         onSubmit={handleSubmit}
                         sx={{
-                            padding: '20px',
-                            display: 'flex',
-                            flexDirection: 'column',
+                            padding: "20px",
+                            display: "flex",
+                            flexDirection: "column",
                         }}
                     >
-                        <FormLabel htmlFor="useremail" sx={{ display: 'flex' }}>
+                        <FormLabel htmlFor="useremail" sx={{ display: "flex" }}>
                             <Typography
-                                sx={{ fontSize: '14px', marginBottom: '5px' }}
+                                sx={{ fontSize: "14px", marginBottom: "5px" }}
                             >
                                 Note title
                             </Typography>
@@ -112,10 +119,10 @@ const CreateNote = (): React.ReactElement => {
 
                         <FormLabel
                             htmlFor="noteContent"
-                            sx={{ display: 'flex' }}
+                            sx={{ display: "flex" }}
                         >
                             <Typography
-                                sx={{ fontSize: '14px', marginBottom: '5px' }}
+                                sx={{ fontSize: "14px", marginBottom: "5px" }}
                             >
                                 Note content
                             </Typography>
@@ -133,25 +140,25 @@ const CreateNote = (): React.ReactElement => {
                         />
                         <Box
                             sx={{
-                                display: 'flex',
+                                display: "flex",
                                 gap: 2,
-                                marginTop: '30px',
-                                marginBottom: '40px',
+                                marginTop: "30px",
+                                marginBottom: "40px",
                             }}
                         >
                             <Button
                                 type="submit"
-                                disabled={noteTitle == '' || noteContent == ''}
+                                disabled={noteTitle == "" || noteContent == ""}
                                 disableRipple
                                 sx={{
-                                    width: '320px',
-                                    height: '50px',
-                                    border: '1px solid black',
-                                    borderRadius: '10px',
-                                    color: 'black',
-                                    textDecoration: 'none',
-                                    textTransform: 'none',
-                                    fontSize: '20px',
+                                    width: "320px",
+                                    height: "50px",
+                                    border: "1px solid black",
+                                    borderRadius: "10px",
+                                    color: "black",
+                                    textDecoration: "none",
+                                    textTransform: "none",
+                                    fontSize: "20px",
                                 }}
                             >
                                 Create note
@@ -161,14 +168,14 @@ const CreateNote = (): React.ReactElement => {
                                 disableRipple
                                 onClick={goBack}
                                 sx={{
-                                    width: '150px',
-                                    height: '50px',
-                                    border: '1px solid black',
-                                    borderRadius: '10px',
-                                    color: 'black',
-                                    textDecoration: 'none',
-                                    textTransform: 'none',
-                                    fontSize: '20px',
+                                    width: "150px",
+                                    height: "50px",
+                                    border: "1px solid black",
+                                    borderRadius: "10px",
+                                    color: "black",
+                                    textDecoration: "none",
+                                    textTransform: "none",
+                                    fontSize: "20px",
                                 }}
                             >
                                 Go back
@@ -178,7 +185,7 @@ const CreateNote = (): React.ReactElement => {
                 </FormCard>
             )}
         </MainContainer>
-    )
-}
+    );
+};
 
-export default CreateNote
+export default CreateNote;

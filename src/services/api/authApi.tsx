@@ -1,10 +1,10 @@
-import axios from '../axiosBase.tsx'
-import API_URL from '../../utils/Constants.tsx'
-import { ErrorHandler } from '../../utils/ErrorHandler.tsx'
+import axios from "../axiosBase.tsx";
+import API_URL from "../../utils/Constants.tsx";
+import { ErrorHandler } from "../../utils/ErrorHandler.tsx";
 import {
     UserProfileLoginType,
     UserProfileRegistrationType,
-} from '../../types/User.ts'
+} from "../../types/User.ts";
 
 export const loginApi = async (userEmail: string, password: string) => {
     try {
@@ -12,15 +12,15 @@ export const loginApi = async (userEmail: string, password: string) => {
             `${API_URL.LOGIN_URL}`,
             JSON.stringify({ email: userEmail, password }),
             {
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "Content-Type": "application/json" },
             }
-        )
+        );
 
-        return response.data
+        return response.data;
     } catch (error) {
-        ErrorHandler(error)
+        ErrorHandler(error);
     }
-}
+};
 
 export const registrationApi = async (
     userName: string,
@@ -33,13 +33,13 @@ export const registrationApi = async (
             JSON.stringify({ userName: userName, email: userEmail, password }),
             {
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
             }
-        )
+        );
 
-        return response.data
+        return response.data;
     } catch (error) {
-        ErrorHandler(error)
+        ErrorHandler(error);
     }
-}
+};

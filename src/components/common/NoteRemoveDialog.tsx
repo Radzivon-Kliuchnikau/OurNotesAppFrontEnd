@@ -6,34 +6,34 @@ import {
     DialogTitle,
     styled,
     Typography,
-} from '@mui/material'
-import * as React from 'react'
+} from "@mui/material";
+import * as React from "react";
 
 interface CustomDialogProps {
-    open: boolean
-    onClose: () => void
-    onDelete: () => void
+    open: boolean;
+    onClose: () => void;
+    onDelete: () => void;
 }
 
 const CustomDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialog-paper': {
-        width: '400px',
+    "& .MuiDialog-paper": {
+        width: "400px",
         padding: theme.spacing(2),
-        borderRadius: '10px',
-        backgroundColor: '#f9f6f2',
+        borderRadius: "10px",
+        backgroundColor: "#f9f6f2",
     },
-}))
+}));
 
 const StyledButton = styled(Button)(({ theme }) => ({
-    width: '120px',
-    height: '40px',
-    borderRadius: '10px',
-    textTransform: 'none',
-    fontSize: '16px',
-    fontWeight: '500',
-    border: '1px solid black',
-    color: 'black',
-}))
+    width: "120px",
+    height: "40px",
+    borderRadius: "10px",
+    textTransform: "none",
+    fontSize: "16px",
+    fontWeight: "500",
+    border: "1px solid black",
+    color: "black",
+}));
 
 const NoteRemoveDialog: React.FC<CustomDialogProps> = ({
     open,
@@ -52,9 +52,9 @@ const NoteRemoveDialog: React.FC<CustomDialogProps> = ({
                 <StyledButton
                     onClick={onClose}
                     sx={{
-                        transition: 'background-color 0.3s ease',
-                        '&:hover': {
-                            backgroundColor: '#cacfcb',
+                        transition: "background-color 0.3s ease",
+                        "&:hover": {
+                            backgroundColor: "#cacfcb",
                         },
                     }}
                 >
@@ -63,9 +63,9 @@ const NoteRemoveDialog: React.FC<CustomDialogProps> = ({
                 <StyledButton
                     onClick={onDelete}
                     sx={{
-                        transition: 'background-color 0.3s ease',
-                        '&:hover': {
-                            backgroundColor: '#f53333',
+                        transition: "background-color 0.3s ease",
+                        "&:hover": {
+                            backgroundColor: "#f53333",
                         },
                     }}
                 >
@@ -73,7 +73,7 @@ const NoteRemoveDialog: React.FC<CustomDialogProps> = ({
                 </StyledButton>
             </DialogActions>
         </CustomDialog>
-    )
-}
+    );
+};
 
-export default NoteRemoveDialog
+export default NoteRemoveDialog;

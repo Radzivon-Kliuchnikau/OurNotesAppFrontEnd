@@ -11,45 +11,45 @@ import {
     Toolbar,
     Tooltip,
     Typography,
-} from '@mui/material'
-import { Logout, Person } from '@mui/icons-material'
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
-import LogoutButton from '../auth/LogoutButton.tsx'
-import * as React from 'react'
-import { useAuth } from '../../context/UseAuth.tsx'
+} from "@mui/material";
+import { Logout, Person } from "@mui/icons-material";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import LogoutButton from "../auth/LogoutButton.tsx";
+import * as React from "react";
+import { useAuth } from "../../context/UseAuth.tsx";
 
-const LogoImage = styled('img')(({ theme }) => ({}))
+const LogoImage = styled("img")(({ theme }) => ({}));
 
 const Navbar = (): React.ReactElement => {
-    const { user } = useAuth()
-    const { loading } = useAuthCheck()
+    const { user } = useAuth();
+    const { loading } = useAuthCheck();
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const open = Boolean(anchorEl)
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget)
-    }
+        setAnchorEl(event.currentTarget);
+    };
     const handleClose = () => {
-        setAnchorEl(null)
-    }
+        setAnchorEl(null);
+    };
 
-    console.log('authUser ' + user)
+    console.log("authUser " + user);
     const StyledToolbar = styled(Toolbar)({
-        display: 'flex',
-        justifyContent: 'space-between',
-    })
+        display: "flex",
+        justifyContent: "space-between",
+    });
 
     return (
         <AppBar
             position="static"
             elevation={0}
             sx={{
-                borderBottom: '1px solid black',
-                backgroundColor: 'white',
+                borderBottom: "1px solid black",
+                backgroundColor: "white",
                 opacity: loading ? 0 : 1,
-                transition: 'opacity 0.2s ease-in-out',
-                pointerEvents: loading ? 'none' : 'auto',
+                transition: "opacity 0.2s ease-in-out",
+                pointerEvents: loading ? "none" : "auto",
             }}
         >
             <StyledToolbar>
@@ -59,21 +59,21 @@ const Navbar = (): React.ReactElement => {
                 {!user ? (
                     <Box
                         sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
                         }}
                     >
                         <Button
                             component={Link}
                             to="/login"
                             sx={{
-                                width: '80px',
-                                height: '30px',
-                                color: 'black',
-                                textDecoration: 'none',
-                                textTransform: 'none',
-                                fontSize: '16px',
+                                width: "80px",
+                                height: "30px",
+                                color: "black",
+                                textDecoration: "none",
+                                textTransform: "none",
+                                fontSize: "16px",
                             }}
                         >
                             Sign in
@@ -82,14 +82,14 @@ const Navbar = (): React.ReactElement => {
                             component={Link}
                             to="/registration"
                             sx={{
-                                width: '80px',
-                                height: '30px',
-                                border: '1px solid black',
-                                borderRadius: '10px',
-                                color: 'black',
-                                textDecoration: 'none',
-                                textTransform: 'none',
-                                fontSize: '16px',
+                                width: "80px",
+                                height: "30px",
+                                border: "1px solid black",
+                                borderRadius: "10px",
+                                color: "black",
+                                textDecoration: "none",
+                                textTransform: "none",
+                                fontSize: "16px",
                             }}
                         >
                             Sign up
@@ -98,12 +98,12 @@ const Navbar = (): React.ReactElement => {
                 ) : (
                     <Box
                         sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
                         }}
                     >
-                        <Typography sx={{ color: 'black' }}>
+                        <Typography sx={{ color: "black" }}>
                             Hey, {user.userName}
                         </Typography>
                         <Tooltip title="Settings">
@@ -113,7 +113,7 @@ const Navbar = (): React.ReactElement => {
                                 sx={{ ml: 2 }}
                                 aria-controls="account-menu"
                                 aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
+                                aria-expanded={open ? "true" : undefined}
                             >
                                 <Avatar sx={{ width: 32, height: 32 }}>
                                     <Person />
@@ -130,26 +130,26 @@ const Navbar = (): React.ReactElement => {
                                 paper: {
                                     elevation: 0,
                                     sx: {
-                                        overflow: 'visible',
-                                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                        overflow: "visible",
+                                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                                         mt: 1.5,
-                                        '& .MuiAvatar-root': {
+                                        "& .MuiAvatar-root": {
                                             width: 32,
                                             height: 32,
                                             ml: -1.5,
                                             mr: 1,
                                         },
-                                        '&::before': {
+                                        "&::before": {
                                             content: '""',
-                                            display: 'block',
-                                            position: 'absolute',
+                                            display: "block",
+                                            position: "absolute",
                                             top: 0,
                                             right: 14,
                                             width: 10,
                                             height: 10,
-                                            bgcolor: 'background.paper',
+                                            bgcolor: "background.paper",
                                             transform:
-                                                'translateY(-50%) rotate(45deg)',
+                                                "translateY(-50%) rotate(45deg)",
                                             zIndex: 0,
                                         },
                                     },
@@ -158,7 +158,7 @@ const Navbar = (): React.ReactElement => {
                             sx={{
                                 top: `25px`,
                                 left: `${anchorEl?.getBoundingClientRect()?.right - 145}px`,
-                                transform: 'none',
+                                transform: "none",
                             }}
                         >
                             <MenuItem onClick={handleClose}>
@@ -172,7 +172,7 @@ const Navbar = (): React.ReactElement => {
                 )}
             </StyledToolbar>
         </AppBar>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;
