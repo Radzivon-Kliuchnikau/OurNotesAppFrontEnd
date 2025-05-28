@@ -1,15 +1,15 @@
 import { UserProfile } from "../types/User.ts";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginApi, registrationApi } from "../services/api/authApi.tsx";
 import { toast } from "react-toastify";
-import axiosBase from "../services/axiosBase.tsx";
+import { AddTokenToHeaders } from "../services/axiosBase.tsx";
 
 type UserContextType = {
     user: UserProfile | null;
     token: string | null;
     registerUser: (email: string, username: string, password: string) => void;
-    loginUser: (email: string, password: string) => void;
+    loginUser: (email: string, password: string, pathToReturn: string) => void;
     logoutUser: () => void;
     isLoggedIn: () => boolean;
 };
@@ -32,8 +32,7 @@ export const UserProvider: React.FC<Props> = ({ children }: Props) => {
         if (user && token) {
             setUser(JSON.parse(user));
             setToken(token);
-            axiosBase.defaults.headers.common["Authorization"] =
-                `Bearer ${token}`;
+            AddTokenToHeaders(token);
         }
         setIsReady(true);
     }, []);
@@ -53,7 +52,11 @@ export const UserProvider: React.FC<Props> = ({ children }: Props) => {
             .catch((error) => toast.warning("Server error: " + error.message));
     };
 
-    const loginUser = async (userEmail: string, password: string) => {
+    const loginUser = async (
+        userEmail: string,
+        password: string,
+        pathToReturn: string
+    ) => {
         await loginApi(userEmail, password)
             .then((response) => {
                 if (response) {
@@ -66,7 +69,7 @@ export const UserProvider: React.FC<Props> = ({ children }: Props) => {
                     setUser(userObject);
                     setToken(response.token);
                     toast.success("Login successful");
-                    navigate("/");
+                    navigate(pathToReturn);
                 }
             })
             .catch((error) => toast.warning("Server error: " + error.message));
@@ -101,4 +104,4 @@ export const UserProvider: React.FC<Props> = ({ children }: Props) => {
     );
 };
 
-export const useAuth = () => React.useContext(UserContext);
+export const useAuth = () => useContext(UserContext);

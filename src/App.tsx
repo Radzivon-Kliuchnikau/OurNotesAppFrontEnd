@@ -1,4 +1,3 @@
-import "./App.css";
 import OpenPage from "./pages/OpenPage.tsx";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/layout/Layout.tsx";
@@ -19,16 +18,12 @@ function App() {
             <Route path="registration" element={<Registration />} />
             <Route path="login" element={<Login />} />
             <Route path="/" element={<Layout />}>
-                {user ? (
-                    <Route path="/" element={<Notes />} />
-                ) : (
-                    <Route path="/" element={<OpenPage />} />
-                )}
+                <Route index element={user ? <Notes /> : <OpenPage />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
                 <Route element={<AuthorizeView />}>
                     <Route path="admin" element={<Admin />} />
                 </Route>
-                <Route path="*" element={<MissingRoute />}></Route>
+                <Route path="*" element={<MissingRoute />} />
             </Route>
         </Routes>
     );

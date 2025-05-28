@@ -6,41 +6,46 @@ import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
 import FormCard from "../components/common/FormCard.tsx";
 import { FieldValues, useForm } from "react-hook-form";
 import * as React from "react";
-import { loginApi } from "../services/api/authApi.tsx";
+import * as Yup from "yup";
+import { useAuth } from "../context/UseAuth.tsx";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 type FormInputs = {
-    username: string;
+    userEmail: string;
     password: string;
-    serverResponse: string;
 };
 
+const validation = Yup.object().shape({
+    userEmail: Yup.string().email().required("User email is required"),
+    password: Yup.string().required("Password is required"),
+});
+
 const Login = (): React.ReactElement => {
+    const { loginUser } = useAuth();
+
     const {
         register,
         handleSubmit,
-        reset,
         formState: { errors, isValid, isSubmitting },
+        reset,
         setFocus,
         setError,
-    } = useForm<FormInputs>();
+    } = useForm<FormInputs>({ resolver: yupResolver(validation) });
 
     useEffect(() => {
-        setFocus("username");
+        setFocus("userEmail");
     }, []);
 
-    const { setAuthUser } = useAuth();
-
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+    const pathToReturn: string = location.state?.from?.pathname || "/";
 
-    const errorRef: any = useRef();
+    // const errorRef: any = useRef();
 
-    const onSubmit = async (data: FieldValues) => {
-        await loginApi(data.username, data.password);
-        setAuthUser({ Email: data.username, Name: data.username });
+    const onSubmit = async (form: FormInputs) => {
+        loginUser(form.userEmail, form.password, pathToReturn);
         reset();
-        navigate(from, { replace: true });
+        // navigate(from, { replace: true });
     };
 
     return (
@@ -78,21 +83,26 @@ const Login = (): React.ReactElement => {
                         flexDirection: "column",
                     }}
                 >
-                    <FormLabel htmlFor="username" sx={{ display: "flex" }}>
+                    <FormLabel htmlFor="userEmail" sx={{ display: "flex" }}>
                         <Typography
                             sx={{ fontSize: "14px", marginBottom: "5px" }}
                         >
-                            Username or email address
+                            Email address
                         </Typography>
                     </FormLabel>
                     <TextFieldCustom
-                        {...register("username", {
-                            required: "User name or email is required",
+                        {...register("userEmail", {
+                            required: "User email is required",
                         })}
                         type="text"
-                        id="username"
+                        id="userEmail"
                         autoComplete="off"
                     />
+                    {errors.userEmail && (
+                        <Typography sx={{ color: "red", fontSize: "12px" }}>
+                            {errors.userEmail.message}
+                        </Typography>
+                    )}
 
                     <FormLabel htmlFor="userPassword" sx={{ display: "flex" }}>
                         <Typography
@@ -108,6 +118,11 @@ const Login = (): React.ReactElement => {
                         type="password"
                         id="userPassword"
                     />
+                    {errors.password && (
+                        <Typography sx={{ color: "red", fontSize: "12px" }}>
+                            {errors.password.message}
+                        </Typography>
+                    )}
 
                     <Button
                         type="submit"
@@ -138,6 +153,7 @@ const Login = (): React.ReactElement => {
                         Sign Up
                     </Link>
                 </Typography>
+                {/*// TODO: Add link to reset/forgot password*/}
             </FormCard>
         </Container>
     );

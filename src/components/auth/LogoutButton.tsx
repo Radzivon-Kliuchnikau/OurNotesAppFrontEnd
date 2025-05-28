@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import API_URL from "../../utils/Constants.tsx";
 import { useState } from "react";
 import * as React from "react";
-import axios from "../../services/api/axiosBase.tsx";
+import axios from "../../services/axiosBase.tsx";
 
 const LogoutButton = (): React.ReactElement => {
     const navigate = useNavigate();

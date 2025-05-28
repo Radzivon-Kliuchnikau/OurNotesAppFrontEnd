@@ -3,7 +3,7 @@ import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
 import API_URL from "../utils/Constants.tsx";
 import * as React from "react";
 import User from "../interfaces/User.tsx";
-import axios from "../services/api/axiosBase.tsx";
+import axios from "../services/axiosBase.tsx";
 
 const Users = (): React.ReactElement => {
     const [users, setUsers] = useState<User[]>([]);
