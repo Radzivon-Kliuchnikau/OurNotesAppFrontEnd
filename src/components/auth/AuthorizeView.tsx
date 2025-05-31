@@ -1,17 +1,18 @@
 import { API_URL } from "../../utils/Constants.tsx";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import InternalError from "../../pages/InternalError.tsx";
+// import InternalError from "../../pages/InternalError.tsx";
 import * as React from "react";
-import Spinner from "../common/Spinner.tsx";
+// import Spinner from "../common/Spinner.tsx";
+import { useAuth } from "../../context/UseAuth.tsx";
 
 const AuthorizeView = (): React.ReactElement => {
     const location = useLocation();
-    const { authUser } = useAuth();
-    const { loading, internalError } = useAuthCheck();
+    const { user } = useAuth();
+    // const { loading, internalError } = useAuthCheck();
 
-    if (loading) return <Spinner />;
-    if (internalError) return <InternalError />;
-    if (!authUser)
+    // if (loading) return <Spinner />;
+    // if (internalError) return <InternalError />;
+    if (!user)
         return (
             <Navigate
                 to={API_URL.LOGIN_URL}

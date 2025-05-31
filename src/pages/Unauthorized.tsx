@@ -7,7 +7,7 @@ const Unauthorized = (): React.ReactElement => {
     const goBack = () => navigate(-1);
     return (
         <Box>
-            <Typography>This is Unauthorized Page!!XXXXXXXXX</Typography>
+            <Typography>This is Unauthorized Page!!!</Typography>
             <Button onClick={goBack}>Go back</Button>
         </Box>
     );

@@ -9,7 +9,6 @@ import Admin from "./pages/Admin.tsx";
 import AuthorizeView from "./components/auth/AuthorizeView.tsx";
 import { useAuth } from "./context/UseAuth.tsx";
 import MissingRoute from "./pages/MissingRoute.tsx";
-import NetworkErrorPage from "./pages/NetworkErrorPage.tsx";
 
 const App = () => {
     const { user } = useAuth();
@@ -25,7 +24,6 @@ const App = () => {
                     <Route path="admin" element={<Admin />} />
                 </Route>
                 <Route path="/*" element={<MissingRoute />} />
-                <Route path="networkerror" element={<NetworkErrorPage />} />
             </Route>
         </Routes>
     );

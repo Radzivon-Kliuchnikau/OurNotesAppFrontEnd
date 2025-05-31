@@ -4,7 +4,6 @@ import Navbar from "./Navbar.tsx";
 import Footer from "./Footer.tsx";
 import * as React from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 
 const Layout = (): React.ReactElement => {
     return (
