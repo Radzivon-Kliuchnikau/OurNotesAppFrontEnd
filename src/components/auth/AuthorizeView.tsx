@@ -1,4 +1,4 @@
-import API_URL from "../../utils/Constants.tsx";
+import { API_URL } from "../../utils/Constants.tsx";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import InternalError from "../../pages/InternalError.tsx";
 import * as React from "react";

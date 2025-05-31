@@ -11,8 +11,6 @@ const Layout = (): React.ReactElement => {
         <Box>
             <Navbar />
             <Outlet />
-            <ToastContainer />{" "}
-            {/* Expand Toast to all components: Login, Register, etc. */}
             <Footer />
         </Box>
     );

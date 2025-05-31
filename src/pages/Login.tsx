@@ -1,24 +1,18 @@
 import { Box, Button, Container, FormLabel, Typography } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Link from "@mui/material/Link";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
 import FormCard from "../components/common/FormCard.tsx";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as React from "react";
-import * as Yup from "yup";
 import { useAuth } from "../context/UseAuth.tsx";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { EMAIL_REGEX } from "../utils/Constants.tsx";
 
 type FormInputs = {
     userEmail: string;
     password: string;
 };
-
-const validation = Yup.object().shape({
-    userEmail: Yup.string().email().required("User email is required"),
-    password: Yup.string().required("Password is required"),
-});
 
 const Login = (): React.ReactElement => {
     const { loginUser } = useAuth();
@@ -29,23 +23,18 @@ const Login = (): React.ReactElement => {
         formState: { errors, isValid, isSubmitting },
         reset,
         setFocus,
-        setError,
-    } = useForm<FormInputs>({ resolver: yupResolver(validation) });
+    } = useForm<FormInputs>({ mode: "onChange" });
 
     useEffect(() => {
         setFocus("userEmail");
     }, []);
 
-    // const navigate = useNavigate();
     const location = useLocation();
     const pathToReturn: string = location.state?.from?.pathname || "/";
-
-    // const errorRef: any = useRef();
 
     const onSubmit = async (form: FormInputs) => {
         loginUser(form.userEmail, form.password, pathToReturn);
         reset();
-        // navigate(from, { replace: true });
     };
 
     return (
@@ -58,10 +47,6 @@ const Login = (): React.ReactElement => {
             }}
         >
             <FormCard>
-                {/*<Typography ref={errorRef} aria-live="assertive"*/}
-                {/*            sx={{display: errors.serverResponse ? "block" : "none"}}>*/}
-                {/*    {errors.serverResponse?.message}*/}
-                {/*</Typography>*/}
                 <Box sx={{ marginTop: "30px", marginBottom: "40px" }}>
                     <Typography variant="h6" noWrap component="a" href="/">
                         <img src="../public/static/logo.svg" alt="Logo" />
@@ -93,13 +78,23 @@ const Login = (): React.ReactElement => {
                     <TextFieldCustom
                         {...register("userEmail", {
                             required: "User email is required",
+                            pattern: {
+                                value: EMAIL_REGEX,
+                                message: "Invalid email format",
+                            },
                         })}
                         type="text"
                         id="userEmail"
                         autoComplete="off"
                     />
                     {errors.userEmail && (
-                        <Typography sx={{ color: "red", fontSize: "12px" }}>
+                        <Typography
+                            sx={{
+                                color: "red",
+                                fontSize: "12px",
+                                marginTop: "-18px",
+                            }}
+                        >
                             {errors.userEmail.message}
                         </Typography>
                     )}
@@ -119,7 +114,13 @@ const Login = (): React.ReactElement => {
                         id="userPassword"
                     />
                     {errors.password && (
-                        <Typography sx={{ color: "red", fontSize: "12px" }}>
+                        <Typography
+                            sx={{
+                                color: "red",
+                                fontSize: "12px",
+                                marginTop: "-18px",
+                            }}
+                        >
                             {errors.password.message}
                         </Typography>
                     )}

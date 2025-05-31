@@ -1,5 +1,5 @@
 import axios from "../axiosBase.tsx";
-import API_URL from "../../utils/Constants.tsx";
+import { API_URL } from "../../utils/Constants.tsx";
 import { ErrorHandler } from "../../utils/ErrorHandler.tsx";
 import {
     UserProfileLoginType,

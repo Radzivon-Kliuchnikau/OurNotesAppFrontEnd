@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Container, FormLabel, Typography } from "@mui/material";
 import { Close, Done, Info } from "@mui/icons-material";
 import Link from "@mui/material/Link";
@@ -7,10 +7,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import FormCard from "../components/common/FormCard.tsx";
 import * as React from "react";
 import { registrationApi } from "../services/api/authApi.tsx";
-
-const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_ ]{3,23}$/;
-const PWA_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+import { EMAIL_REGEX, PSW_REGEX, USERNAME_REGEX } from "../utils/Constants.tsx";
 
 type FormInputs = {
     username: string;
@@ -22,7 +19,6 @@ type FormInputs = {
 
 const Registration = (): React.ReactElement => {
     const [success, setSuccess] = useState<boolean>(false);
-    const errorRef: any = useRef();
 
     const {
         register,
@@ -31,7 +27,6 @@ const Registration = (): React.ReactElement => {
         reset,
         getValues,
         setFocus,
-        setError,
     } = useForm<FormInputs>({ mode: "onChange" });
 
     useEffect(() => {
@@ -78,13 +73,6 @@ const Registration = (): React.ReactElement => {
                     }}
                 >
                     <FormCard>
-                        {/*<Typography*/}
-                        {/*    ref={errorRef}*/}
-                        {/*    aria-live="assertive"*/}
-                        {/*    sx={{display: errors.serverResponse ? "block" : "none"}}*/}
-                        {/*>*/}
-                        {/*    {errors.serverResponse?.message}*/}
-                        {/*</Typography>*/}
                         <Box sx={{ marginTop: "20px", marginBottom: "10px" }}>
                             <Typography
                                 variant="h6"
@@ -288,7 +276,7 @@ const Registration = (): React.ReactElement => {
                                 {...register("password", {
                                     required: "Password is required",
                                     pattern: {
-                                        value: PWA_REGEX,
+                                        value: PSW_REGEX,
                                         message:
                                             "8 to 24 characters. Must include uppercase and lowercase letters, a number and a special character",
                                     },

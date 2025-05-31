@@ -1,8 +1,22 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export const ErrorHandler = (error: any) => {
+export const ErrorHandler = (error: unknown) => {
     if (axios.isAxiosError(error)) {
+        if (!error.response) {
+            if (error.code === "ERR_NETWORK") {
+                toast.error(
+                    "Network error occurred. Unable to connect to the server."
+                );
+            } else {
+                toast.error(
+                    error.message || "An unexpected network error occurred."
+                );
+            }
+
+            return;
+        }
+
         const errorResponse = error.response;
         if (Array.isArray(errorResponse?.data.errors)) {
             for (let errorValue of errorResponse.data.errors) {

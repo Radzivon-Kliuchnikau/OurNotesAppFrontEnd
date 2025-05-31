@@ -113,6 +113,7 @@ const Notes = (): React.ReactElement => {
         if (!notes) {
             setErrorMessage("Failed to get notes: empty response");
             setError(true);
+            setLoading(false);
             return;
         }
         setData(notes);

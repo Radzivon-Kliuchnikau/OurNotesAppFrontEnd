@@ -1,9 +1,9 @@
 import { UserProfile } from "../types/User.ts";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { loginApi, registrationApi } from "../services/api/authApi.tsx";
 import { toast } from "react-toastify";
 import { AddTokenToHeaders } from "../services/axiosBase.tsx";
+import { useNavigate } from "react-router-dom";
 
 type UserContextType = {
     user: UserProfile | null;
@@ -42,14 +42,14 @@ export const UserProvider: React.FC<Props> = ({ children }: Props) => {
         userEmail: string,
         password: string
     ) => {
-        await registrationApi(userName, userEmail, password)
-            .then((response) => {
+        await registrationApi(userName, userEmail, password).then(
+            (response) => {
                 if (response) {
                     toast.success("Registration was successful");
-                    navigate("/login"); // TODO: Redirect to the page where system ask to activate account from email
+                    navigate("/login"); // TODO: Implement redirection to the section where user should confirm email
                 }
-            })
-            .catch((error) => toast.warning("Server error: " + error.message));
+            }
+        );
     };
 
     const loginUser = async (
@@ -57,22 +57,20 @@ export const UserProvider: React.FC<Props> = ({ children }: Props) => {
         password: string,
         pathToReturn: string
     ) => {
-        await loginApi(userEmail, password)
-            .then((response) => {
-                if (response) {
-                    const userObject: UserProfile = {
-                        userName: response.userName,
-                        email: response.email,
-                    };
-                    localStorage.setItem("token", response.token);
-                    localStorage.setItem("user", JSON.stringify(userObject));
-                    setUser(userObject);
-                    setToken(response.token);
-                    toast.success("Login successful");
-                    navigate(pathToReturn);
-                }
-            })
-            .catch((error) => toast.warning("Server error: " + error.message));
+        await loginApi(userEmail, password).then((response) => {
+            if (response) {
+                const userObject: UserProfile = {
+                    userName: response.userName,
+                    email: response.email,
+                };
+                localStorage.setItem("token", response.token);
+                localStorage.setItem("user", JSON.stringify(userObject));
+                setUser(userObject);
+                setToken(response.token);
+                toast.success("Login successful");
+                navigate(pathToReturn);
+            }
+        });
     };
 
     const isLoggedIn = () => {

@@ -7,7 +7,7 @@ import {
     Typography,
 } from "@mui/material";
 import MainContainer from "../components/common/MainContainer.tsx";
-import API_URL from "../utils/Constants.tsx";
+import { API_URL } from "../utils/Constants.tsx";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowBack } from "@mui/icons-material";

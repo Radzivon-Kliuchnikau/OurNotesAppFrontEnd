@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-import API_URL from "../../utils/Constants.tsx";
+import { API_URL } from "../../utils/Constants.tsx";
 import { useState } from "react";
 import * as React from "react";
 import axios from "../../services/axiosBase.tsx";

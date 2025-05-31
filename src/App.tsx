@@ -5,12 +5,13 @@ import Registration from "./pages/Registration.tsx";
 import Login from "./pages/Login.tsx";
 import Notes from "./pages/Notes.tsx";
 import Unauthorized from "./pages/Unauthorized.tsx";
-import MissingRoute from "./pages/MissingRoute.tsx";
 import Admin from "./pages/Admin.tsx";
 import AuthorizeView from "./components/auth/AuthorizeView.tsx";
 import { useAuth } from "./context/UseAuth.tsx";
+import MissingRoute from "./pages/MissingRoute.tsx";
+import NetworkErrorPage from "./pages/NetworkErrorPage.tsx";
 
-function App() {
+const App = () => {
     const { user } = useAuth();
 
     return (
@@ -23,10 +24,11 @@ function App() {
                 <Route element={<AuthorizeView />}>
                     <Route path="admin" element={<Admin />} />
                 </Route>
-                <Route path="*" element={<MissingRoute />} />
+                <Route path="/*" element={<MissingRoute />} />
+                <Route path="networkerror" element={<NetworkErrorPage />} />
             </Route>
         </Routes>
     );
-}
+};
 
 export default App;

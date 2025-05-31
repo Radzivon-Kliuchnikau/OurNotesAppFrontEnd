@@ -23,7 +23,7 @@ const LogoImage = styled("img")(({ theme }) => ({}));
 
 const Navbar = (): React.ReactElement => {
     const { user } = useAuth();
-    const { loading } = useAuthCheck();
+    // const { loading } = useAuthCheck();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -47,9 +47,9 @@ const Navbar = (): React.ReactElement => {
             sx={{
                 borderBottom: "1px solid black",
                 backgroundColor: "white",
-                opacity: loading ? 0 : 1,
+                // opacity: loading ? 0 : 1,
                 transition: "opacity 0.2s ease-in-out",
-                pointerEvents: loading ? "none" : "auto",
+                // pointerEvents: loading ? "none" : "auto",
             }}
         >
             <StyledToolbar>
