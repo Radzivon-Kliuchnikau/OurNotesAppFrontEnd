@@ -22,8 +22,7 @@ import { useAuth } from "../../context/UseAuth.tsx";
 const LogoImage = styled("img")(({ theme }) => ({}));
 
 const Navbar = (): React.ReactElement => {
-    const { user } = useAuth();
-    // const { loading } = useAuthCheck();
+    const { user, isLoggedIn } = useAuth();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -34,7 +33,6 @@ const Navbar = (): React.ReactElement => {
         setAnchorEl(null);
     };
 
-    console.log("authUser " + user);
     const StyledToolbar = styled(Toolbar)({
         display: "flex",
         justifyContent: "space-between",
@@ -56,7 +54,7 @@ const Navbar = (): React.ReactElement => {
                 <Typography variant="h6" noWrap component="a" href="/">
                     <LogoImage src="../public/static/logo.svg" />
                 </Typography>
-                {!user ? (
+                {!isLoggedIn() ? (
                     <Box
                         sx={{
                             display: "flex",
@@ -104,7 +102,7 @@ const Navbar = (): React.ReactElement => {
                         }}
                     >
                         <Typography sx={{ color: "black" }}>
-                            Hey, {user.userName}
+                            Hey, {user?.userName}
                         </Typography>
                         <Tooltip title="Settings">
                             <IconButton
