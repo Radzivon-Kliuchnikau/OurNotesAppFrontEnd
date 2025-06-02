@@ -1,4 +1,13 @@
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, styled, Typography} from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    styled,
+    Typography,
+} from "@mui/material";
+import * as React from "react";
 
 interface CustomDialogProps {
     open: boolean;
@@ -6,16 +15,16 @@ interface CustomDialogProps {
     onDelete: () => void;
 }
 
-const CustomDialog = styled(Dialog)(({theme}) => ({
+const CustomDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
         width: "400px",
         padding: theme.spacing(2),
         borderRadius: "10px",
-        backgroundColor: "#f9f6f2"
-    }    
-}))
+        backgroundColor: "#f9f6f2",
+    },
+}));
 
-const StyledButton = styled(Button)(({theme}) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
     width: "120px",
     height: "40px",
     borderRadius: "10px",
@@ -24,15 +33,20 @@ const StyledButton = styled(Button)(({theme}) => ({
     fontWeight: "500",
     border: "1px solid black",
     color: "black",
+}));
 
-}))
-
-const NoteRemoveDialog: React.FC<CustomDialogProps> = ({open, onClose, onDelete}) => {
+const NoteRemoveDialog: React.FC<CustomDialogProps> = ({
+    open,
+    onClose,
+    onDelete,
+}): React.ReactElement => {
     return (
         <CustomDialog open={open}>
             <DialogTitle>Are you sure?</DialogTitle>
             <DialogContent>
-                <Typography>Do you actually want to remove this note?</Typography>
+                <Typography>
+                    Do you actually want to remove this note?
+                </Typography>
             </DialogContent>
             <DialogActions>
                 <StyledButton
@@ -41,8 +55,11 @@ const NoteRemoveDialog: React.FC<CustomDialogProps> = ({open, onClose, onDelete}
                         transition: "background-color 0.3s ease",
                         "&:hover": {
                             backgroundColor: "#cacfcb",
-                        }
-                    }}>Cancel</StyledButton>
+                        },
+                    }}
+                >
+                    Cancel
+                </StyledButton>
                 <StyledButton
                     onClick={onDelete}
                     sx={{
@@ -51,7 +68,9 @@ const NoteRemoveDialog: React.FC<CustomDialogProps> = ({open, onClose, onDelete}
                             backgroundColor: "#f53333",
                         },
                     }}
-                >Delete</StyledButton>
+                >
+                    Delete
+                </StyledButton>
             </DialogActions>
         </CustomDialog>
     );

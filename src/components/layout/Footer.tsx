@@ -1,15 +1,17 @@
-import {Box, Typography} from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import * as React from "react";
 
-const Footer = () => {
+const Footer = (): React.ReactElement => {
     return (
-        <Box 
+        <Box
             sx={{
-                display: "flex", 
-                justifyContent: "center", 
+                display: "flex",
+                justifyContent: "center",
                 padding: "20px",
-                borderTop: "1px solid black"
-            }}>
-            <Typography>{new Date().getFullYear()} RareCase, Inc.</Typography>        
+                borderTop: "1px solid black",
+            }}
+        >
+            <Typography>{new Date().getFullYear()} RareCase, Inc.</Typography>
         </Box>
     );
 };

@@ -7,28 +7,29 @@ import {
     DialogTitle,
     FormLabel,
     styled,
-    Typography
+    Typography,
 } from "@mui/material";
 import TextFieldCustom from "./TextFieldCustom.tsx";
-import {FieldValues, useForm} from "react-hook-form";
-import {useEffect} from "react";
+import { FieldValues, useForm } from "react-hook-form";
+import { useEffect } from "react";
+import * as React from "react";
 
 type FormInputs = {
-    title: string,
-    content: string,
-}
+    title: string;
+    content: string;
+};
 
-const CustomNoteDialog = styled(Dialog)(({theme}) => ({
+const CustomNoteDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
-        height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+        height: "calc((1 - var(--template-frame-height, 0)) * 100dvh)",
         width: "1000px",
         padding: theme.spacing(2),
         borderRadius: "10px",
-        backgroundColor: "#f9f6f2"
-    }
-}))
+        backgroundColor: "#f9f6f2",
+    },
+}));
 
-const StyledButton = styled(Button)(({theme}) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
     width: "120px",
     height: "40px",
     borderRadius: "10px",
@@ -37,8 +38,7 @@ const StyledButton = styled(Button)(({theme}) => ({
     fontWeight: "500",
     border: "1px solid black",
     color: "black",
-
-}))
+}));
 
 interface NoteDialogProps {
     open: boolean;
@@ -48,14 +48,20 @@ interface NoteDialogProps {
     onSave: (title: string, content: string) => void;
 }
 
-const NoteDialog: React.FC<NoteDialogProps> = ({open, onClose, dialogTitle, defaultValues, onSave}) => {
+const NoteDialog: React.FC<NoteDialogProps> = ({
+    open,
+    onClose,
+    dialogTitle,
+    defaultValues,
+    onSave,
+}): React.ReactElement => {
     const {
         register,
         handleSubmit,
         setValue,
-        formState: {errors},
+        formState: { errors },
     } = useForm<FormInputs>({
-        defaultValues: defaultValues || {title: "", content: ""}
+        defaultValues: defaultValues || { title: "", content: "" },
     });
 
     useEffect(() => {
@@ -63,17 +69,17 @@ const NoteDialog: React.FC<NoteDialogProps> = ({open, onClose, dialogTitle, defa
             setValue("title", defaultValues.title);
             setValue("content", defaultValues.content);
         }
-    }, [defaultValues, setValue])
+    }, [defaultValues, setValue]);
 
     const onSubmit = (data: FieldValues) => {
         onSave(data.title, data.content);
         onClose();
-    }
+    };
 
     return (
         <CustomNoteDialog open={open} onClose={onClose}>
-            <Box 
-                component="form" 
+            <Box
+                component="form"
                 onSubmit={handleSubmit(onSubmit)}
                 sx={{
                     display: "flex",
@@ -83,23 +89,33 @@ const NoteDialog: React.FC<NoteDialogProps> = ({open, onClose, dialogTitle, defa
             >
                 <DialogTitle>{dialogTitle}</DialogTitle>
                 <DialogContent>
-                    <FormLabel htmlFor="noteTitle" sx={{display: "flex"}}>
-                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note title</Typography>
+                    <FormLabel htmlFor="noteTitle" sx={{ display: "flex" }}>
+                        <Typography
+                            sx={{ fontSize: "14px", marginBottom: "5px" }}
+                        >
+                            Note title
+                        </Typography>
                     </FormLabel>
                     <TextFieldCustom
                         {...register("title", {
-                            required: "Hey, mate. Title is required!"
+                            required: "Hey, mate. Title is required!",
                         })}
                         type="text"
                         id="noteTitle"
                         autoComplete="off"
                     />
                     {errors.title && (
-                        <Typography sx={{color: "red", fontSize: "12px"}}>{errors.title.message}</Typography>
+                        <Typography sx={{ color: "red", fontSize: "12px" }}>
+                            {errors.title.message}
+                        </Typography>
                     )}
 
-                    <FormLabel htmlFor="noteContent" sx={{display: "flex"}}>
-                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Note content</Typography>
+                    <FormLabel htmlFor="noteContent" sx={{ display: "flex" }}>
+                        <Typography
+                            sx={{ fontSize: "14px", marginBottom: "5px" }}
+                        >
+                            Note content
+                        </Typography>
                     </FormLabel>
                     <TextFieldCustom
                         {...register("content")}
@@ -118,15 +134,21 @@ const NoteDialog: React.FC<NoteDialogProps> = ({open, onClose, dialogTitle, defa
                             "&:hover": {
                                 backgroundColor: "#cacfcb",
                             },
-                        }}>Cancel</StyledButton>
+                        }}
+                    >
+                        Cancel
+                    </StyledButton>
                     <StyledButton
                         type="submit"
                         sx={{
                             transition: "background-color 0.3s ease",
                             "&:hover": {
                                 backgroundColor: "#16db65",
-                            }
-                        }}>Save</StyledButton>
+                            },
+                        }}
+                    >
+                        Save
+                    </StyledButton>
                 </DialogActions>
             </Box>
         </CustomNoteDialog>

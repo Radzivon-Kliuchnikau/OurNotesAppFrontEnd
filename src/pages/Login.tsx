@@ -1,130 +1,129 @@
-import {
-    Box,
-    Button, Container,
-    FormLabel,
-    Typography
-} from "@mui/material";
-import {useEffect, useRef} from "react";
-// @ts-ignore
+import { Box, Button, Container, FormLabel, Typography } from "@mui/material";
+import { useEffect } from "react";
 import Link from "@mui/material/Link";
-import {useLocation, useNavigate} from "react-router-dom";
-import useAuth from "../hooks/UseAuth.tsx";
+import { useLocation } from "react-router-dom";
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
-import {login} from "../api/authApi.ts";
 import FormCard from "../components/common/FormCard.tsx";
-import {FieldValues, useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
+import * as React from "react";
+import { useAuth } from "../context/UseAuth.tsx";
+import { EMAIL_REGEX } from "../utils/Constants.tsx";
 
 type FormInputs = {
-    username: string,
-    password: string,
-    serverResponse: string
-}
+    userEmail: string;
+    password: string;
+};
 
-const Login = () => {
+const Login = (): React.ReactElement => {
+    const { loginUser } = useAuth();
+
     const {
         register,
         handleSubmit,
+        formState: { errors, isValid, isSubmitting },
         reset,
-        formState: {errors, isValid, isSubmitting}, 
         setFocus,
-        setError
-    } = useForm<FormInputs>();
+    } = useForm<FormInputs>({ mode: "onChange" });
 
     useEffect(() => {
-        setFocus("username");
-    }, [])
-    
-    const {setAuthUser} = useAuth();
+        setFocus("userEmail");
+    }, []);
 
-    const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+    const pathToReturn: string = location.state?.from?.pathname || "/";
 
-    const errorRef: any = useRef();
-
-    const onSubmit = async (data: FieldValues) => {
-        try {
-            await login(data.username, data.password)
-
-            setAuthUser({Email: data.username, Name: data.username});
-            reset();
-            navigate(from, {replace: true});
-        } catch (error: any) {
-            if (!error.response) {
-                setError("serverResponse", {
-                    type: "server",
-                    message: "No Server Response"
-                })
-            } else if (error.response?.status === 400) {
-                setError("serverResponse", {
-                    type: "server",
-                    message: "Missing User email or password"
-                })
-            } else if (error.response?.status === 401) {
-                setError("serverResponse", {
-                    type: "server",
-                    message: "Unauthorized"
-                })
-            } else {
-                setError("serverResponse", {
-                    type: "server",
-                    message: "Login failed"
-                })
-            }
-            errorRef.current.focus();
-        }
-    }
+    const onSubmit = async (form: FormInputs) => {
+        loginUser(form.userEmail, form.password, pathToReturn);
+        reset();
+    };
 
     return (
-        <Container sx={{
-            minHeight: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-            display: "flex",
-            justifyContent: "center"
-        }}>
+        <Container
+            sx={{
+                minHeight:
+                    "calc((1 - var(--template-frame-height, 0)) * 100dvh)",
+                display: "flex",
+                justifyContent: "center",
+            }}
+        >
             <FormCard>
-                <Typography ref={errorRef} aria-live="assertive"
-                            sx={{display: errors.serverResponse ? "block" : "none"}}>
-                    {errors.serverResponse?.message}
-                </Typography>
-                <Box sx={{marginTop: "30px", marginBottom: "40px"}}>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="a"
-                        href="/">
+                <Box sx={{ marginTop: "30px", marginBottom: "40px" }}>
+                    <Typography variant="h6" noWrap component="a" href="/">
                         <img src="../public/static/logo.svg" alt="Logo" />
                     </Typography>
                 </Box>
-                <Typography component="h1" variant="h5" sx={{marginBottom: "20px"}}>Sign In</Typography>
-                <Box component="form" onSubmit={handleSubmit(onSubmit)}
-                     sx={{
-                         width: "400px",
-                         display: "flex", 
-                         flexDirection: "column",
-                }}>
-
-                    <FormLabel htmlFor="username" sx={{display: "flex"}}>
-                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Username or email address</Typography>
+                <Typography
+                    component="h1"
+                    variant="h5"
+                    sx={{ marginBottom: "20px" }}
+                >
+                    Sign In
+                </Typography>
+                <Box
+                    component="form"
+                    onSubmit={handleSubmit(onSubmit)}
+                    sx={{
+                        width: "400px",
+                        display: "flex",
+                        flexDirection: "column",
+                    }}
+                >
+                    <FormLabel htmlFor="userEmail" sx={{ display: "flex" }}>
+                        <Typography
+                            sx={{ fontSize: "14px", marginBottom: "5px" }}
+                        >
+                            Email address
+                        </Typography>
                     </FormLabel>
                     <TextFieldCustom
-                        {...register("username", {
-                            required: "User name or email is required",
+                        {...register("userEmail", {
+                            required: "User email is required",
+                            pattern: {
+                                value: EMAIL_REGEX,
+                                message: "Invalid email format",
+                            },
                         })}
                         type="text"
-                        id="username"
+                        id="userEmail"
                         autoComplete="off"
                     />
+                    {errors.userEmail && (
+                        <Typography
+                            sx={{
+                                color: "red",
+                                fontSize: "12px",
+                                marginTop: "-18px",
+                            }}
+                        >
+                            {errors.userEmail.message}
+                        </Typography>
+                    )}
 
-                    <FormLabel htmlFor="userPassword" sx={{display: "flex"}}>
-                        <Typography sx={{fontSize: "14px", marginBottom: "5px"}}>Password</Typography>
+                    <FormLabel htmlFor="userPassword" sx={{ display: "flex" }}>
+                        <Typography
+                            sx={{ fontSize: "14px", marginBottom: "5px" }}
+                        >
+                            Password
+                        </Typography>
                     </FormLabel>
                     <TextFieldCustom
                         {...register("password", {
-                            required: "Password is required"
+                            required: "Password is required",
                         })}
                         type="password"
                         id="userPassword"
                     />
+                    {errors.password && (
+                        <Typography
+                            sx={{
+                                color: "red",
+                                fontSize: "12px",
+                                marginTop: "-18px",
+                            }}
+                        >
+                            {errors.password.message}
+                        </Typography>
+                    )}
 
                     <Button
                         type="submit"
@@ -140,23 +139,25 @@ const Login = () => {
                             textTransform: "none",
                             fontSize: "20px",
                             marginBottom: "40px",
-                            marginTop: "30px"
+                            marginTop: "30px",
                         }}
                     >
                         Sign in
                     </Button>
                 </Box>
-                <Typography sx={{textAlign: "center"}}>
+                <Typography sx={{ textAlign: "center" }}>
                     Need an Account?{" "}
                     <Link
                         href="/registration"
-                        sx={{color: "black", textDecoration: "none"}}>
+                        sx={{ color: "black", textDecoration: "none" }}
+                    >
                         Sign Up
                     </Link>
                 </Typography>
+                {/*// TODO: Add link to reset/forgot password*/}
             </FormCard>
         </Container>
-    )
+    );
 };
 
 export default Login;

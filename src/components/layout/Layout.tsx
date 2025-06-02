@@ -1,14 +1,16 @@
-import {Box} from "@mui/material";
-import {Outlet} from "react-router-dom";
+import { Box } from "@mui/material";
+import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar.tsx";
 import Footer from "./Footer.tsx";
+import * as React from "react";
+import "react-toastify/dist/ReactToastify.css";
 
-const Layout = () => {
+const Layout = (): React.ReactElement => {
     return (
         <Box>
-            <Navbar/>
-            <Outlet/>
-            <Footer/>
+            <Navbar />
+            <Outlet />
+            <Footer />
         </Box>
     );
 };

@@ -1,6 +1,6 @@
-const API_URL = {
+export const API_URL = {
     MAINPAGE_URL: "/",
-    LOGIN_URL: "/login",
+    LOGIN_URL: "/api/account/login",
     REGISTER_URL: "/api/account/register",
     LOGOUT_URL: "/api/account/logout",
     USE_COOKIES: "?useCookies=true",
@@ -8,6 +8,8 @@ const API_URL = {
     CHECK_AUTH: "/api/account/checkAuth",
     USER_LIST: "/api/admin/users",
     NOTES_URL: "/api/notes",
-}
-
-export default API_URL;
+};
+export const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_ ]{3,23}$/;
+export const PSW_REGEX =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+export const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
