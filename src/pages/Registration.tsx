@@ -6,8 +6,8 @@ import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
 import { FieldValues, useForm } from "react-hook-form";
 import FormCard from "../components/common/FormCard.tsx";
 import * as React from "react";
-import { registrationApi } from "../services/api/authApi.tsx";
 import { EMAIL_REGEX, PSW_REGEX, USERNAME_REGEX } from "../utils/Constants.tsx";
+import { useAuth } from "../context/UseAuth.tsx";
 
 type FormInputs = {
     username: string;
@@ -18,6 +18,8 @@ type FormInputs = {
 };
 
 const Registration = (): React.ReactElement => {
+    const { registerUser } = useAuth();
+
     const [success, setSuccess] = useState<boolean>(false);
 
     const {
@@ -34,8 +36,13 @@ const Registration = (): React.ReactElement => {
     }, []);
 
     const onSubmit = async (data: FieldValues) => {
-        await registrationApi(data.username, data.useremail, data.password);
-        setSuccess(true);
+        registerUser(
+            data.username,
+            data.useremail,
+            data.password,
+            data.confirmPassword
+        );
+        // setSuccess(true); // TODO: Redirect to the success page with a call to activate account in email and then to sign in
         reset();
     };
 

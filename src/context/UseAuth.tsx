@@ -8,7 +8,12 @@ import { useNavigate } from "react-router-dom";
 type UserContextType = {
     user: UserProfile | null;
     token: string | null;
-    registerUser: (email: string, username: string, password: string) => void;
+    registerUser: (
+        email: string,
+        username: string,
+        password: string,
+        confirmPassword: string
+    ) => void;
     loginUser: (email: string, password: string, pathToReturn: string) => void;
     logoutUser: () => void;
     isLoggedIn: () => boolean;
@@ -40,16 +45,18 @@ export const UserProvider: React.FC<Props> = ({ children }: Props) => {
     const registerUser = async (
         userName: string,
         userEmail: string,
-        password: string
+        password: string,
+        confirmPassword: string
     ) => {
-        await registrationApi(userName, userEmail, password).then(
-            (response) => {
-                if (response) {
-                    toast.success("Registration was successful");
-                    navigate("/login"); // TODO: Implement redirection to the section where user should confirm email
-                }
-            }
-        );
+        await registrationApi(
+            userName,
+            userEmail,
+            password,
+            confirmPassword
+        ).then(() => {
+            toast.success("Registration was successful");
+            navigate("/login"); // TODO: Implement redirection to the section where user should confirm email
+        });
     };
 
     const loginUser = async (

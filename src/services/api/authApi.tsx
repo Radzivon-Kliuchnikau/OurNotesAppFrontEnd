@@ -28,19 +28,24 @@ export const loginApi = async (
 export const registrationApi = async (
     userName: string,
     userEmail: string,
-    password: string
+    password: string,
+    confirmPassword: string
 ): Promise<UserProfileRegistrationType | undefined> => {
     try {
-        const response = await axios.post<UserProfileRegistrationType>( // TODO: Think on another type for registration
+        const response = await axios.post<UserProfileRegistrationType>(
             API_URL.REGISTER_URL,
-            JSON.stringify({ userName: userName, email: userEmail, password }),
+            JSON.stringify({
+                userName: userName,
+                email: userEmail,
+                password,
+                confirmPassword,
+            }),
             {
                 headers: {
                     "Content-Type": "application/json",
                 },
             }
         );
-
         return response.data;
     } catch (error) {
         ErrorHandler(error);

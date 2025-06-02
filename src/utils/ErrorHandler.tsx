@@ -20,7 +20,7 @@ export const ErrorHandler = (error: unknown) => {
         const errorResponse = error.response;
         if (Array.isArray(errorResponse?.data.errors)) {
             for (let errorValue of errorResponse.data.errors) {
-                toast.warning(errorValue.description);
+                toast.warning(errorValue);
             }
         } else if (typeof errorResponse?.data.errors === "object") {
             for (let errorValue in errorResponse?.data.errors) {

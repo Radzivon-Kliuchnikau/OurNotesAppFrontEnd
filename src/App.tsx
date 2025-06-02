@@ -6,9 +6,9 @@ import Login from "./pages/Login.tsx";
 import Notes from "./pages/Notes.tsx";
 import Unauthorized from "./pages/Unauthorized.tsx";
 import Admin from "./pages/Admin.tsx";
-import AuthorizeView from "./components/auth/AuthorizeView.tsx";
 import { useAuth } from "./context/UseAuth.tsx";
 import MissingRoute from "./pages/MissingRoute.tsx";
+import ProtectedRoute from "./components/auth/ProtectedRoute.tsx";
 
 const App = () => {
     const { user } = useAuth();
@@ -20,9 +20,14 @@ const App = () => {
             <Route path="/" element={<Layout />}>
                 <Route index element={user ? <Notes /> : <OpenPage />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
-                <Route element={<AuthorizeView />}>
-                    <Route path="admin" element={<Admin />} />
-                </Route>
+                <Route
+                    path="admin"
+                    element={
+                        <ProtectedRoute>
+                            <Admin />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route path="/*" element={<MissingRoute />} />
             </Route>
         </Routes>
