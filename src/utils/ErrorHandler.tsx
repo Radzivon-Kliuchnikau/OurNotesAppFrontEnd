@@ -31,6 +31,7 @@ export const ErrorHandler = (error: unknown) => {
         } else if (errorResponse?.status === 401) {
             toast.warning("Unauthorized. Please log in again.");
             window.history.pushState({}, "LoginPage", "/login");
+            // window.location.href = `/login?redirect=${location.pathname}`;
         } else {
             toast.warning(errorResponse?.data);
         }
