@@ -2,7 +2,6 @@ import { UserProfile } from "../types/User.ts";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { loginApi, registrationApi } from "../services/api/authApi.tsx";
 import { toast } from "react-toastify";
-import { AddTokenToHeaders } from "../services/axiosBase.tsx";
 import { useNavigate } from "react-router-dom";
 
 type UserContextType = {
@@ -37,7 +36,6 @@ export const UserProvider: React.FC<Props> = ({ children }: Props) => {
         if (user && token) {
             setUser(JSON.parse(user));
             setToken(token);
-            AddTokenToHeaders(token);
         }
         setIsReady(true);
     }, []);
@@ -48,15 +46,7 @@ export const UserProvider: React.FC<Props> = ({ children }: Props) => {
         password: string,
         confirmPassword: string
     ) => {
-        await registrationApi(
-            userName,
-            userEmail,
-            password,
-            confirmPassword
-        ).then(() => {
-            toast.success("Registration was successful");
-            navigate("/login"); // TODO: Implement redirection to the section where user should confirm email
-        });
+        await registrationApi(userName, userEmail, password, confirmPassword);
     };
 
     const loginUser = async (
