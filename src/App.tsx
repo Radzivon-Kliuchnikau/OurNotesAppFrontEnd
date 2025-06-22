@@ -15,9 +15,9 @@ const App = () => {
 
     return (
         <Routes>
-            <Route path="registration" element={<Registration />} />
-            <Route path="login" element={<Login />} />
             <Route path="/" element={<Layout />}>
+                <Route path="login" element={<Login />} />
+                <Route path="registration" element={<Registration />} />
                 <Route index element={user ? <Notes /> : <OpenPage />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
                 <Route

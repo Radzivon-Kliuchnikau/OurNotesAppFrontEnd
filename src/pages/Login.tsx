@@ -1,18 +1,15 @@
-import { Box, Button, Container, FormLabel, Typography } from "@mui/material";
+import { Box, Button, FormLabel, Typography } from "@mui/material";
 import { useEffect } from "react";
-import Link from "@mui/material/Link";
 import { useLocation } from "react-router-dom";
 import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
-import FormCard from "../components/common/FormCard.tsx";
 import { useForm } from "react-hook-form";
 import * as React from "react";
 import { useAuth } from "../context/UseAuth.tsx";
 import { EMAIL_REGEX } from "../utils/Constants.tsx";
-
-type FormInputs = {
-    userEmail: string;
-    password: string;
-};
+import MainContainer from "../components/common/MainContainer.tsx";
+import { Link } from "react-router-dom";
+import FormField from "../components/common/FormField.tsx";
+import { LoginFormInputs } from "../types/general";
 
 const Login = (): React.ReactElement => {
     const { loginUser } = useAuth();
@@ -23,7 +20,7 @@ const Login = (): React.ReactElement => {
         formState: { errors, isValid, isSubmitting },
         reset,
         setFocus,
-    } = useForm<FormInputs>({ mode: "onChange" });
+    } = useForm<LoginFormInputs>({ mode: "onChange" });
 
     useEffect(() => {
         setFocus("userEmail");
@@ -32,131 +29,150 @@ const Login = (): React.ReactElement => {
     const location = useLocation();
     const pathToReturn: string = location.state?.from?.pathname || "/";
 
-    const onSubmit = async (form: FormInputs) => {
+    const onSubmit = async (form: LoginFormInputs) => {
         loginUser(form.userEmail, form.password, pathToReturn);
         reset();
     };
 
     return (
-        <Container
-            sx={{
-                minHeight:
-                    "calc((1 - var(--template-frame-height, 0)) * 100dvh)",
-                display: "flex",
-                justifyContent: "center",
-            }}
-        >
-            <FormCard>
-                <Box sx={{ marginTop: "30px", marginBottom: "40px" }}>
-                    <Typography variant="h6" noWrap component="a" href="/">
-                        <img src="../public/static/logo.svg" alt="Logo" />
+        <MainContainer>
+            <Box
+                sx={{
+                    marginTop: "40px",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                }}
+            >
+                <Box>
+                    <Typography
+                        component="h1"
+                        variant="h5"
+                        sx={{ marginBottom: "20px" }}
+                    >
+                        Sign in to your account
                     </Typography>
-                </Box>
-                <Typography
-                    component="h1"
-                    variant="h5"
-                    sx={{ marginBottom: "20px" }}
-                >
-                    Sign In
-                </Typography>
-                <Box
-                    component="form"
-                    onSubmit={handleSubmit(onSubmit)}
-                    sx={{
-                        width: "400px",
-                        display: "flex",
-                        flexDirection: "column",
-                    }}
-                >
-                    <FormLabel htmlFor="userEmail" sx={{ display: "flex" }}>
-                        <Typography
-                            sx={{ fontSize: "14px", marginBottom: "5px" }}
-                        >
-                            Email address
-                        </Typography>
-                    </FormLabel>
-                    <TextFieldCustom
-                        {...register("userEmail", {
-                            required: "User email is required",
-                            pattern: {
-                                value: EMAIL_REGEX,
-                                message: "Invalid email format",
-                            },
-                        })}
-                        type="text"
-                        id="userEmail"
-                        autoComplete="off"
-                    />
-                    {errors.userEmail && (
-                        <Typography
-                            sx={{
-                                color: "red",
-                                fontSize: "12px",
-                                marginTop: "-18px",
-                            }}
-                        >
-                            {errors.userEmail.message}
-                        </Typography>
-                    )}
-
-                    <FormLabel htmlFor="userPassword" sx={{ display: "flex" }}>
-                        <Typography
-                            sx={{ fontSize: "14px", marginBottom: "5px" }}
-                        >
-                            Password
-                        </Typography>
-                    </FormLabel>
-                    <TextFieldCustom
-                        {...register("password", {
-                            required: "Password is required",
-                        })}
-                        type="password"
-                        id="userPassword"
-                    />
-                    {errors.password && (
-                        <Typography
-                            sx={{
-                                color: "red",
-                                fontSize: "12px",
-                                marginTop: "-18px",
-                            }}
-                        >
-                            {errors.password.message}
-                        </Typography>
-                    )}
-
-                    <Button
-                        type="submit"
-                        disabled={!isValid || isSubmitting}
-                        disableRipple
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit(onSubmit)}
                         sx={{
-                            width: "100%",
-                            height: "50px",
-                            border: "1px solid black",
-                            borderRadius: "10px",
-                            color: "black",
-                            textDecoration: "none",
-                            textTransform: "none",
-                            fontSize: "20px",
-                            marginBottom: "40px",
-                            marginTop: "30px",
+                            width: "400px",
+                            display: "flex",
+                            flexDirection: "column",
                         }}
                     >
-                        Sign in
+                        <FormField
+                            label="Email address"
+                            name="userEmail"
+                            type="email"
+                            register={register}
+                            error={errors.userEmail?.message}
+                            validation={{
+                                required: "User email is required",
+                                pattern: {
+                                    value: EMAIL_REGEX,
+                                    message: "Invalid email format",
+                                },
+                            }}
+                        />
+                        <FormField
+                            label="Password"
+                            name="password"
+                            type="password"
+                            register={register}
+                            error={errors.password?.message}
+                            validation={{
+                                required: "Password is required",
+                            }}
+                            actionElement={
+                                <Button
+                                    component={Link}
+                                    to="/forgot-password"
+                                    sx={{
+                                        textDecoration: "underline",
+                                        color: "black",
+                                        textTransform: "none",
+                                        fontSize: "15px",
+                                        padding: 0,
+                                        top: 0,
+                                        fontWeight: 600,
+                                        "&:hover": {
+                                            textDecoration: "none",
+                                            backgroundColor: "transparent",
+                                        },
+                                    }}
+                                >
+                                    Forgot password
+                                </Button>
+                            }
+                        />
+
+                        <Box>
+                            <Button
+                                type="submit"
+                                disabled={!isValid || isSubmitting}
+                                disableRipple
+                                sx={{
+                                    width: "100%",
+                                    height: "50px",
+                                    border: "1px solid black",
+                                    borderRadius: "10px",
+                                    color: "black",
+                                    textDecoration: "none",
+                                    textTransform: "none",
+                                    fontSize: "20px",
+                                    marginBottom: "40px",
+                                    marginTop: "30px",
+                                }}
+                            >
+                                Sign in
+                            </Button>
+                        </Box>
+                    </Box>
+                </Box>
+                <Box
+                    sx={{
+                        height: "120px",
+                        minWidth: "450px",
+                        padding: "24px",
+                        display: "flex",
+                        gap: "24px",
+                        flexDirection: "column",
+                        backgroundColor: "#f4f4f4",
+                        borderRadius: "16px",
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            fontSize: "18px",
+                        }}
+                    >
+                        Not got an account?
+                    </Typography>
+                    <Button
+                        component={Link}
+                        to="/registration"
+                        disableRipple
+                        sx={{
+                            alignSelf: "flex-start",
+                            fontWeight: 600,
+                            borderWidth: "2px",
+                            border: "1px solid black",
+                            borderRadius: "2rem",
+                            padding: ".5rem 2.5rem",
+                            color: "black",
+                            textShadow: "none",
+                            letterSpacing: "0.025rem",
+                            textDecoration: "none",
+                            textTransform: "none",
+                            fontSize: "18px",
+                        }}
+                    >
+                        Rerister now
                     </Button>
                 </Box>
-                <Typography sx={{ textAlign: "center" }}>
-                    Need an Account?{" "}
-                    <Link
-                        href="/registration"
-                        sx={{ color: "black", textDecoration: "none" }}
-                    >
-                        Sign Up
-                    </Link>
-                </Typography>
-                {/*// TODO: Add link to reset/forgot password*/}
-            </FormCard>
-        </Container>
+            </Box>
+        </MainContainer>
     );
 };
 

@@ -9,50 +9,79 @@ const OpenPage = (): React.ReactElement => {
             <Box
                 flex={12}
                 p={2}
-                textAlign="center"
                 sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    paddingTop: "100px",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    margin: "90px 0 auto",
+                    padding: 0,
                 }}
             >
-                <Box sx={{ maxWidth: "800px", marginBottom: "40px" }}>
-                    <Typography
-                        variant="h1"
-                        sx={{
-                            fontSize: { xs: "2rem", sm: "3rem", md: "4rem" },
-                            fontWeight: 600,
-                        }}
-                    >
-                        Create your notes, save it and share
-                    </Typography>
-                </Box>
-                <Typography
-                    component="h1"
-                    variant="h6"
-                    sx={{ marginBottom: "40px" }}
-                >
-                    A little tool that help you and your partner to remember
-                    things
-                </Typography>
-                <Button
-                    component={Link}
-                    to="/registration"
-                    disableRipple
+                <Box
                     sx={{
-                        width: "120px",
-                        height: "30px",
-                        border: "1px solid black",
-                        borderRadius: "10px",
-                        color: "black",
-                        textDecoration: "none",
-                        textTransform: "none",
-                        fontSize: "16px",
+                        width: "auto",
+                        maxWidth: "700px",
+                        flexGrow: 1,
+                        textAlign: "left",
                     }}
                 >
-                    Get started
-                </Button>
+                    <Box sx={{ maxWidth: "800px", marginBottom: "20px" }}>
+                        <Typography
+                            variant="h1"
+                            sx={{
+                                fontSize: {
+                                    xs: "2rem",
+                                    sm: "3rem",
+                                    md: "3.5rem",
+                                },
+                                fontWeight: 600,
+                            }}
+                        >
+                            Create your notes, save it and share
+                        </Typography>
+                    </Box>
+                    <Typography
+                        component="h1"
+                        variant="h6"
+                        sx={{ marginBottom: "40px" }}
+                    >
+                        A little tool that help you and your partner to remember
+                        things
+                    </Typography>
+                    <Button
+                        component={Link}
+                        to="/login"
+                        disableRipple
+                        sx={{
+                            minWidth: "160px",
+                            fontWeight: 600,
+                            borderWidth: "2px",
+                            border: "1px solid black",
+                            borderRadius: "2rem",
+                            padding: ".5rem 2.5rem",
+                            color: "black",
+                            textShadow: "none",
+                            letterSpacing: "0.025rem",
+                            textDecoration: "none",
+                            textTransform: "none",
+                            fontSize: "20px",
+                        }}
+                    >
+                        Get started with notes
+                    </Button>
+                </Box>
+                <Box>
+                    <Box
+                        component="img"
+                        src="/static/images/open-page.png"
+                        alt="Open Page"
+                        sx={{
+                            width: "100%",
+                            maxWidth: "600px",
+                            marginTop: "40px",
+                        }}
+                    />
+                </Box>
             </Box>
         </MainContainer>
     );

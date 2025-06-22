@@ -7,7 +7,13 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Layout = (): React.ReactElement => {
     return (
-        <Box>
+        <Box
+            style={{
+                minHeight: "100vh",
+                display: "flex",
+                flexDirection: "column",
+            }}
+        >
             <Navbar />
             <Outlet />
             <Footer />

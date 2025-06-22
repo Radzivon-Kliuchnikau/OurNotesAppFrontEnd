@@ -12,8 +12,8 @@ import {
     Tooltip,
     Typography,
 } from "@mui/material";
-import { Logout, Person } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Logout, Person, PersonOutline } from "@mui/icons-material";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import LogoutButton from "../auth/LogoutButton.tsx";
 import * as React from "react";
@@ -23,6 +23,11 @@ const LogoImage = styled("img")(({ theme }) => ({}));
 
 const Navbar = (): React.ReactElement => {
     const { user, isLoggedIn } = useAuth();
+
+    const location = useLocation();
+    const currentPath = location.pathname;
+    const authRoutes = ["/login", "/registration", "/forgot-password"];
+    const isAuthPage = authRoutes.includes(currentPath);
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -36,6 +41,7 @@ const Navbar = (): React.ReactElement => {
     const StyledToolbar = styled(Toolbar)({
         display: "flex",
         justifyContent: "space-between",
+        padding: "0 !important",
     });
 
     return (
@@ -43,11 +49,13 @@ const Navbar = (): React.ReactElement => {
             position="static"
             elevation={0}
             sx={{
-                borderBottom: "1px solid black",
+                maxWidth: "1200px",
+                margin: "0 auto",
+                padding: "10px 0",
                 backgroundColor: "white",
-                // opacity: loading ? 0 : 1,
                 transition: "opacity 0.2s ease-in-out",
-                // pointerEvents: loading ? "none" : "auto",
+                left: 0,
+                right: 0,
             }}
         >
             <StyledToolbar>
@@ -55,44 +63,39 @@ const Navbar = (): React.ReactElement => {
                     <LogoImage src="../public/static/logo.svg" />
                 </Typography>
                 {!isLoggedIn() ? (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "10px",
-                        }}
-                    >
-                        <Button
-                            component={Link}
-                            to="/login"
+                    !isAuthPage && (
+                        <Box
                             sx={{
-                                width: "80px",
-                                height: "30px",
-                                color: "black",
-                                textDecoration: "none",
-                                textTransform: "none",
-                                fontSize: "16px",
+                                display: "flex",
+                                alignItems: "center",
                             }}
                         >
-                            Sign in
-                        </Button>
-                        <Button
-                            component={Link}
-                            to="/registration"
-                            sx={{
-                                width: "80px",
-                                height: "30px",
-                                border: "1px solid black",
-                                borderRadius: "10px",
-                                color: "black",
-                                textDecoration: "none",
-                                textTransform: "none",
-                                fontSize: "16px",
-                            }}
-                        >
-                            Sign up
-                        </Button>
-                    </Box>
+                            <Button
+                                component={Link}
+                                to="/login"
+                                sx={{
+                                    display: "flex",
+                                    gap: "5px",
+                                    width: "100px",
+                                    height: "30px",
+                                    padding: 0,
+                                    color: "black",
+                                    textDecoration: "none",
+                                    textTransform: "none",
+                                    fontSize: "16px",
+                                    backgroundColor: "transparent",
+                                    boxShadow: "none",
+                                    "&:hover": {
+                                        backgroundColor: "transparent",
+                                        boxShadow: "none",
+                                    },
+                                }}
+                            >
+                                <PersonOutline sx={{ color: "black" }} />
+                                Sign in
+                            </Button>
+                        </Box>
+                    )
                 ) : (
                     <Box
                         sx={{
