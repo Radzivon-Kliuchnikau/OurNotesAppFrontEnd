@@ -1,6 +1,6 @@
 import { styled, TextField } from "@mui/material";
 
-const TextFieldCustom = styled(TextField)(({ theme }) => ({
+const TextFieldCustom = styled(TextField)(() => ({
     "& .MuiOutlinedInput-root": {
         // Target the root container of the input
         border: "1px solid black", // Custom border

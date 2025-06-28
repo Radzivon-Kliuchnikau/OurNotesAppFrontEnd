@@ -1,14 +1,15 @@
 import { Stack, styled } from "@mui/material";
 import * as React from "react";
 
-const Container = styled(Stack)(({ theme }) => ({
+const Container = styled(Stack)(() => ({
     maxWidth: "1200px",
     width: "100%",
     margin: "0 auto",
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    padding: "0 16px",
+    boxSizing: "border-box",
+    padding: "0 20px",
 }));
 
 interface Props {

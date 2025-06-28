@@ -30,9 +30,9 @@ const OpenPage = (): React.ReactElement => {
                             variant="h1"
                             sx={{
                                 fontSize: {
-                                    xs: "2rem",
-                                    sm: "3rem",
-                                    md: "3.5rem",
+                                    mobile: "2rem",
+                                    tablet: "3rem",
+                                    laptop: "3.5rem",
                                 },
                                 fontWeight: 600,
                             }}

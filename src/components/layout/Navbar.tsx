@@ -19,7 +19,7 @@ import LogoutButton from "../auth/LogoutButton.tsx";
 import * as React from "react";
 import { useAuth } from "../../context/UseAuth.tsx";
 
-const LogoImage = styled("img")(({ theme }) => ({}));
+const LogoImage = styled("img")(() => ({}));
 
 const Navbar = (): React.ReactElement => {
     const { user, isLoggedIn } = useAuth();
@@ -51,7 +51,7 @@ const Navbar = (): React.ReactElement => {
             sx={{
                 maxWidth: "1200px",
                 margin: "0 auto",
-                padding: "10px 0",
+                padding: "10px 20px",
                 backgroundColor: "white",
                 transition: "opacity 0.2s ease-in-out",
                 left: 0,
@@ -74,10 +74,10 @@ const Navbar = (): React.ReactElement => {
                                 component={Link}
                                 to="/login"
                                 sx={{
+                                    height: "auto",
+                                    border: "none",
                                     display: "flex",
                                     gap: "5px",
-                                    width: "100px",
-                                    height: "30px",
                                     padding: 0,
                                     color: "black",
                                     textDecoration: "none",
@@ -90,6 +90,7 @@ const Navbar = (): React.ReactElement => {
                                         boxShadow: "none",
                                     },
                                 }}
+                                disableRipple
                             >
                                 <PersonOutline sx={{ color: "black" }} />
                                 Sign in

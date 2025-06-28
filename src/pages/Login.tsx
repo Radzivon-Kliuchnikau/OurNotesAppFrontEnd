@@ -1,15 +1,25 @@
-import { Box, Button, FormLabel, Typography } from "@mui/material";
-import { useEffect } from "react";
+import {
+    Box,
+    Button,
+    FormControl,
+    FormHelperText,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    OutlinedInput,
+    Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
 import { useForm } from "react-hook-form";
 import * as React from "react";
 import { useAuth } from "../context/UseAuth.tsx";
 import { EMAIL_REGEX } from "../utils/Constants.tsx";
 import MainContainer from "../components/common/MainContainer.tsx";
 import { Link } from "react-router-dom";
-import FormField from "../components/common/FormField.tsx";
 import { LoginFormInputs } from "../types/general";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import LinkButton from "../components/common/LinkButton.tsx";
 
 const Login = (): React.ReactElement => {
     const { loginUser } = useAuth();
@@ -34,17 +44,46 @@ const Login = (): React.ReactElement => {
         reset();
     };
 
+    const [showPassword, setShowPassword] = useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleMouseDownPassword = (
+        event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+        event.preventDefault();
+    };
+    const handleMouseUpPassword = (
+        event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+        event.preventDefault();
+    };
+
     return (
         <MainContainer>
             <Box
                 sx={{
                     marginTop: "40px",
                     display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
+                    justifyContent: {
+                        mobile: "center",
+                        tablet: "center",
+                        laptop: "space-between",
+                    },
+                    flexDirection: {
+                        mobile: "column",
+                        tablet: "column",
+                        laptop: "row",
+                    },
                 }}
             >
-                <Box>
+                <Box
+                    sx={{
+                        width: {
+                            mobile: "100%",
+                            tablet: "100%",
+                            laptop: "400px",
+                        },
+                    }}
+                >
                     <Typography
                         component="h1"
                         variant="h5"
@@ -52,60 +91,140 @@ const Login = (): React.ReactElement => {
                     >
                         Sign in to your account
                     </Typography>
+
+                    <Box
+                        sx={{
+                            display: {
+                                mobile: "flex",
+                                tablet: "flex",
+                                laptop: "none",
+                            },
+                            alignItems: "center",
+                            gap: "10px",
+                            marginBottom: "15px",
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                fontSize: "18px",
+                            }}
+                        >
+                            Not got an account?
+                        </Typography>
+                        <LinkButton
+                            component={Link}
+                            to="/registration"
+                            variant="text"
+                            disableRipple
+                        >
+                            Rerister now
+                        </LinkButton>
+                    </Box>
+
                     <Box
                         component="form"
                         onSubmit={handleSubmit(onSubmit)}
                         sx={{
-                            width: "400px",
                             display: "flex",
                             flexDirection: "column",
                         }}
                     >
-                        <FormField
-                            label="Email address"
-                            name="userEmail"
-                            type="email"
-                            register={register}
-                            error={errors.userEmail?.message}
-                            validation={{
-                                required: "User email is required",
-                                pattern: {
-                                    value: EMAIL_REGEX,
-                                    message: "Invalid email format",
-                                },
+                        <FormControl
+                            sx={{
+                                margin: "10px 0",
                             }}
-                        />
-                        <FormField
-                            label="Password"
-                            name="password"
-                            type="password"
-                            register={register}
-                            error={errors.password?.message}
-                            validation={{
-                                required: "Password is required",
+                            variant="outlined"
+                            error={!!errors.userEmail}
+                        >
+                            <InputLabel htmlFor="email">
+                                Email address
+                            </InputLabel>
+                            <OutlinedInput
+                                {...register("userEmail", {
+                                    required: "User email is required",
+                                    pattern: {
+                                        value: EMAIL_REGEX,
+                                        message: "Invalid email format",
+                                    },
+                                })}
+                                sx={{
+                                    borderRadius: "15px",
+                                }}
+                                id="email"
+                                type="email"
+                                label="Email address"
+                            />
+                            {errors.userEmail && (
+                                <FormHelperText>
+                                    {errors.userEmail.message}
+                                </FormHelperText>
+                            )}
+                        </FormControl>
+
+                        <FormControl
+                            sx={{
+                                margin: "10px 0",
                             }}
-                            actionElement={
-                                <Button
-                                    component={Link}
-                                    to="/forgot-password"
-                                    sx={{
-                                        textDecoration: "underline",
-                                        color: "black",
-                                        textTransform: "none",
-                                        fontSize: "15px",
-                                        padding: 0,
-                                        top: 0,
-                                        fontWeight: 600,
-                                        "&:hover": {
-                                            textDecoration: "none",
-                                            backgroundColor: "transparent",
-                                        },
-                                    }}
-                                >
-                                    Forgot password
-                                </Button>
-                            }
-                        />
+                            variant="outlined"
+                            error={!!errors.password}
+                        >
+                            <InputLabel htmlFor="password">Password</InputLabel>
+                            <OutlinedInput
+                                {...register("password", {
+                                    required: "Password is required",
+                                })}
+                                sx={{
+                                    borderRadius: "15px",
+                                }}
+                                id="password"
+                                type={showPassword ? "text" : "password"}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label={
+                                                showPassword
+                                                    ? "hide the password"
+                                                    : "display the password"
+                                            }
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={
+                                                handleMouseDownPassword
+                                            }
+                                            onMouseUp={handleMouseUpPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword ? (
+                                                <VisibilityOff />
+                                            ) : (
+                                                <Visibility />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                label="Password"
+                            />
+                            {errors.password && (
+                                <FormHelperText>
+                                    {errors.password.message}
+                                </FormHelperText>
+                            )}
+                        </FormControl>
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "flex-end",
+                            }}
+                        >
+                            <LinkButton
+                                component={Link}
+                                to="/forgot-password"
+                                variant="text"
+                                disableRipple
+                            >
+                                Forgot password
+                            </LinkButton>
+                        </Box>
 
                         <Box>
                             <Button
@@ -114,13 +233,6 @@ const Login = (): React.ReactElement => {
                                 disableRipple
                                 sx={{
                                     width: "100%",
-                                    height: "50px",
-                                    border: "1px solid black",
-                                    borderRadius: "10px",
-                                    color: "black",
-                                    textDecoration: "none",
-                                    textTransform: "none",
-                                    fontSize: "20px",
                                     marginBottom: "40px",
                                     marginTop: "30px",
                                 }}
@@ -130,46 +242,50 @@ const Login = (): React.ReactElement => {
                         </Box>
                     </Box>
                 </Box>
+
                 <Box
                     sx={{
-                        height: "120px",
-                        minWidth: "450px",
-                        padding: "24px",
-                        display: "flex",
-                        gap: "24px",
-                        flexDirection: "column",
-                        backgroundColor: "#f4f4f4",
-                        borderRadius: "16px",
+                        display: {
+                            mobile: "none",
+                            tablet: "none",
+                            laptop: "flex",
+                        },
                     }}
                 >
-                    <Typography
+                    <Box
                         sx={{
-                            fontSize: "18px",
+                            height: "120px",
+                            minWidth: "400px",
+                            width: "45%",
+                            padding: "24px",
+                            margin: "0 30px",
+                            display: "flex",
+                            gap: "24px",
+                            flexDirection: "column",
+                            backgroundColor: "#f4f4f4",
+                            borderRadius: "16px",
                         }}
                     >
-                        Not got an account?
-                    </Typography>
-                    <Button
-                        component={Link}
-                        to="/registration"
-                        disableRipple
-                        sx={{
-                            alignSelf: "flex-start",
-                            fontWeight: 600,
-                            borderWidth: "2px",
-                            border: "1px solid black",
-                            borderRadius: "2rem",
-                            padding: ".5rem 2.5rem",
-                            color: "black",
-                            textShadow: "none",
-                            letterSpacing: "0.025rem",
-                            textDecoration: "none",
-                            textTransform: "none",
-                            fontSize: "18px",
-                        }}
-                    >
-                        Rerister now
-                    </Button>
+                        <Typography
+                            sx={{
+                                fontSize: "18px",
+                            }}
+                        >
+                            Not got an account?
+                        </Typography>
+                        <Button
+                            component={Link}
+                            to="/registration"
+                            disableRipple
+                            sx={{
+                                alignSelf: "flex-start",
+                                fontWeight: 600,
+                                padding: ".5rem 2.5rem",
+                            }}
+                        >
+                            Rerister now
+                        </Button>
+                    </Box>
                 </Box>
             </Box>
         </MainContainer>

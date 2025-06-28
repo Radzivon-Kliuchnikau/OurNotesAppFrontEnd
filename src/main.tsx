@@ -6,14 +6,18 @@ import App from "./App.tsx";
 import { UserProvider } from "./context/UseAuth.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "./utils/Theme.tsx";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <BrowserRouter>
-            <UserProvider>
-                <App />
-                <ToastContainer />
-            </UserProvider>
-        </BrowserRouter>
+        <ThemeProvider theme={theme}>
+            <BrowserRouter>
+                <UserProvider>
+                    <App />
+                    <ToastContainer />
+                </UserProvider>
+            </BrowserRouter>
+        </ThemeProvider>
     </StrictMode>
 );

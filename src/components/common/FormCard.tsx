@@ -1,7 +1,7 @@
 import { Card, styled } from "@mui/material";
 import * as React from "react";
 
-const CustomFormCard = styled(Card)(({ theme }) => ({
+const CustomFormCard = styled(Card)(() => ({
     display: "flex",
     flexDirection: "column",
     alignSelf: "center",
