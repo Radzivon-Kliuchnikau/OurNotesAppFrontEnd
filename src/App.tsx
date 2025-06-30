@@ -9,6 +9,7 @@ import Admin from "./pages/Admin.tsx";
 import { useAuth } from "./context/UseAuth.tsx";
 import MissingRoute from "./pages/MissingRoute.tsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.tsx";
+import RegistrationRequest from "./pages/RegistrationRequest.tsx";
 
 const App = () => {
     const { user } = useAuth();
@@ -18,6 +19,10 @@ const App = () => {
             <Route path="/" element={<Layout />}>
                 <Route path="login" element={<Login />} />
                 <Route path="registration" element={<Registration />} />
+                <Route
+                    path="registration-request"
+                    element={<RegistrationRequest />}
+                />
                 <Route index element={user ? <Notes /> : <OpenPage />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
                 <Route

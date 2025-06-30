@@ -24,7 +24,7 @@ const CustomDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
+const StyledButton = styled(Button)(() => ({
     width: "120px",
     height: "40px",
     borderRadius: "10px",

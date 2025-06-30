@@ -12,17 +12,17 @@ const ErrorBox = styled(Box)(({ theme }) => ({
     textAlign: "center",
     gap: theme.spacing(2),
     margin: "auto",
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("mobile")]: {
         width: "450px",
     },
 }));
 
-const ErrorImage = styled("img")(({ theme }) => ({
-    width: "100%", // Full width of its container
-    height: "auto", // Maintain aspect ratio
-    borderRadius: theme.shape.borderRadius, // Optional: Add rounded corners
-    boxShadow: theme.shadows[3],
-}));
+// const ErrorImage = styled("img")(({ theme }) => ({
+//     width: "100%", // Full width of its container
+//     height: "auto", // Maintain aspect ratio
+//     borderRadius: theme.shape.borderRadius, // Optional: Add rounded corners
+//     boxShadow: theme.shadows[3],
+// }));
 
 const InternalError = (): React.ReactElement => {
     return (

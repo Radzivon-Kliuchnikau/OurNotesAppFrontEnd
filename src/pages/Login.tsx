@@ -113,7 +113,7 @@ const Login = (): React.ReactElement => {
                         </Typography>
                         <LinkButton
                             component={Link}
-                            to="/registration"
+                            to="/registration-request"
                             variant="text"
                             disableRipple
                         >
@@ -275,7 +275,7 @@ const Login = (): React.ReactElement => {
                         </Typography>
                         <Button
                             component={Link}
-                            to="/registration"
+                            to="/registration-request"
                             disableRipple
                             sx={{
                                 alignSelf: "flex-start",
