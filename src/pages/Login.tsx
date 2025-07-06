@@ -283,7 +283,7 @@ const Login = (): React.ReactElement => {
                                 padding: ".5rem 2.5rem",
                             }}
                         >
-                            Rerister now
+                            Register now
                         </Button>
                     </Box>
                 </Box>

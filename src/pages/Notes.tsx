@@ -9,7 +9,7 @@ import {
     Typography,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Add, Delete } from "@mui/icons-material";
 import NoteRemoveDialog from "../components/common/NoteRemoveDialog.tsx";
 import NoteDialog from "../components/common/NoteDialog.tsx";
@@ -37,8 +37,6 @@ const Notes = (): React.ReactElement => {
         useState<boolean>(false);
     const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
     const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-
-    const errorRef: any = useRef();
 
     const handleOpenCreateModal = () => {
         setOpenCreateNoteModal(true);

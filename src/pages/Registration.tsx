@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react";
-import { Box, Button, Container, FormLabel, Typography } from "@mui/material";
-import { Close, Done, Info } from "@mui/icons-material";
-import Link from "@mui/material/Link";
-import TextFieldCustom from "../components/common/TextFieldCustom.tsx";
+import { useState } from "react";
+import {
+    Box,
+    Button,
+    FormControl,
+    FormHelperText,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    OutlinedInput,
+    Typography,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { FieldValues, useForm } from "react-hook-form";
-import FormCard from "../components/common/FormCard.tsx";
 import * as React from "react";
 import { EMAIL_REGEX, PSW_REGEX, USERNAME_REGEX } from "../utils/Constants.tsx";
 import { useAuth } from "../context/UseAuth.tsx";
-
-type FormInputs = {
-    username: string;
-    useremail: string;
-    password: string;
-    confirmPassword: string;
-    serverResponse: string;
-};
+import MainContainer from "../components/common/MainContainer.tsx";
+import { RegistrationFormInputs } from "../types/general";
 
 const Registration = (): React.ReactElement => {
     const { registerUser } = useAuth();
-
-    const [success, setSuccess] = useState<boolean>(false);
 
     const {
         register,
@@ -28,12 +27,23 @@ const Registration = (): React.ReactElement => {
         formState: { errors, isSubmitting, isValid },
         reset,
         getValues,
-        setFocus,
-    } = useForm<FormInputs>({ mode: "onChange" });
+    } = useForm<RegistrationFormInputs>({ mode: "onChange" });
 
-    useEffect(() => {
-        setFocus("username");
-    }, []);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleClickShowConfirmPassword = () =>
+        setShowConfirmPassword((show) => !show);
+    const handleMouseDownPassword = (
+        event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+        event.preventDefault();
+    };
+    const handleMouseUpPassword = (
+        event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+        event.preventDefault();
+    };
 
     const onSubmit = async (data: FieldValues) => {
         registerUser(
@@ -47,239 +57,124 @@ const Registration = (): React.ReactElement => {
     };
 
     return (
-        <>
-            {success ? (
+        <MainContainer>
+            <Box
+                sx={{
+                    marginTop: "40px",
+                    display: "flex",
+                    justifyContent: {
+                        mobile: "center",
+                        tablet: "center",
+                        laptop: "space-between",
+                    },
+                    flexDirection: {
+                        mobile: "column",
+                        tablet: "column",
+                        laptop: "row",
+                    },
+                }}
+            >
                 <Box
                     sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        flexDirection: "column",
-                        textAlign: "center",
-                        height: "calc((1 - var(--template-frame-height, 0)) * 100dvh)",
+                        width: {
+                            mobile: "100%",
+                            tablet: "100%",
+                            laptop: "400px",
+                        },
                     }}
                 >
-                    <Typography component="h1">Success!</Typography>
-                    <Link
-                        href="/login"
+                    <Typography
+                        component="h1"
+                        variant="h5"
+                        sx={{ marginBottom: "20px" }}
+                    >
+                        Create your new account
+                    </Typography>
+
+                    <Typography sx={{ marginBottom: "20px" }}>
+                        With account you can save and share your notes
+                    </Typography>
+
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit(onSubmit)}
                         sx={{
-                            alignSelf: "center",
-                            color: "black",
-                            textDecoration: "none",
+                            display: "flex",
+                            flexDirection: "column",
                         }}
                     >
-                        Sign in
-                    </Link>
-                </Box>
-            ) : (
-                <Container
-                    sx={{
-                        minHeight:
-                            "calc((1 - var(--template-frame-height, 0)) * 100dvh)",
-                        display: "flex",
-                        justifyContent: "center",
-                    }}
-                >
-                    <FormCard>
-                        <Box sx={{ marginTop: "20px", marginBottom: "10px" }}>
-                            <Typography
-                                variant="h6"
-                                noWrap
-                                component="a"
-                                href="/"
-                            >
-                                <img
-                                    src="../public/static/logo.svg"
-                                    alt="Logo"
-                                />
-                            </Typography>
-                        </Box>
-                        <Typography
-                            component="h1"
-                            variant="h5"
-                            sx={{ marginBottom: "15px" }}
-                        >
-                            Sign up
-                        </Typography>
-                        <Box
-                            component="form"
-                            onSubmit={handleSubmit(onSubmit)}
+                        <FormControl
                             sx={{
-                                width: "400px",
-                                display: "flex",
-                                flexDirection: "column",
+                                margin: "10px 0",
                             }}
+                            variant="outlined"
+                            error={!!errors.userName}
                         >
-                            <FormLabel
-                                htmlFor="username"
-                                sx={{ display: "flex" }}
-                            >
-                                <Typography
-                                    sx={{
-                                        fontSize: "14px",
-                                        marginBottom: "5px",
-                                    }}
-                                >
-                                    Name
-                                </Typography>
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        display:
-                                            getValues("username") &&
-                                            !errors.username
-                                                ? "block"
-                                                : "none",
-                                    }}
-                                >
-                                    <Done />
-                                </Box>
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        display: !errors.username
-                                            ? "none"
-                                            : "block",
-                                    }}
-                                >
-                                    <Close />
-                                </Box>
-                            </FormLabel>
-                            <TextFieldCustom
-                                {...register("username", {
+                            <InputLabel htmlFor="name">User name</InputLabel>
+                            <OutlinedInput
+                                {...register("userName", {
                                     required: "User name is required",
                                     pattern: {
                                         value: USERNAME_REGEX,
                                         message:
-                                            "Just type a valid name. Min 4 chars",
+                                            "Minimum 3 characters. Must start with a letter. Can contain only letters, numbers, hyphens, underscores, and spaces.",
                                     },
                                 })}
-                                type="text"
-                                id="username"
-                                autoComplete="off"
-                                placeholder="Jonny D"
-                                aria-describedby="userNameDescription"
-                            />
-                            <Box
-                                id="userNameDescription"
                                 sx={{
-                                    display: errors.username ? "flex" : "none",
-                                    marginTop: "-30px",
-                                    marginBottom: "10px",
-                                    alignItems: "center",
+                                    borderRadius: "15px",
                                 }}
-                            >
-                                <Info sx={{ fontSize: "12px" }} />
-                                <Typography
-                                    sx={{
-                                        fontSize: "12px",
-                                        marginLeft: "5px",
-                                    }}
-                                >{`${errors.username?.message}`}</Typography>
-                            </Box>
+                                id="name"
+                                type="test"
+                                label="User name"
+                            />
+                            {errors.userName && (
+                                <FormHelperText>
+                                    {errors.userName.message}
+                                </FormHelperText>
+                            )}
+                        </FormControl>
 
-                            <FormLabel
-                                htmlFor="useremail"
-                                sx={{ display: "flex" }}
-                            >
-                                <Typography
-                                    sx={{
-                                        fontSize: "14px",
-                                        marginBottom: "5px",
-                                    }}
-                                >
-                                    Email
-                                </Typography>
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        display:
-                                            getValues("useremail") &&
-                                            !errors.useremail
-                                                ? "block"
-                                                : "none",
-                                    }}
-                                >
-                                    <Done />
-                                </Box>
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        display: !errors.useremail
-                                            ? "none"
-                                            : "block",
-                                    }}
-                                >
-                                    <Close />
-                                </Box>
-                            </FormLabel>
-                            <TextFieldCustom
-                                {...register("useremail", {
-                                    required: "Email is required",
+                        <FormControl
+                            sx={{
+                                margin: "10px 0",
+                            }}
+                            variant="outlined"
+                            error={!!errors.userEmail}
+                        >
+                            <InputLabel htmlFor="email">
+                                Email address
+                            </InputLabel>
+                            <OutlinedInput
+                                {...register("userEmail", {
+                                    required: "User email is required",
                                     pattern: {
                                         value: EMAIL_REGEX,
                                         message: "Just type a valid email",
                                     },
                                 })}
-                                type="email"
-                                id="useremail"
-                                autoComplete="off"
-                                placeholder="example@example.com"
-                                aria-describedby="userNameDescription"
-                            />
-                            <Box
-                                id="userNameDescription"
                                 sx={{
-                                    display: errors.useremail ? "flex" : "none",
-                                    marginTop: "-30px",
-                                    marginBottom: "10px",
-                                    alignItems: "center",
+                                    borderRadius: "15px",
                                 }}
-                            >
-                                <Info sx={{ fontSize: "12px" }} />
-                                <Typography
-                                    sx={{
-                                        fontSize: "12px",
-                                        marginLeft: "5px",
-                                    }}
-                                >{`${errors.useremail?.message}`}</Typography>
-                            </Box>
+                                id="email"
+                                type="email"
+                                label="Email address"
+                            />
+                            {errors.userEmail && (
+                                <FormHelperText>
+                                    {errors.userEmail.message}
+                                </FormHelperText>
+                            )}
+                        </FormControl>
 
-                            <FormLabel
-                                htmlFor="password"
-                                sx={{ display: "flex" }}
-                            >
-                                <Typography
-                                    sx={{
-                                        fontSize: "14px",
-                                        marginBottom: "5px",
-                                    }}
-                                >
-                                    Password
-                                </Typography>
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        display:
-                                            getValues("password") &&
-                                            !errors.password
-                                                ? "block"
-                                                : "none",
-                                    }}
-                                >
-                                    <Done />
-                                </Box>
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        display: !errors.password
-                                            ? "none"
-                                            : "block",
-                                    }}
-                                >
-                                    <Close />
-                                </Box>
-                            </FormLabel>
-                            <TextFieldCustom
+                        <FormControl
+                            sx={{
+                                margin: "10px 0",
+                            }}
+                            variant="outlined"
+                            error={!!errors.password}
+                        >
+                            <InputLabel htmlFor="password">Password</InputLabel>
+                            <OutlinedInput
                                 {...register("password", {
                                     required: "Password is required",
                                     pattern: {
@@ -288,132 +183,117 @@ const Registration = (): React.ReactElement => {
                                             "8 to 24 characters. Must include uppercase and lowercase letters, a number and a special character",
                                     },
                                 })}
-                                type="password"
-                                id="password"
-                                placeholder="*********"
-                                aria-describedby="passwordDescription"
-                            />
-                            <Box
-                                id="passwordDescription"
                                 sx={{
-                                    display: errors.password ? "flex" : "none",
-                                    marginTop: "-30px",
-                                    marginBottom: "10px",
-                                    alignItems: "center",
-                                    textAlign: "left",
+                                    borderRadius: "15px",
                                 }}
-                            >
-                                <Info sx={{ fontSize: "12px" }} />
-                                <Typography
-                                    sx={{
-                                        fontSize: "12px",
-                                        marginLeft: "5px",
-                                    }}
-                                >{`${errors.password?.message}`}</Typography>
-                            </Box>
+                                id="password"
+                                label="Password"
+                                type={showPassword ? "text" : "password"}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label={
+                                                showPassword
+                                                    ? "hide the password"
+                                                    : "display the password"
+                                            }
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={
+                                                handleMouseDownPassword
+                                            }
+                                            onMouseUp={handleMouseUpPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword ? (
+                                                <VisibilityOff />
+                                            ) : (
+                                                <Visibility />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                            {errors.password && (
+                                <FormHelperText>
+                                    {errors.password?.message}
+                                </FormHelperText>
+                            )}
+                        </FormControl>
 
-                            <FormLabel
-                                htmlFor="confirmPassword"
-                                sx={{ display: "flex" }}
-                            >
-                                <Typography
-                                    sx={{
-                                        fontSize: "14px",
-                                        marginBottom: "5px",
-                                    }}
-                                >
-                                    Confirm Password
-                                </Typography>
-                                <Box
-                                    sx={{
-                                        display:
-                                            getValues("confirmPassword") &&
-                                            !errors.confirmPassword
-                                                ? "block"
-                                                : "none",
-                                    }}
-                                >
-                                    <Done />
-                                </Box>
-                                <Box
-                                    sx={{
-                                        display: !errors.confirmPassword
-                                            ? "none"
-                                            : "block",
-                                    }}
-                                >
-                                    <Close />
-                                </Box>
-                            </FormLabel>
-                            <TextFieldCustom
+                        <FormControl
+                            sx={{
+                                margin: "10px 0",
+                            }}
+                            variant="outlined"
+                            error={!!errors.confirmPassword}
+                        >
+                            <InputLabel htmlFor="confirmPassword">
+                                Confirm password
+                            </InputLabel>
+                            <OutlinedInput
                                 {...register("confirmPassword", {
                                     required: "Confirm password required",
                                     validate: (value) =>
                                         value === getValues("password") ||
                                         "Passwords must match",
                                 })}
-                                type="password"
-                                id="confirmPassword"
-                                placeholder="*********"
-                                aria-describedby="confirmPasswordDescription"
-                            />
-                            <Box
-                                id="confirmPasswordDescription"
                                 sx={{
-                                    display: errors.confirmPassword
-                                        ? "flex"
-                                        : "none",
-                                    marginTop: "-30px",
-                                    marginBottom: "10px",
-                                    alignItems: "center",
-                                    textAlign: "left",
+                                    borderRadius: "15px",
                                 }}
-                            >
-                                <Info sx={{ fontSize: "12px" }} />
-                                <Typography
-                                    sx={{
-                                        fontSize: "12px",
-                                        marginLeft: "5px",
-                                    }}
-                                >{`${errors.confirmPassword?.message}`}</Typography>
-                            </Box>
+                                id="password"
+                                label="Password"
+                                type={showConfirmPassword ? "text" : "password"}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label={
+                                                showPassword
+                                                    ? "hide the password"
+                                                    : "display the password"
+                                            }
+                                            onClick={
+                                                handleClickShowConfirmPassword
+                                            }
+                                            onMouseDown={
+                                                handleMouseDownPassword
+                                            }
+                                            onMouseUp={handleMouseUpPassword}
+                                            edge="end"
+                                        >
+                                            {showConfirmPassword ? (
+                                                <VisibilityOff />
+                                            ) : (
+                                                <Visibility />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                            {errors.confirmPassword && (
+                                <FormHelperText>
+                                    {errors.confirmPassword?.message}
+                                </FormHelperText>
+                            )}
+                        </FormControl>
 
+                        <Box>
                             <Button
                                 type="submit"
                                 disabled={!isValid || isSubmitting}
                                 disableRipple
                                 sx={{
                                     width: "100%",
-                                    height: "50px",
-                                    border: "1px solid black",
-                                    borderRadius: "10px",
-                                    color: "black",
-                                    textDecoration: "none",
-                                    textTransform: "none",
-                                    fontSize: "20px",
-                                    marginBottom: "30px",
-                                    marginTop: "20px",
-                                    alignContent: "center",
+                                    marginBottom: "40px",
+                                    marginTop: "30px",
                                 }}
                             >
-                                Sign up
+                                Create account and sign in
                             </Button>
                         </Box>
-                        <Typography
-                            sx={{ textAlign: "center", marginBottom: "10px" }}
-                        >
-                            Already registered?{" "}
-                            <Link
-                                href="/login"
-                                sx={{ color: "black", textDecoration: "none" }}
-                            >
-                                Sign in
-                            </Link>
-                        </Typography>
-                    </FormCard>
-                </Container>
-            )}
-        </>
+                    </Box>
+                </Box>
+            </Box>
+        </MainContainer>
     );
 };
 

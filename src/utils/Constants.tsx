@@ -9,7 +9,7 @@ export const API_URL = {
     USER_LIST: "/api/admin/users",
     NOTES_URL: "/api/notes",
 };
-export const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_ ]{3,23}$/;
+export const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_ ]{2,23}$/;
 export const PSW_REGEX =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 export const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

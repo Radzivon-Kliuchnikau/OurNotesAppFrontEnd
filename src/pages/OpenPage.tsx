@@ -11,9 +11,18 @@ const OpenPage = (): React.ReactElement => {
                 p={2}
                 sx={{
                     display: "flex",
-                    flexDirection: "row",
+                    flexDirection: {
+                        mobile: "column",
+                        tablet: "row",
+                        laptop: "row",
+                    },
                     justifyContent: "space-between",
-                    margin: "90px 0 auto",
+                    margin: {
+                        mobile: "0 auto",
+                        tablet: "0 auto",
+                        biggerTablet: "90px 0 auto",
+                        laptop: "90px 0 auto",
+                    },
                     padding: 0,
                 }}
             >
@@ -39,46 +48,143 @@ const OpenPage = (): React.ReactElement => {
                         >
                             Create your notes, save it and share
                         </Typography>
+                        <Box
+                            sx={{
+                                overflow: "hidden",
+                                display: {
+                                    mobile: "flex",
+                                    tablet: "flex",
+                                    biggerTablet: "none",
+                                    laptop: "none",
+                                },
+                                justifyContent: "center",
+                            }}
+                        >
+                            <Box
+                                component="img"
+                                src="../public/static/open-page-tablet-mobile4.svg"
+                                alt="Open Page"
+                                sx={{
+                                    width: "100%",
+                                    maxWidth: "520px",
+                                    height: "auto%",
+                                    objectFit: "contain",
+                                    // position: "relative",
+                                }}
+                            />
+                        </Box>
                     </Box>
                     <Typography
                         component="h1"
                         variant="h6"
-                        sx={{ marginBottom: "40px" }}
+                        sx={{
+                            marginBottom: {
+                                mobile: "20px",
+                                tablet: "20px",
+                                biggerTablet: "40px",
+                                laptop: "40px",
+                            },
+                        }}
                     >
                         A little tool that help you and your partner to remember
                         things
                     </Typography>
-                    <Button
-                        component={Link}
-                        to="/login"
-                        disableRipple
+                    <Box
                         sx={{
-                            minWidth: "160px",
-                            fontWeight: 600,
-                            borderWidth: "2px",
-                            border: "1px solid black",
-                            borderRadius: "2rem",
-                            padding: ".5rem 2.5rem",
-                            color: "black",
-                            textShadow: "none",
-                            letterSpacing: "0.025rem",
-                            textDecoration: "none",
-                            textTransform: "none",
-                            fontSize: "20px",
+                            display: "flex",
+                            flexWrap: "nowrap",
+                            flexDirection: {
+                                mobile: "column",
+                                tablet: "column",
+                                laptop: "row",
+                            },
+                            marginBottom: {
+                                mobile: "60px",
+                                tablet: "60px",
+                                biggerTablet: "60px",
+                                laptop: "0",
+                            },
+                            gap: "20px",
                         }}
                     >
-                        Get started with notes
-                    </Button>
+                        <Button
+                            component={Link}
+                            to="/demo"
+                            disableRipple
+                            sx={{
+                                fontWeight: 600,
+                                borderWidth: "2px",
+                                border: "none",
+                                borderRadius: "2rem",
+                                padding: ".5rem 2.5rem",
+                                color: "black",
+                                backgroundColor: "#D3D3D3",
+                                textShadow: "none",
+                                letterSpacing: "0.025rem",
+                                textDecoration: "none",
+                                textTransform: "none",
+                                fontSize: "20px",
+                                whiteSpace: "nowrap",
+                                minWidth: "fit-content",
+                            }}
+                        >
+                            Check out the demo
+                        </Button>
+                        <Button
+                            component={Link}
+                            to="/login"
+                            disableRipple
+                            sx={{
+                                fontWeight: 600,
+                                borderWidth: "2px",
+                                border: "1px solid black",
+                                borderRadius: "2rem",
+                                padding: ".5rem 2.5rem",
+                                color: "black",
+                                textShadow: "none",
+                                letterSpacing: "0.025rem",
+                                textDecoration: "none",
+                                textTransform: "none",
+                                fontSize: "20px",
+                                whiteSpace: "nowrap",
+                                minWidth: "fit-content",
+                            }}
+                        >
+                            Sign in to your account
+                        </Button>
+                    </Box>
                 </Box>
-                <Box>
+                <Box
+                    sx={{
+                        overflow: "visible",
+                        display: {
+                            mobile: "none",
+                            tablet: "none",
+                            biggerTablet: "flex",
+                            laptop: "flex",
+                        },
+                    }}
+                >
                     <Box
                         component="img"
-                        src="/static/images/open-page.png"
+                        src="../public/static/open-page.svg"
                         alt="Open Page"
                         sx={{
-                            width: "100%",
-                            maxWidth: "600px",
-                            marginTop: "40px",
+                            width: {
+                                mobile: "150%",
+                                tablet: "120%",
+                                laptop: "100%",
+                            },
+                            maxWidth: "none",
+                            height: "100%",
+                            objectFit: "cover",
+                            position: "relative",
+                            bottom: 80,
+                            left: {
+                                mobile: "-25%",
+                                tablet: "-10%",
+                                laptop: "0",
+                            },
                         }}
                     />
                 </Box>

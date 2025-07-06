@@ -13,8 +13,8 @@ const RegistrationRequest = () => {
     return (
         <MainContainer>
             <EmailRequestForm
-                title="Create new account"
-                description="Enter your email address and we will send you an email to create your new account."
+                title="Set up your new password"
+                description="Enter your email address and we will send you an email to set up your new password."
                 submitFunction={onSubmit}
             />
         </MainContainer>

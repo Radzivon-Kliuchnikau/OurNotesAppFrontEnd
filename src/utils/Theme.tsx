@@ -9,6 +9,7 @@ declare module "@mui/material/styles" {
         xl: false;
         mobile: true; // adds the `mobile` breakpoint
         tablet: true;
+        biggerTablet: true;
         laptop: true;
         desktop: true;
     }
@@ -19,6 +20,7 @@ export const theme = createTheme({
         values: {
             mobile: 0,
             tablet: 640,
+            biggerTablet: 800,
             laptop: 1024,
             desktop: 1200,
         },
