@@ -8,8 +8,8 @@ import {
     Typography,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import { useEffect, useRef, useState } from "react";
-import { Add, Delete } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import { Add, Delete, Share } from "@mui/icons-material";
 import NoteRemoveDialog from "../components/common/NoteRemoveDialog.tsx";
 import NoteDialog from "../components/common/NoteDialog.tsx";
 import * as React from "react";
@@ -19,7 +19,8 @@ import { demoNotes } from "../utils/NotesDemoData.ts";
 import MainContainer from "../components/common/MainContainer.tsx";
 
 import "./DemoNotes.css";
-import { motion, AnimatePresence, Reorder } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import NoteShareDialog from "../components/common/NoteShareDialog.tsx";
 
 const DemoNotes = (): React.ReactElement => {
     const MotionCard = motion(Card);
@@ -30,8 +31,9 @@ const DemoNotes = (): React.ReactElement => {
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
     const [data, setData] = useState<Note[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const [openRemoveModal, setOpenRemoveModal] = useState<boolean>(false);
+    const [openShareModal, setOpenShareModal] = useState<boolean>(false);
     const [openEditNoteModal, setOpenEditNoteModal] = useState<boolean>(false);
     const [openCreateNoteModal, setOpenCreateNoteModal] =
         useState<boolean>(false);
@@ -94,6 +96,16 @@ const DemoNotes = (): React.ReactElement => {
         setSelectedNoteId(null);
     };
 
+    const handleOpenShareModal = (id: string) => {
+        setSelectedNoteId(id);
+        setOpenShareModal(true);
+    };
+
+    const handleCloseShareModel = () => {
+        setOpenShareModal(false);
+        setSelectedNoteId(null);
+    };
+
     const handleNoteDelete = async () => {
         if (!selectedNoteId) return;
 
@@ -102,6 +114,16 @@ const DemoNotes = (): React.ReactElement => {
         );
         setData([...updatedData]);
         handleCloseRemoveModel();
+    };
+
+    const handleNoteShare = async () => {
+        if (!selectedNoteId) return;
+
+        // const updatedData = data.filter(
+        //     (note: Note) => note.id !== selectedNoteId
+        // );
+        // setData([...updatedData]);
+        handleCloseShareModel();
     };
 
     const getAllNotes = async () => {
@@ -120,6 +142,11 @@ const DemoNotes = (): React.ReactElement => {
                 open={openRemoveModal}
                 onClose={handleCloseRemoveModel}
                 onDelete={handleNoteDelete}
+            />
+            <NoteShareDialog
+                open={openShareModal}
+                onClose={handleCloseShareModel}
+                onShare={handleNoteShare}
             />
             <NoteDialog
                 open={openCreateNoteModal}
@@ -185,7 +212,7 @@ const DemoNotes = (): React.ReactElement => {
                         </Button>
                     </Box>
                     <Box>
-                        {data.length == 0 ? (
+                        {data.length === 0 ? (
                             <h1>You don't have any notes at the moment</h1>
                         ) : (
                             <AnimatePresence mode="popLayout">
@@ -213,7 +240,12 @@ const DemoNotes = (): React.ReactElement => {
                                             }}
                                             exit={{
                                                 opacity: 0,
-                                                scale: 0.95,
+                                                scale: 0.7,
+                                                rotate: -5,
+                                                transition: {
+                                                    duration: 0.4,
+                                                    ease: "easeInOut",
+                                                },
                                             }}
                                             transition={{ duration: 0.5 }}
                                             style={{
@@ -280,6 +312,17 @@ const DemoNotes = (): React.ReactElement => {
                                                             "#cbcbcb",
                                                     }}
                                                 >
+                                                    <IconButton
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleOpenShareModal(
+                                                                note.id
+                                                            );
+                                                        }}
+                                                        aria-label="delete"
+                                                    >
+                                                        <Share />
+                                                    </IconButton>
                                                     <IconButton
                                                         onClick={(e) => {
                                                             e.stopPropagation();
