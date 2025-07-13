@@ -1,6 +1,10 @@
-import { Button, styled } from "@mui/material";
+import { Button, ButtonProps, styled } from "@mui/material";
 
-const CommonButton = styled(Button)({
+type LinkButtonProps = ButtonProps & {
+    to?: string;
+};
+
+const CommonButton = styled(Button)<LinkButtonProps>({
     fontWeight: 600,
     borderWidth: "2px",
     border: "1px solid black",

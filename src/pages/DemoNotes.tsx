@@ -1,6 +1,7 @@
 import {
+    Avatar,
+    AvatarGroup,
     Box,
-    Button,
     Card,
     CardActions,
     CardContent,
@@ -15,13 +16,14 @@ import NoteDialog from "../components/common/NoteDialog.tsx";
 import * as React from "react";
 import { Note } from "../types/general";
 import Spinner from "../components/common/Spinner.tsx";
-import { demoNotes } from "../utils/NotesDemoData.ts";
+import { demoNotes } from "../utils/demoData/NotesDemoData.ts";
 import MainContainer from "../components/common/MainContainer.tsx";
 
 import "./DemoNotes.css";
 import { motion, AnimatePresence } from "motion/react";
 import NoteShareDialog from "../components/common/NoteShareDialog.tsx";
 import CommonButton from "../components/common/Buttons/CommonButton.tsx";
+import { stringAvatar } from "../utils/AvatarServices.ts";
 
 const DemoNotes = (): React.ReactElement => {
     const MotionCard = motion(Card);
@@ -117,10 +119,12 @@ const DemoNotes = (): React.ReactElement => {
         handleCloseRemoveModel();
     };
 
-    const handleNoteShare = async (userId: string) => {
+    const handleNoteShare = async (userEmail: string) => {
         if (!selectedNoteId) return;
 
-        console.log("noteId: " + selectedNoteId + "---- userId: " + userId);
+        console.log(
+            "noteId: " + selectedNoteId + " ---- userEmail: " + userEmail
+        );
         // const updatedData = data.filter(
         //     (note: Note) => note.id !== selectedNoteId
         // );
@@ -294,33 +298,49 @@ const DemoNotes = (): React.ReactElement => {
                                                 <CardActions
                                                     sx={{
                                                         justifyContent:
-                                                            "flex-end",
+                                                            "space-between",
                                                         backgroundColor:
                                                             "#cbcbcb",
                                                     }}
                                                 >
-                                                    <IconButton
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleOpenShareModal(
-                                                                note.id
-                                                            );
-                                                        }}
-                                                        aria-label="delete"
-                                                    >
-                                                        <Share />
-                                                    </IconButton>
-                                                    <IconButton
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleOpenRemoveModal(
-                                                                note.id
-                                                            );
-                                                        }}
-                                                        aria-label="delete"
-                                                    >
-                                                        <Delete />
-                                                    </IconButton>
+                                                    {note.sharedWith?.length >
+                                                        0 && (
+                                                        <AvatarGroup max={3}>
+                                                            {note.sharedWith.map(
+                                                                (user) => (
+                                                                    <Avatar
+                                                                        {...stringAvatar(
+                                                                            user.name
+                                                                        )}
+                                                                    />
+                                                                )
+                                                            )}
+                                                        </AvatarGroup>
+                                                    )}
+                                                    <Box>
+                                                        <IconButton
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleOpenShareModal(
+                                                                    note.id
+                                                                );
+                                                            }}
+                                                            aria-label="delete"
+                                                        >
+                                                            <Share />
+                                                        </IconButton>
+                                                        <IconButton
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleOpenRemoveModal(
+                                                                    note.id
+                                                                );
+                                                            }}
+                                                            aria-label="delete"
+                                                        >
+                                                            <Delete />
+                                                        </IconButton>
+                                                    </Box>
                                                 </CardActions>
                                             </MotionCard>
                                         </motion.div>

@@ -4,11 +4,21 @@ export interface Note {
     content: string;
     createdAt: Date;
     updatedAt: Date;
+    sharedWith: User[];
+}
+
+export interface User {
+    name: string;
+    email: string;
 }
 
 export interface LoginFormInputs {
     userEmail: string;
     password: string;
+}
+
+export interface ShareWithUserFormInputs {
+    userEmail: string;
 }
 
 export interface RegistrationFormInputs {
