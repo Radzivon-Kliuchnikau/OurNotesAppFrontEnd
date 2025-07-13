@@ -21,6 +21,7 @@ import MainContainer from "../components/common/MainContainer.tsx";
 import "./DemoNotes.css";
 import { motion, AnimatePresence } from "motion/react";
 import NoteShareDialog from "../components/common/NoteShareDialog.tsx";
+import CommonButton from "../components/common/Buttons/CommonButton.tsx";
 
 const DemoNotes = (): React.ReactElement => {
     const MotionCard = motion(Card);
@@ -116,9 +117,10 @@ const DemoNotes = (): React.ReactElement => {
         handleCloseRemoveModel();
     };
 
-    const handleNoteShare = async () => {
+    const handleNoteShare = async (userId: string) => {
         if (!selectedNoteId) return;
 
+        console.log("noteId: " + selectedNoteId + "---- userId: " + userId);
         // const updatedData = data.filter(
         //     (note: Note) => note.id !== selectedNoteId
         // );
@@ -185,31 +187,16 @@ const DemoNotes = (): React.ReactElement => {
                     }}
                 >
                     <Box>
-                        <Button
+                        <CommonButton
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleOpenCreateModal();
                             }}
                             disableRipple
                             startIcon={<Add />}
-                            sx={{
-                                fontWeight: 600,
-                                borderWidth: "2px",
-                                border: "1px solid black",
-                                borderRadius: "2rem",
-                                padding: ".5rem 2.5rem",
-                                color: "black",
-                                textShadow: "none",
-                                letterSpacing: "0.025rem",
-                                textDecoration: "none",
-                                textTransform: "none",
-                                fontSize: "20px",
-                                whiteSpace: "nowrap",
-                                minWidth: "fit-content",
-                            }}
                         >
                             Create new note
-                        </Button>
+                        </CommonButton>
                     </Box>
                     <Box>
                         {data.length === 0 ? (

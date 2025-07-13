@@ -2,6 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import MainContainer from "../components/common/MainContainer.tsx";
 import * as React from "react";
+import CommonButton from "../components/common/Buttons/CommonButton.tsx";
 
 const OpenPage = (): React.ReactElement => {
     return (
@@ -107,51 +108,24 @@ const OpenPage = (): React.ReactElement => {
                             gap: "20px",
                         }}
                     >
-                        <Button
+                        <CommonButton
                             component={Link}
                             to="/demo"
                             disableRipple
                             sx={{
-                                fontWeight: 600,
-                                borderWidth: "2px",
                                 border: "none",
-                                borderRadius: "2rem",
-                                padding: ".5rem 2.5rem",
-                                color: "black",
                                 backgroundColor: "#D3D3D3",
-                                textShadow: "none",
-                                letterSpacing: "0.025rem",
-                                textDecoration: "none",
-                                textTransform: "none",
-                                fontSize: "20px",
-                                whiteSpace: "nowrap",
-                                minWidth: "fit-content",
                             }}
                         >
                             Check out the demo
-                        </Button>
-                        <Button
+                        </CommonButton>
+                        <CommonButton
                             component={Link}
                             to="/login"
                             disableRipple
-                            sx={{
-                                fontWeight: 600,
-                                borderWidth: "2px",
-                                border: "1px solid black",
-                                borderRadius: "2rem",
-                                padding: ".5rem 2.5rem",
-                                color: "black",
-                                textShadow: "none",
-                                letterSpacing: "0.025rem",
-                                textDecoration: "none",
-                                textTransform: "none",
-                                fontSize: "20px",
-                                whiteSpace: "nowrap",
-                                minWidth: "fit-content",
-                            }}
                         >
                             Sign in to your account
-                        </Button>
+                        </CommonButton>
                     </Box>
                 </Box>
                 <Box

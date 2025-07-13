@@ -19,7 +19,7 @@ import MainContainer from "../components/common/MainContainer.tsx";
 import { Link } from "react-router-dom";
 import { LoginFormInputs } from "../types/general";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import LinkButton from "../components/common/LinkButton.tsx";
+import LinkButton from "../components/common/Buttons/LinkButton.tsx";
 
 const Login = (): React.ReactElement => {
     const { loginUser } = useAuth();
