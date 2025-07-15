@@ -11,19 +11,20 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState } from "react";
 import { Add, Delete, Share } from "@mui/icons-material";
-import NoteRemoveDialog from "../components/common/NoteRemoveDialog.tsx";
+import NoteRemoveDialog from "../components/common/Dialogs/NoteRemoveDialog.tsx";
 import NoteDialog from "../components/common/NoteDialog.tsx";
 import * as React from "react";
-import { Note } from "../types/general";
+import { Note, User } from "../types/general";
 import Spinner from "../components/common/Spinner.tsx";
 import { demoNotes } from "../utils/demoData/NotesDemoData.ts";
 import MainContainer from "../components/common/MainContainer.tsx";
 
 import "./DemoNotes.css";
 import { motion, AnimatePresence } from "motion/react";
-import NoteShareDialog from "../components/common/NoteShareDialog.tsx";
+import NoteShareDialog from "../components/common/Dialogs/NoteShareDialog.tsx";
 import CommonButton from "../components/common/Buttons/CommonButton.tsx";
 import { stringAvatar } from "../utils/AvatarServices.ts";
+import NoteAvatarsDialog from "../components/common/Dialogs/NoteAvatarsDialog.tsx";
 
 const DemoNotes = (): React.ReactElement => {
     const MotionCard = motion(Card);
@@ -37,11 +38,14 @@ const DemoNotes = (): React.ReactElement => {
     const [loading, setLoading] = useState<boolean>(true);
     const [openRemoveModal, setOpenRemoveModal] = useState<boolean>(false);
     const [openShareModal, setOpenShareModal] = useState<boolean>(false);
+    const [openAvatarsModal, setOpenAvatarsModal] = useState<boolean>(false);
     const [openEditNoteModal, setOpenEditNoteModal] = useState<boolean>(false);
     const [openCreateNoteModal, setOpenCreateNoteModal] =
         useState<boolean>(false);
     const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
     const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+
+    const [avatarUsers, setAvatarUsers] = useState<User[]>([]);
 
     const handleOpenCreateModal = () => {
         setOpenCreateNoteModal(true);
@@ -109,6 +113,17 @@ const DemoNotes = (): React.ReactElement => {
         setSelectedNoteId(null);
     };
 
+    const handleOpenAvatarsModal = (id: string, users: User[]) => {
+        setAvatarUsers(users);
+        setSelectedNoteId(id);
+        setOpenAvatarsModal(true);
+    };
+
+    const handleCloseAvatarsModel = () => {
+        setOpenAvatarsModal(false);
+        setSelectedNoteId(null);
+    };
+
     const handleNoteDelete = async () => {
         if (!selectedNoteId) return;
 
@@ -153,6 +168,11 @@ const DemoNotes = (): React.ReactElement => {
                 open={openShareModal}
                 onClose={handleCloseShareModel}
                 onShare={handleNoteShare}
+            />
+            <NoteAvatarsDialog
+                open={openAvatarsModal}
+                onClose={handleCloseAvatarsModel}
+                users={avatarUsers}
             />
             <NoteDialog
                 open={openCreateNoteModal}
@@ -305,17 +325,33 @@ const DemoNotes = (): React.ReactElement => {
                                                 >
                                                     {note.sharedWith?.length >
                                                         0 && (
-                                                        <AvatarGroup max={3}>
-                                                            {note.sharedWith.map(
-                                                                (user) => (
-                                                                    <Avatar
-                                                                        {...stringAvatar(
-                                                                            user.name
-                                                                        )}
-                                                                    />
-                                                                )
-                                                            )}
-                                                        </AvatarGroup>
+                                                        <Box
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleOpenAvatarsModal(
+                                                                    note.id,
+                                                                    note.sharedWith
+                                                                );
+                                                            }}
+                                                        >
+                                                            <AvatarGroup
+                                                                key={uuidv4()}
+                                                                max={4}
+                                                            >
+                                                                {note.sharedWith.map(
+                                                                    (user) => (
+                                                                        <Avatar
+                                                                            {...stringAvatar(
+                                                                                user.name
+                                                                            )}
+                                                                            src={
+                                                                                user.image
+                                                                            }
+                                                                        />
+                                                                    )
+                                                                )}
+                                                            </AvatarGroup>
+                                                        </Box>
                                                     )}
                                                     <Box>
                                                         <IconButton

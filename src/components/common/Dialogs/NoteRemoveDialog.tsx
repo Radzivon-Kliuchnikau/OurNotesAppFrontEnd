@@ -6,7 +6,7 @@ import {
     Typography,
 } from "@mui/material";
 import * as React from "react";
-import PopUpDialogButton from "./Buttons/PopUpDialogButton.tsx";
+import PopUpDialogButton from "../Buttons/PopUpDialogButton.tsx";
 
 interface CustomDialogProps {
     open: boolean;

@@ -9,12 +9,14 @@ export const demoNotes: Note[] = [
         updatedAt: new Date("2025-06-01T10:30:00Z"),
         sharedWith: [
             {
-                name: "User One",
+                name: "Tim Smith",
                 email: "user_one@gmail.com",
+                image: "../public/static/avatar_one.jpg",
             },
             {
-                name: "User Two",
+                name: "Antony Watson",
                 email: "user_two@gmail.com",
+                image: "../public/static/avatar_two.jpg",
             },
         ],
     },
@@ -45,8 +47,9 @@ export const demoNotes: Note[] = [
         updatedAt: new Date("2025-06-20T09:00:00Z"),
         sharedWith: [
             {
-                name: "User Three",
+                name: "Rodion Kliuchnikau",
                 email: "user_three@gmail.com",
+                image: "../public/static/avatar.png",
             },
         ],
     },
@@ -68,23 +71,25 @@ export const demoNotes: Note[] = [
         updatedAt: new Date("2025-06-20T09:00:00Z"),
         sharedWith: [
             {
-                name: "User Four",
+                name: "Mark Toffin",
                 email: "user_four@gmail.com",
+                image: "../public/static/avatar_one.jpg",
             },
             {
-                name: "User Five",
+                name: "Emmie Hikes",
                 email: "user_five@gmail.com",
             },
             {
-                name: "User Five",
+                name: "Ann Blethering",
+                email: "user_five@gmail.com",
+                image: "../public/static/avatar_three.jpg",
+            },
+            {
+                name: "Julia Night",
                 email: "user_five@gmail.com",
             },
             {
-                name: "User Five",
-                email: "user_five@gmail.com",
-            },
-            {
-                name: "User Five",
+                name: "David Kleiner",
                 email: "user_five@gmail.com",
             },
         ],

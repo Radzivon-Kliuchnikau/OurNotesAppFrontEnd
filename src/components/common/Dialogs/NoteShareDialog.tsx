@@ -11,10 +11,10 @@ import {
     OutlinedInput,
 } from "@mui/material";
 import * as React from "react";
-import PopUpDialogButton from "./Buttons/PopUpDialogButton.tsx";
-import { EMAIL_REGEX } from "../../utils/Constants.tsx";
+import PopUpDialogButton from "../Buttons/PopUpDialogButton.tsx";
+import { EMAIL_REGEX } from "../../../utils/Constants.tsx";
 import { useForm } from "react-hook-form";
-import { ShareWithUserFormInputs } from "../../types/general";
+import { ShareWithUserFormInputs } from "../../../types/general";
 
 interface CustomDialogProps {
     open: boolean;
@@ -94,7 +94,9 @@ const NoteShareDialog: React.FC<CustomDialogProps> = ({
                                 {errors.userEmail.message}
                             </FormHelperText>
                         )}
-                    </FormControl>
+                    </FormControl>{" "}
+                    // TODO: Add Permissions select field: Edit or View rights
+                    for user with whom the note is shared
                     <DialogActions>
                         <PopUpDialogButton
                             onClick={onClose}

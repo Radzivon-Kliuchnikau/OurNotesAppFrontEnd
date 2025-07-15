@@ -11,7 +11,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState } from "react";
 import { Add, Delete } from "@mui/icons-material";
-import NoteRemoveDialog from "../components/common/NoteRemoveDialog.tsx";
+import NoteRemoveDialog from "../components/common/Dialogs/NoteRemoveDialog.tsx";
 import NoteDialog from "../components/common/NoteDialog.tsx";
 import * as React from "react";
 import {
