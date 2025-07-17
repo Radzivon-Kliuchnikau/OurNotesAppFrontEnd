@@ -17,7 +17,7 @@ import { useAuth } from "../context/UseAuth.tsx";
 import { EMAIL_REGEX } from "../utils/Constants.tsx";
 import MainContainer from "../components/common/MainContainer.tsx";
 import { Link } from "react-router-dom";
-import { LoginFormInputs } from "../types/general";
+import { LoginFormInputs } from "../types/general.ts";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import LinkButton from "../components/common/Buttons/LinkButton.tsx";
 

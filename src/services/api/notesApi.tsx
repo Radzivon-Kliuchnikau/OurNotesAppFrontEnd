@@ -1,6 +1,6 @@
 import axiosBase from "../axiosBase.tsx";
 import { API_URL } from "../../utils/Constants.tsx";
-import { Note } from "../../types/general";
+import { Note } from "../../types/general.ts";
 import { ErrorHandler } from "../../utils/ErrorHandler.tsx";
 
 export const getNotes = async (): Promise<Note[] | undefined> => {

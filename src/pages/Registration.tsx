@@ -16,7 +16,7 @@ import * as React from "react";
 import { EMAIL_REGEX, PSW_REGEX, USERNAME_REGEX } from "../utils/Constants.tsx";
 import { useAuth } from "../context/UseAuth.tsx";
 import MainContainer from "../components/common/MainContainer.tsx";
-import { RegistrationFormInputs } from "../types/general";
+import { RegistrationFormInputs } from "../types/general.ts";
 
 const Registration = (): React.ReactElement => {
     const { registerUser } = useAuth();

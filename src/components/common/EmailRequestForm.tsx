@@ -1,4 +1,4 @@
-import { LoginFormInputs } from "../../types/general";
+import { LoginFormInputs } from "../../types/general.ts";
 import {
     Box,
     Button,

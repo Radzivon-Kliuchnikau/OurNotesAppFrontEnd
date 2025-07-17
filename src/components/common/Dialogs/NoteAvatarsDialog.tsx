@@ -12,7 +12,7 @@ import {
     Typography,
 } from "@mui/material";
 import * as React from "react";
-import { User } from "../../../types/general";
+import { User } from "../../../types/general.ts";
 import { v4 as uuidv4 } from "uuid";
 
 interface CustomDialogProps {
@@ -39,13 +39,9 @@ const NoteAvatarsDialog: React.FC<CustomDialogProps> = ({
                 },
             }}
         >
-            <DialogTitle>Do you want to share this note?</DialogTitle>
+            <DialogTitle>Users that have access to you note</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    Enter the email address to invite user to view or edit this
-                    note.
-                </DialogContentText>
-                <Box sx={{ p: 2 }}>
+                <Box>
                     <Typography variant="subtitle1" gutterBottom>
                         Shared With
                     </Typography>

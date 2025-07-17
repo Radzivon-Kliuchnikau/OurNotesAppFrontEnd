@@ -20,7 +20,7 @@ import {
     editNote,
     getNotes,
 } from "../services/api/notesApi.tsx";
-import { Note } from "../types/general";
+import { Note } from "../types/general.ts";
 import Spinner from "../components/common/Spinner.tsx";
 
 const Notes = (): React.ReactElement => {

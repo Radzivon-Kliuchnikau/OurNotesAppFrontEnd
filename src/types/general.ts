@@ -18,8 +18,14 @@ export interface LoginFormInputs {
     password: string;
 }
 
+export enum ViewEditRights {
+    VIEW = "VIEW",
+    EDIT = "EDIT",
+}
+
 export interface ShareWithUserFormInputs {
     userEmail: string;
+    viewEditRights: ViewEditRights;
 }
 
 export interface RegistrationFormInputs {

@@ -1,4 +1,4 @@
-import { Note } from "../../types/general";
+import { Note } from "../../types/general.ts";
 
 export const demoNotes: Note[] = [
     {

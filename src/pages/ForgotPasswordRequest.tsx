@@ -1,6 +1,6 @@
 import MainContainer from "../components/common/MainContainer.tsx";
 import { useForm } from "react-hook-form";
-import { LoginFormInputs } from "../types/general";
+import { LoginFormInputs } from "../types/general.ts";
 import EmailRequestForm from "../components/common/EmailRequestForm.tsx";
 
 const RegistrationRequest = () => {

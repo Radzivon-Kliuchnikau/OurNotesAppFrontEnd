@@ -9,7 +9,7 @@ import {
     ListItemAvatar,
     ListItemText,
 } from "@mui/material";
-import { User } from "../../types/general";
+import { User } from "../../types/general.ts";
 import { v4 as uuidv4 } from "uuid";
 
 interface Props {

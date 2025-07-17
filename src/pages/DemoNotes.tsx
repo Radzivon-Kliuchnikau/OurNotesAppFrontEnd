@@ -14,7 +14,7 @@ import { Add, Delete, Share } from "@mui/icons-material";
 import NoteRemoveDialog from "../components/common/Dialogs/NoteRemoveDialog.tsx";
 import NoteDialog from "../components/common/NoteDialog.tsx";
 import * as React from "react";
-import { Note, User } from "../types/general";
+import { Note, User } from "../types/general.ts";
 import Spinner from "../components/common/Spinner.tsx";
 import { demoNotes } from "../utils/demoData/NotesDemoData.ts";
 import MainContainer from "../components/common/MainContainer.tsx";
